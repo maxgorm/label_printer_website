@@ -89,19 +89,19 @@
         const counters = document.querySelectorAll(".counter");
         if (!counters.length) return;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        animateCounter(entry.target);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            { threshold: 0.5 }
-        );
+        let hasAnimated = false;
 
-        counters.forEach((counter) => observer.observe(counter));
+        // Trigger counters when pre-order buttons are clicked
+        const preorderButtons = document.querySelectorAll('a[href="#kickstarter"]');
+        
+        preorderButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                if (!hasAnimated) {
+                    counters.forEach((counter) => animateCounter(counter));
+                    hasAnimated = true;
+                }
+            });
+        });
     }
 
     function animateCounter(el) {
@@ -189,36 +189,30 @@
     function initSmoothScroll() {
         document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
             anchor.addEventListener("click", function (e) {
-                const targetId = this.getAttribute("href");
-                if (targetId === "#") return;
+                const href = this.getAttribute("href");
+                if (!href || href === "#") return;
 
-                const targetEl = document.querySelector(targetId);
-                if (targetEl) {
+                const target = document.querySelector(href);
+                if (target) {
                     e.preventDefault();
-                    const navHeight = navbar?.offsetHeight || 80;
-                    const targetPosition = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
-                    smoothScrollTo(targetPosition, 900);
-
-                    // Update URL hash without jumping
-                    history.pushState(null, null, targetId);
+                    
+                    const navbarHeight = navbar?.offsetHeight || 80;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    
+                    smoothScrollTo(targetPosition, 800);
                 }
             });
         });
     }
 
-    /**
-     * Custom smooth scroll with easing (ease-in-out cubic)
-     */
+    // Custom smooth scroll animation
     function smoothScrollTo(targetY, duration) {
         const startY = window.pageYOffset;
         const diff = targetY - startY;
         const startTime = performance.now();
 
         function easeInOutCubic(t) {
-            return t < 0.5
-                ? 4 * t * t * t
-                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
 
         function step(currentTime) {
@@ -243,20 +237,54 @@
 
         faqItems.forEach((item) => {
             const trigger = item.querySelector(".faq-trigger");
+            const content = item.querySelector(".faq-content");
 
-            trigger?.addEventListener("click", () => {
+            if (!trigger || !content) return;
+
+            // Ensure starts closed
+            content.style.maxHeight = "0";
+            item.classList.remove("open");
+
+            trigger.addEventListener("click", (e) => {
+                e.preventDefault();
                 const isOpen = item.classList.contains("open");
 
-                // Close all other FAQ items
-                faqItems.forEach((other) => {
-                    if (other !== item) {
-                        other.classList.remove("open");
+                // Close all items
+                faqItems.forEach((otherItem) => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove("open");
+                        const otherContent = otherItem.querySelector(".faq-content");
+                        if (otherContent) {
+                            otherContent.style.maxHeight = "0";
+                        }
                     }
                 });
 
-                // Toggle current item
-                item.classList.toggle("open", !isOpen);
+                // Toggle current
+                if (isOpen) {
+                    item.classList.remove("open");
+                    content.style.maxHeight = "0";
+                } else {
+                    item.classList.add("open");
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
             });
+        });
+    }
+
+    // ===================== HERO HOVER SYNC =====================
+    function initHeroHoverSync() {
+        const heroCard = document.getElementById("hero-card");
+        const heroNote = document.getElementById("hero-note");
+
+        if (!heroCard || !heroNote) return;
+
+        heroCard.addEventListener("mouseenter", () => {
+            heroNote.style.transform = "translateX(-50%) rotate(0deg)";
+        });
+
+        heroCard.addEventListener("mouseleave", () => {
+            heroNote.style.transform = "translateX(-50%) rotate(-5deg)";
         });
     }
 
@@ -270,6 +298,7 @@
         initVideoModal();
         initSmoothScroll();
         initFaqAccordion();
+        initHeroHoverSync();
     }
 
     // Run when DOM is ready

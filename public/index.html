@@ -157,14 +157,16 @@
                 <div class="relative lg:h-[600px] flex items-center justify-center fade-in-up" style="animation-delay: 0.2s;">
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-pink dark:bg-primary/10 rounded-full blur-3xl opacity-60"></div>
 
-                    <!-- Floating Note (outside rotating card so it stays upright) -->
-                    <div class="absolute z-20 top-4 left-1/2 transform -translate-x-1/2 w-40 bg-white shadow-md p-4 flex flex-col items-center justify-center animate-bounce" style="animation-duration: 3s;">
-                        <span class="handwritten text-2xl text-gray-800 mb-2">Love you!</span>
-                        <span class="material-icons-round text-red-500 text-3xl">favorite</span>
-                        <p class="text-[10px] text-gray-400 mt-2 font-mono">10:42 AM</p>
+                    <!-- Floating Note (rotated wrapper) -->
+                    <div id="hero-note" class="absolute z-20 top-4 left-1/2 transition-transform duration-700" style="transform: translateX(-50%) rotate(-5deg);">
+                        <div class="w-40 bg-white shadow-md p-4 flex flex-col items-center justify-center animate-bounce" style="animation-duration: 3s;">
+                            <span class="handwritten text-2xl text-gray-800 mb-2">Love you!</span>
+                            <span class="material-icons-round text-red-500 text-3xl">favorite</span>
+                            <p class="text-[10px] text-gray-400 mt-2 font-mono">10:42 AM</p>
+                        </div>
                     </div>
 
-                    <div class="relative z-10 w-full max-w-md mx-auto transform rotate-[-5deg] hover:rotate-0 transition-transform duration-700">
+                    <div id="hero-card" class="relative z-10 w-full max-w-md mx-auto transform rotate-[-5deg] hover:rotate-0 transition-transform duration-700">
                         <div class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700 relative">
 
                             <!-- Printer Image -->
@@ -246,6 +248,56 @@
         </div>
     </section>
 
+    <!-- ===================== FEATURES ===================== -->
+    <section class="py-24 bg-surface-light dark:bg-surface-dark transition-colors duration-300" id="features">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Feature Image -->
+                <div class="order-2 lg:order-1 relative scroll-reveal">
+                    <div class="bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-surface-dark dark:to-background-dark rounded-3xl p-8 lg:p-12 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -mr-16 -mt-16"></div>
+                        <img alt="Product Details" class="relative z-10 w-full rounded-xl shadow-lg transform rotate-2 hover:rotate-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsv9YcwbhSYvqWa3ZNPEthmlsbo2qJqx2OyC3S1w3HhdB0BRNUIiu2IyqhBp_CZcK0aupr4NkFy6Lr53qCVHQt-YqqRpqjgLI7mqEQL7vaoM2uHKNoVOstMmgLwubHlwZczlHftnt3rjAeL6BbteXScStbF2KJri89i-MwniMAIKFSkjxhb--Ru9wfIKhisSUAJB2A7mkSDVWfz3JUtoGVpZiDniU6fdL_aq8-8Fc-2fR4htVxYUDbInJG2L3dY-T-2mhzY7Y8AP04" />
+                    </div>
+                </div>
+
+                <!-- Feature List -->
+                <div class="order-1 lg:order-2 space-y-8 scroll-reveal" style="animation-delay: 0.15s;">
+                    <h2 class="text-3xl md:text-4xl font-bold">Tiny but mighty.</h2>
+                    <p class="text-text-muted-light dark:text-text-muted-dark">Packed with technology to make printing seamless and fun.</p>
+                    <div class="grid gap-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">water_drop</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">No Ink Required</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Thermal printing technology means you never have to buy ink cartridges. Ever.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">wifi</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">WiFi Powered</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Stays connected to your home WiFi. Send a note from work, and it's waiting when they get home.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">inventory_2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Pocket Sized</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Small enough to fit on any nightstand, desk, or kitchen counter without clutter.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ===================== USE CASES / STORIES ===================== -->
     <section class="py-24 bg-background-light dark:bg-background-dark transition-colors duration-300" id="reviews">
         <div class="max-w-7xl mx-auto px-6">
@@ -311,56 +363,6 @@
         </div>
     </section>
 
-    <!-- ===================== FEATURES ===================== -->
-    <section class="py-24 bg-surface-light dark:bg-surface-dark transition-colors duration-300" id="features">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <!-- Feature Image -->
-                <div class="order-2 lg:order-1 relative scroll-reveal">
-                    <div class="bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-surface-dark dark:to-background-dark rounded-3xl p-8 lg:p-12 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -mr-16 -mt-16"></div>
-                        <img alt="Product Details" class="relative z-10 w-full rounded-xl shadow-lg transform rotate-2 hover:rotate-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsv9YcwbhSYvqWa3ZNPEthmlsbo2qJqx2OyC3S1w3HhdB0BRNUIiu2IyqhBp_CZcK0aupr4NkFy6Lr53qCVHQt-YqqRpqjgLI7mqEQL7vaoM2uHKNoVOstMmgLwubHlwZczlHftnt3rjAeL6BbteXScStbF2KJri89i-MwniMAIKFSkjxhb--Ru9wfIKhisSUAJB2A7mkSDVWfz3JUtoGVpZiDniU6fdL_aq8-8Fc-2fR4htVxYUDbInJG2L3dY-T-2mhzY7Y8AP04" />
-                    </div>
-                </div>
-
-                <!-- Feature List -->
-                <div class="order-1 lg:order-2 space-y-8 scroll-reveal" style="animation-delay: 0.15s;">
-                    <h2 class="text-3xl md:text-4xl font-bold">Tiny but mighty.</h2>
-                    <p class="text-text-muted-light dark:text-text-muted-dark">Packed with technology to make printing seamless and fun.</p>
-                    <div class="grid gap-6">
-                        <div class="flex items-start space-x-4">
-                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
-                                <span class="material-icons-round">water_drop</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-lg">No Ink Required</h4>
-                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Thermal printing technology means you never have to buy ink cartridges. Ever.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
-                                <span class="material-icons-round">wifi</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-lg">WiFi Powered</h4>
-                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Stays connected to your home WiFi. Send a note from work, and it's waiting when they get home.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
-                                <span class="material-icons-round">inventory_2</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-lg">Pocket Sized</h4>
-                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Small enough to fit on any nightstand, desk, or kitchen counter without clutter.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- ===================== KICKSTARTER / PRICING ===================== -->
     <section class="py-24 bg-surface-dark text-white relative overflow-hidden" id="kickstarter">
         <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F53F7B 1px, transparent 1px); background-size: 30px 30px;"></div>
@@ -391,60 +393,67 @@
 
             <!-- Pricing Cards -->
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Single Pack -->
+                <!-- Early Bird Duo -->
                 <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 hover:border-primary transition-colors duration-300 flex flex-col scroll-reveal">
                     <div class="mb-4">
-                        <span class="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded">Early Bird</span>
+                        <span class="bg-primary text-white text-xs font-bold px-2 py-1 rounded">Early Bird</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">Single Pack</h3>
+                    <h3 class="text-2xl font-bold mb-2">Early Bird Duo</h3>
                     <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold">$89</span>
-                        <span class="text-gray-500 line-through mb-1">$129</span>
-                    </div>
-                    <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 1x Sentimo Printer</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 3x Paper Rolls</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> USB-C Cable</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> App Access</li>
-                    </ul>
-                    <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">Select Reward</button>
-                </div>
-
-                <!-- Couple's Set -->
-                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-primary relative transform md:scale-105 shadow-2xl shadow-primary/20 flex flex-col scroll-reveal" style="animation-delay: 0.1s;">
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">Most Popular</div>
-                    <h3 class="text-2xl font-bold mb-2">Couple's Set</h3>
-                    <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold text-primary">$159</span>
-                        <span class="text-gray-500 line-through mb-1">$258</span>
+                        <span class="text-4xl font-bold">$49</span>
+                        <span class="text-xs text-gray-400 mb-2">29% off retail</span>
                     </div>
                     <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
                         <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x Sentimo Printers</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 10x Paper Rolls (Included)</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 4x Sticker Paper Rolls</li>
                         <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x USB-C Cables</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Premium App Features</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> App Access</li>
+                    </ul>
+                    <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">Select Reward</button>
+                    <p class="text-xs text-gray-400 text-center mt-3">Limited quantity - may sell out</p>
+                </div>
+
+                <!-- Kickstarter Duo -->
+                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-primary relative transform md:scale-105 shadow-2xl shadow-primary/20 flex flex-col scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">Most Popular</div>
+                    <h3 class="text-2xl font-bold mb-2">Kickstarter Duo</h3>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="text-4xl font-bold text-primary">$59</span>
+                        <span class="text-xs text-gray-400 mb-2">14% off retail</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x Sentimo Printers</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 4x Sticker Paper Rolls</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x USB-C Cables</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> App Access</li>
                     </ul>
                     <button class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-hover transition-colors shadow-lg shadow-primary/40">Select Reward</button>
                 </div>
 
-                <!-- Family Bundle -->
+                <!-- Distant Duo -->
                 <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 hover:border-primary transition-colors duration-300 flex flex-col scroll-reveal" style="animation-delay: 0.2s;">
                     <div class="mb-4">
-                        <span class="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded">Family Pack</span>
+                        <span class="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded">Long Distance</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">Family Bundle</h3>
+                    <h3 class="text-2xl font-bold mb-2">Distant Duo</h3>
                     <div class="flex items-end gap-2 mb-6">
-                        <span class="text-4xl font-bold">$299</span>
-                        <span class="text-gray-500 line-through mb-1">$516</span>
+                        <span class="text-4xl font-bold">$64</span>
+                        <span class="text-xs text-gray-400 mb-2">14% off retail</span>
                     </div>
                     <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 4x Sentimo Printers</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 20x Paper Rolls</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Multi-user Dashboard</li>
-                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Priority Shipping</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x Sentimo Printers</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 4x Sticker Paper Rolls</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x USB-C Cables</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Ships to 2 separate locations</li>
                     </ul>
                     <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">Select Reward</button>
+                    <p class="text-xs text-gray-400 text-center mt-3">Perfect for long-distance couples</p>
                 </div>
+            </div>
+
+            <!-- Shipping Notice -->
+            <div class="text-center mt-12">
+                <p class="text-sm text-gray-400">Free shipping to the 48 contiguous US states. Additional charges may apply for other locations.</p>
             </div>
         </div>
     </section>

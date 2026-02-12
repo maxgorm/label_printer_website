@@ -4,7 +4,7 @@
 
 /* --- Base Resets & Globals --- */
 html {
-    scroll-behavior: auto;
+    scroll-padding-top: 100px;
 }
 
 body {
@@ -28,17 +28,19 @@ body {
 .faq-content {
     max-height: 0;
     overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.4s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .faq-item.open .faq-content {
-    max-height: 300px;
-    opacity: 1;
+    max-height: 1000px;
 }
 
 .faq-item.open .faq-icon {
     transform: rotate(180deg);
+}
+
+.faq-icon {
+    transition: transform 0.3s ease;
 }
 
 .faq-trigger {
@@ -47,6 +49,7 @@ body {
     font-family: inherit;
     font-size: inherit;
     color: inherit;
+    transition: color 0.2s ease;
 }
 
 .faq-trigger:hover {
