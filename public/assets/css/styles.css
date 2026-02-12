@@ -1,0 +1,155 @@
+/* ================================================
+   Sentimo – Custom Styles
+   ================================================ */
+
+/* --- Base Resets & Globals --- */
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* --- Typography --- */
+.handwritten {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+}
+
+.gradient-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, #F53F7B, #FF8BA7);
+}
+
+/* --- FAQ Accordion Smooth Animation --- */
+.faq-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.faq-item.open .faq-content {
+    max-height: 300px;
+    opacity: 1;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-trigger {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+.faq-trigger:hover {
+    color: #F53F7B;
+}
+
+/* --- Scroll Reveal Animation --- */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Fade-In-Up on Load --- */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Navbar scroll state --- */
+.nav-scrolled {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* --- FAQ styling handled via custom accordion --- */
+
+/* --- FAQ animation handled via JS accordion --- */
+
+/* --- Smooth section transitions --- */
+section {
+    position: relative;
+}
+
+/* --- Selection color --- */
+::selection {
+    background-color: rgba(245, 63, 123, 0.2);
+    color: inherit;
+}
+
+/* --- Focus outlines for accessibility --- */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+    outline: 2px solid #F53F7B;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* --- Active nav link --- */
+.nav-link.active {
+    color: #F53F7B;
+}
+
+/* --- Counter number display --- */
+.counter {
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Mobile menu transition --- */
+#mobile-menu {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+#mobile-menu.menu-open {
+    display: block;
+}
+
+/* --- Smooth image loading --- */
+img {
+    transition: opacity 0.3s ease;
+}
+
+img[src] {
+    opacity: 1;
+}
+
+/* --- Print styles --- */
+@media print {
+    nav,
+    #video-modal,
+    .floating-note {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    section {
+        page-break-inside: avoid;
+    }
+}

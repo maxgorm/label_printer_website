@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentimo - Print love notes, instantly.</title>
+    <meta name="description" content="Connect with your partner through doodles and texts sent directly to their printer. No ink required, just pure connection." />
+    <meta name="keywords" content="Sentimo, love notes, thermal printer, couples, long distance, connection" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sentimo - Print love notes, instantly." />
+    <meta property="og:description" content="Send a message. They feel it. Connect through doodles and texts printed instantly." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lh3.googleusercontent.com/aida-public/AB6AXuA2QaxYDkoqvTb6q0rWUF1M99ph-7RP6T92tCKspyM6DXYm7wBRodAH4S4ZjrhNtFyO7ZDqkVz61PKPxrTvDz5rsaItZNpiv3xYlTpPlxrbylmbPT3AsQAHpKPztOVeSGMg2kZXuy27jsaNIvp_xFP9BOnE0kizuM09hwF0httilIBNXlcWw_QI34f3zao7nbNY87mfrwJdDmPh7n57BkkOcy8V2BdAsS9TMpubZM1ItbLOp5cPs9KDjOPIGPmP19KOZKTqtoIPYCxU" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sentimo - Print love notes, instantly." />
+    <meta name="twitter:description" content="Send a message. They feel it." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F53F7B",
+                        "primary-hover": "#D92E66",
+                        "accent-pink": "#FFE8F0",
+                        "background-light": "#FFF9F5",
+                        "background-dark": "#18181B",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#27272A",
+                        "text-main-light": "#1F2937",
+                        "text-main-dark": "#F3F4F6",
+                        "text-muted-light": "#6B7280",
+                        "text-muted-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "sans-serif"],
+                        serif: ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        xl: "1.5rem",
+                        "2xl": "2rem",
+                    },
+                    boxShadow: {
+                        soft: "0 20px 40px -15px rgba(245, 63, 123, 0.15)",
+                        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased">
+
+    <!-- ===================== NAVIGATION ===================== -->
+    <nav id="navbar" class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2">
+                <span class="material-icons-round text-primary text-3xl">print</span>
+                <span class="text-2xl font-bold tracking-tight">Sentimo</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-text-muted-light dark:text-text-muted-dark">
+                <a class="nav-link hover:text-primary transition-colors" href="#how-it-works">How it Works</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#features">Features</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#reviews">Stories</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#faq">FAQ</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <a class="hidden sm:inline-flex bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-sm" href="#kickstarter">
+                    Pre-order Now
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Open menu">
+                    <span class="material-icons-round">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-background-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 px-6 py-4 space-y-4">
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#how-it-works">How it Works</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#features">Features</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#reviews">Stories</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#faq">FAQ</a>
+            <a class="block sm:hidden bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-medium text-center text-sm" href="#kickstarter">Pre-order Now</a>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Hero Copy -->
+                <div class="relative z-10 space-y-8 fade-in-up">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-accent-pink/50 dark:bg-primary/20 text-primary text-xs font-bold uppercase tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        <span>Live on Kickstarter</span>
+                    </div>
+
+                    <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                        Send a message. <br />
+                        <span class="handwritten text-primary font-normal">They feel it.</span>
+                    </h1>
+
+                    <p class="text-xl text-text-muted-light dark:text-text-muted-dark leading-relaxed max-w-lg">
+                        Connect with your partner through doodles and texts sent directly to their printer. No ink required, just pure connection.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a class="flex items-center justify-center space-x-2 bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-soft hover:shadow-lg transform hover:-translate-y-1" href="#kickstarter">
+                            <span>Back Us on Kickstarter</span>
+                            <span class="material-icons-round">arrow_forward</span>
+                        </a>
+                        <button id="watch-video-btn" class="flex items-center justify-center space-x-2 bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-text-main-light dark:text-text-main-dark px-8 py-4 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <span class="material-icons-round">play_circle_filled</span>
+                            <span>Watch Video</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center space-x-4 pt-4">
+                        <div class="flex -space-x-3">
+                            <img alt="User" class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHp_aUDQAjEYknotoC_QdPfdeeRPpy7jOd1DxQCoGdCWVAKyO55gEXP_DExvGHpaSk3pTFlqEe6Z6nW0nUsc14_9_I5LPaDW1-s7w02eTcNsajBvRrpl-r4Qr3PmE9VrlTnMmpCVstx4HG7Ee8loAXDHrGvYsuS2VXYVSOKFcMuR2uJd40UrPvPBKJN7WhClLdkQrDG6tf_169yb5haO-jc6ZpJB6n1ygfKSGWchhBjo4TH2Nk1T_SFollfsm6mCZ5pCZ9E8f4aXBn" />
+                            <img alt="User" class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq1eYoKMkjgBUSgrblhGhjwxIFhpo4swgcAe_jPU5ZfDcwpdwfVlIcsg1g2yorIMag2mhhQrAWX7o_wEjPL12DY1zfxBoLswz-PDAZI5LbIB-9jW_IKbbaqRSJZvFoUvmuhWt-eahRj3M8ClcAHrSDI2RsfGKVuaETk1-NlspvsIbNhgd515pheEMCI_T5rU5T-NEcMOJMHZr_vGe8lxVT0I5Qf2CzM930WWv1LV5ADfGBkwU0EZJ39z4EAHTMTyw0CvGbxn5iz-qP" />
+                            <img alt="User" class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf6qhcD9_x57LXZHVcEsS83X9CdGW5-g1FGPQ-WW7HqFC7nPnA0SfFBv0WeQa0KedJIDQ1E5olvR0E1MU48EVfrI4XEmnn9GMrIBtJyT2TDhylhLi8bTAxuVfmuEmPOgjmZeBzjR9qoZ9fky-xTlbKwPZw3KoX9k44P3uarbOn9pfIfMLeyIhB7FLBtbIyOVuw7YKHNkUDU8CPTQzXpzUBNLWS4zyyeOli_AYZrld7PJohhgRXrKm5xi4EzU54bDzcYYe9THMrjfGa" />
+                        </div>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">
+                            <strong>2,400+</strong> happy couples connected
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Hero Visual -->
+                <div class="relative lg:h-[600px] flex items-center justify-center fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-pink dark:bg-primary/10 rounded-full blur-3xl opacity-60"></div>
+
+                    <!-- Floating Note (outside rotating card so it stays upright) -->
+                    <div class="absolute z-20 top-4 left-1/2 transform -translate-x-1/2 w-40 bg-white shadow-md p-4 flex flex-col items-center justify-center animate-bounce" style="animation-duration: 3s;">
+                        <span class="handwritten text-2xl text-gray-800 mb-2">Love you!</span>
+                        <span class="material-icons-round text-red-500 text-3xl">favorite</span>
+                        <p class="text-[10px] text-gray-400 mt-2 font-mono">10:42 AM</p>
+                    </div>
+
+                    <div class="relative z-10 w-full max-w-md mx-auto transform rotate-[-5deg] hover:rotate-0 transition-transform duration-700">
+                        <div class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700 relative">
+
+                            <!-- Printer Image -->
+                            <img alt="Sentimo Printer White" class="rounded-2xl w-full h-auto object-cover shadow-inner bg-gray-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2QaxYDkoqvTb6q0rWUF1M99ph-7RP6T92tCKspyM6DXYm7wBRodAH4S4ZjrhNtFyO7ZDqkVz61PKPxrTvDz5rsaItZNpiv3xYlTpPlxrbylmbPT3AsQAHpKPztOVeSGMg2kZXuy27jsaNIvp_xFP9BOnE0kizuM09hwF0httilIBNXlcWw_QI34f3zao7nbNY87mfrwJdDmPh7n57BkkOcy8V2BdAsS9TMpubZM1ItbLOp5cPs9KDjOPIGPmP19KOZKTqtoIPYCxU" />
+
+                            <!-- Status Bar -->
+                            <div class="mt-6 flex justify-between items-center">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                    <span class="text-sm font-medium dark:text-white">Sentimo Connected</span>
+                                </div>
+                                <span class="material-icons-round text-primary animate-pulse">wifi</span>
+                            </div>
+                        </div>
+
+                        <!-- App Preview Card -->
+                        <div class="absolute -bottom-12 -right-12 w-48 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-xl p-4 border border-gray-100 dark:border-gray-700 hidden sm:block">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold text-gray-400">APP PREVIEW</span>
+                                <span class="material-icons-round text-primary text-sm">favorite</span>
+                            </div>
+                            <div class="h-24 bg-gray-50 dark:bg-black rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600 flex items-center justify-center">
+                                <span class="text-xs text-gray-400">Draw here...</span>
+                            </div>
+                            <button class="w-full mt-3 bg-primary text-white text-xs font-bold py-2 rounded-lg hover:bg-primary-hover transition-colors">Send Note</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="py-24 bg-surface-light dark:bg-surface-dark transition-colors duration-300" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Magic in three simple steps.</h2>
+                <p class="text-text-muted-light dark:text-text-muted-dark max-w-2xl mx-auto">
+                    Distance feels a little shorter when you can send a physical touch from anywhere in the world.
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-12 relative">
+                <!-- Connecting Line -->
+                <div class="hidden md:block absolute top-12 left-20 right-20 h-0.5 bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent z-0"></div>
+
+                <!-- Step 1 -->
+                <div class="relative z-10 flex flex-col items-center text-center group scroll-reveal">
+                    <div class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-card flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-gray-100 dark:border-gray-700">
+                        <span class="material-icons-round text-primary text-4xl">edit</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">1. Create</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm px-4">
+                        Open the Sentimo app to draw a doodle, type a note, or choose a photo.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative z-10 flex flex-col items-center text-center group scroll-reveal" style="animation-delay: 0.15s;">
+                    <div class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-card flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-gray-100 dark:border-gray-700">
+                        <span class="material-icons-round text-primary text-4xl">send</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">2. Send</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm px-4">
+                        Hit send from anywhere. The message flies instantly to your partner's device.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative z-10 flex flex-col items-center text-center group scroll-reveal" style="animation-delay: 0.3s;">
+                    <div class="w-24 h-24 rounded-2xl bg-white dark:bg-background-dark shadow-card flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-gray-100 dark:border-gray-700">
+                        <span class="material-icons-round text-primary text-4xl">print</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">3. Print</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm px-4">
+                        Their Sentimo lights up and prints your message instantly. A physical memory.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== USE CASES / STORIES ===================== -->
+    <section class="py-24 bg-background-light dark:bg-background-dark transition-colors duration-300" id="reviews">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Made for connection.</h2>
+                    <p class="text-text-muted-light dark:text-text-muted-dark">Perfect for anyone you miss.</p>
+                </div>
+                <a class="hidden md:flex items-center text-primary font-bold hover:text-primary-hover transition-colors mt-4 md:mt-0" href="#">
+                    See all stories <span class="material-icons-round ml-1">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group scroll-reveal">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Couple" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYJFKduiRuC85XmSKodEF91D8obN1-T8iXmHrBQRk2wjNkA3G5h5PT6d9fmqoMdUABc_1wRfOjuXspk2NIeIRtg5ESXw8PAGjruVmtCSveGpM7vL8h6bdCpswLe1KR-IrE8lw1QovAHOtP3pOqEei_tzKTlcdUOot66jx_J1BzsRMlKSd1DrLPsmGV5hlwhycRZugbfDLahdDqS5QJhXb-6651xbD84glaXCgsv0p2zEZ6mK90asw02Dr5FpScCE6K8qM6r773oA5D" />
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-accent-pink dark:bg-pink-900/30 text-primary text-xs font-bold px-2 py-1 rounded inline-block mb-3">Couples</div>
+                        <h3 class="text-lg font-bold mb-2">Long Distance</h3>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Wake up to a handwritten "Good Morning" note next to your bed.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Parent and Child" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7JN3aJn9he1FqnS2E5ojkeEWn0lGJJxo2FYmkYdJwaFPJGG6U9H9mNiCfK4CuIbf04FO9vtv3Fqv06PlihfP0w9wvQ1Ui-nmc6gNP-KAdP-uQ5e1Aj75-TXpXK4YJLa2TsFgc4PeLbO_ScXruXOzwAd_Ptz4LTZUKMsVFeZLG6D1iAlU5_Pgr2AfJC0mBoppndVKPBjW_rf1FF4DR3WNC9Q2ya8l3WuuIILzfNoIWEqm_sdUz5Ul0JbYs2ef8rn9aHaClrh74NFXG" />
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold px-2 py-1 rounded inline-block mb-3">Family</div>
+                        <h3 class="text-lg font-bold mb-2">Parents &amp; Kids</h3>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Send a drawing to mom at work, or a reminder to do homework.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Friends" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkvhdK8aC-3s6AH-L6614WfFJJXGBDg9dkZ1nZRAR5AAqhkfxaZnX_GvByewwoeFvdjixrGUIgK78urvIilgHwiT8P3SDVP54bnkKs03MqJszz7xfkyznOJVo63FNh4TZOsYsz2MDduTkLoHiuE9gdvn2OPeVGAHJHJkBaln9T4U08kl6P0ecVoJ9j4Om1CGjgJu3909rrG5juEG7qSkSaAbtTgKpzOfBdXuGMoPAu2mJK0pSNgxLTibjii1Cbu9uypAZ49X8rcuAr" />
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-bold px-2 py-1 rounded inline-block mb-3">Friends</div>
+                        <h3 class="text-lg font-bold mb-2">Roommates</h3>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Leave sticky notes on the fridge without being in the kitchen.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group scroll-reveal" style="animation-delay: 0.3s;">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Surprise" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkIx8MaSf6s2oSl_SvgExWgSUefw1WWSx_Dr_KF8I0j6NOAy9h77qLOu-YWI61FArp0WQUfhF1t4bAafJFfwbusShxbuLqEMKu_dJroyeN3zwR-aB3CIk0JJOQ52VMywVbnBQX_J2CLUY3MbSbbC98sPqme8WoTUD7vcdAufEE-CfZeazmLqQh2qdBH6WnXgVKE_2a6esyy1GczfnW6OXVxehMBBZ1_JBrlaRYyKcsscBqDp774mjBr4eXxoeGkmU5h9VlBxln72JC" />
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-bold px-2 py-1 rounded inline-block mb-3">Creative</div>
+                        <h3 class="text-lg font-bold mb-2">Daily Surprises</h3>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Send a riddle, a joke, or a daily affirmation to brighten their day.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section class="py-24 bg-surface-light dark:bg-surface-dark transition-colors duration-300" id="features">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Feature Image -->
+                <div class="order-2 lg:order-1 relative scroll-reveal">
+                    <div class="bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-surface-dark dark:to-background-dark rounded-3xl p-8 lg:p-12 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -mr-16 -mt-16"></div>
+                        <img alt="Product Details" class="relative z-10 w-full rounded-xl shadow-lg transform rotate-2 hover:rotate-0 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsv9YcwbhSYvqWa3ZNPEthmlsbo2qJqx2OyC3S1w3HhdB0BRNUIiu2IyqhBp_CZcK0aupr4NkFy6Lr53qCVHQt-YqqRpqjgLI7mqEQL7vaoM2uHKNoVOstMmgLwubHlwZczlHftnt3rjAeL6BbteXScStbF2KJri89i-MwniMAIKFSkjxhb--Ru9wfIKhisSUAJB2A7mkSDVWfz3JUtoGVpZiDniU6fdL_aq8-8Fc-2fR4htVxYUDbInJG2L3dY-T-2mhzY7Y8AP04" />
+                    </div>
+                </div>
+
+                <!-- Feature List -->
+                <div class="order-1 lg:order-2 space-y-8 scroll-reveal" style="animation-delay: 0.15s;">
+                    <h2 class="text-3xl md:text-4xl font-bold">Tiny but mighty.</h2>
+                    <p class="text-text-muted-light dark:text-text-muted-dark">Packed with technology to make printing seamless and fun.</p>
+                    <div class="grid gap-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">water_drop</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">No Ink Required</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Thermal printing technology means you never have to buy ink cartridges. Ever.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">wifi</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">WiFi Powered</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Stays connected to your home WiFi. Send a note from work, and it's waiting when they get home.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent-pink dark:bg-primary/20 flex items-center justify-center text-primary">
+                                <span class="material-icons-round">inventory_2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Pocket Sized</h4>
+                                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Small enough to fit on any nightstand, desk, or kitchen counter without clutter.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== KICKSTARTER / PRICING ===================== -->
+    <section class="py-24 bg-surface-dark text-white relative overflow-hidden" id="kickstarter">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#F53F7B 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">Limited Time Offer</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Bring Sentimo Home.</h2>
+                <p class="text-gray-400 text-lg mb-8">
+                    We're launching exclusively on Kickstarter. Back us today to get up to 40% off the retail price and be the first to start sending love.
+                </p>
+
+                <!-- Stats -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div class="bg-gray-800 rounded-lg p-4 w-full sm:w-auto min-w-[150px] border border-gray-700">
+                        <div class="text-3xl font-bold text-primary counter" data-target="124000" data-prefix="$">$0</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wide">Pledged</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-4 w-full sm:w-auto min-w-[150px] border border-gray-700">
+                        <div class="text-3xl font-bold text-white counter" data-target="1402">0</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wide">Backers</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-4 w-full sm:w-auto min-w-[150px] border border-gray-700">
+                        <div class="text-3xl font-bold text-white counter" data-target="12">0</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wide">Days Left</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Cards -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Single Pack -->
+                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 hover:border-primary transition-colors duration-300 flex flex-col scroll-reveal">
+                    <div class="mb-4">
+                        <span class="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded">Early Bird</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Single Pack</h3>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="text-4xl font-bold">$89</span>
+                        <span class="text-gray-500 line-through mb-1">$129</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 1x Sentimo Printer</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 3x Paper Rolls</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> USB-C Cable</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> App Access</li>
+                    </ul>
+                    <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">Select Reward</button>
+                </div>
+
+                <!-- Couple's Set -->
+                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-primary relative transform md:scale-105 shadow-2xl shadow-primary/20 flex flex-col scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">Most Popular</div>
+                    <h3 class="text-2xl font-bold mb-2">Couple's Set</h3>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="text-4xl font-bold text-primary">$159</span>
+                        <span class="text-gray-500 line-through mb-1">$258</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x Sentimo Printers</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 10x Paper Rolls (Included)</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 2x USB-C Cables</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Premium App Features</li>
+                    </ul>
+                    <button class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-hover transition-colors shadow-lg shadow-primary/40">Select Reward</button>
+                </div>
+
+                <!-- Family Bundle -->
+                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 hover:border-primary transition-colors duration-300 flex flex-col scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="mb-4">
+                        <span class="bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded">Family Pack</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Family Bundle</h3>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="text-4xl font-bold">$299</span>
+                        <span class="text-gray-500 line-through mb-1">$516</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-grow text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 4x Sentimo Printers</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> 20x Paper Rolls</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Multi-user Dashboard</li>
+                        <li class="flex items-center gap-2"><span class="material-icons-round text-primary text-base">check</span> Priority Shipping</li>
+                    </ul>
+                    <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">Select Reward</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="py-24 bg-background-light dark:bg-background-dark transition-colors duration-300" id="faq">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span>How long does the paper last?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            One roll of thermal paper can print about 50-70 average-sized notes. The print itself lasts for years without fading if kept away from direct heat sources.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span>Does it work with both iOS and Android?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            Yes! The Sentimo app is available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span>Is there a monthly subscription?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            The core features of sending and receiving notes are completely free forever. We offer a premium "Sentimo Plus" for advanced drawing tools and huge cloud storage for history, but it's optional.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span>Can I print photos?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            Absolutely. The app converts any photo from your gallery into a high-contrast black and white dithered image optimized for thermal printing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="material-icons-round text-primary text-2xl">print</span>
+                        <span class="text-xl font-bold tracking-tight">Sentimo</span>
+                    </div>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm max-w-xs leading-relaxed mb-6">
+                        Bringing back the charm of physical notes in a digital world. Designed with love in San Francisco.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Facebook">
+                            <i class="material-icons-round">facebook</i>
+                        </a>
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Twitter">
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"></path></svg>
+                        </a>
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Instagram">
+                            <span class="material-icons-round">photo_camera</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="#how-it-works">How it Works</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#features">Features</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Refills</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Download App</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Support</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Press Kit</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-xs text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
+                    &copy; 2026 Sentimo Inc. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <img alt="PayPal" class="h-4 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE8RhaaYZatFIi6wHxl-Kb7Z4ogUyuF9i4z-6DbLPTf4SZ41Ps2OrYX2J6mtASFxJxo9-8zGwZGyOs0s5EOI7kbzJG1bRy05ajReKzCkkpn68ZOdDky0G5QunDieDTtGIEcZoRirlTZ7b-rpm1YJi0eTzQNTij45kNAugOdeeO0_CcCvhjmaSgoR-h3XoehoWAUkFlcdknaFDKcPTYh3UCaphogpfLL9qN710NDaISftrW1KcQEgWwVpkxMVxd8y5s1oXpGHzzIvmy" />
+                    <img alt="Visa" class="h-3 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW8My3BowgHtvD8aQD47yRw2vfbpstGXN2P-xbrs0-7BGRRvGvwx79AyNBq3Sqq7Q_VuYoKIAUmWOMBiFSs5invuWRv3NyHpvYr6mPLxtmeNHepgOJ_JG0X2j85ytOwyY30BP256F9zjdKltQtpmitH0NDj8yCwH0o082MRGb0LiX8_XhBdj7KFytpE6Ic1mlS3ETUDudx1Yy4mEEeqtR1iCZnkwb4qhP-7tUMtGnCQHzkIu1xum3KH5xbZaYFMOyjI0nOEW1VMlLC" />
+                    <img alt="Mastercard" class="h-6 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Oxrx_AT6xQ1VNBin-4onHINmz7i1afLfEWvj16xjl2tPVjPyJtFAUmEMqjgQFPalZhSzlDQKYsIHZRh7g0HoKRdRx-hNfXfGvW6QUyzvh72kJz8lciHuJPT-VV6eDJn3_O1knCzhujyxdkRlddw8qO7gdDAg2xRBHl34c-3mVWDKi3tn3dFk5JqAjCUndG2IRG8hcJQ6buRKYt4k-BmE552ez9p2d3pXaIhbr83o4zkrcrf71WmNRtdWlFoeUmZZ5IzzXx0wiexr" />
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================== VIDEO MODAL ===================== -->
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="relative w-full max-w-3xl mx-4">
+            <button id="close-modal" class="absolute -top-12 right-0 text-white hover:text-primary transition-colors">
+                <span class="material-icons-round text-3xl">close</span>
+            </button>
+            <div class="bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+                <div class="text-center text-gray-400">
+                    <span class="material-icons-round text-6xl mb-4 block">play_circle_filled</span>
+                    <p class="text-lg">Video coming soon</p>
+                    <p class="text-sm mt-1">Stay tuned for our launch video!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
