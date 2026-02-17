@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms of Service | Sentimo</title>
+    <meta name="description" content="Sentimo Terms of Service" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Terms of Service | Sentimo" />
+    <meta property="og:description" content="Terms of Service for Sentimo." />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F53F7B",
+                        "primary-hover": "#D92E66",
+                        "accent-pink": "#FFE8F0",
+                        "background-light": "#FFF9F5",
+                        "background-dark": "#18181B",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#27272A",
+                        "text-main-light": "#1F2937",
+                        "text-main-dark": "#F3F4F6",
+                        "text-muted-light": "#6B7280",
+                        "text-muted-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "sans-serif"],
+                        serif: ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        xl: "1.5rem",
+                        "2xl": "2rem",
+                    },
+                    boxShadow: {
+                        soft: "0 20px 40px -15px rgba(245, 63, 123, 0.15)",
+                        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased">
+
+    <!-- ===================== NAVIGATION ===================== -->
+    <nav id="navbar" class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-2" aria-label="Sentimo home">
+                <span class="material-icons-round text-primary text-3xl">print</span>
+                <span class="text-2xl font-bold tracking-tight">Sentimo</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-text-muted-light dark:text-text-muted-dark">
+                <a class="hover:text-primary transition-colors" href="/">Home</a>
+                <a class="hover:text-primary transition-colors" href="/privacy.html">Privacy</a>
+                <a class="hover:text-primary transition-colors" href="/terms.html" aria-current="page">Terms</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <a class="hidden sm:inline-flex bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-sm" href="/#kickstarter">
+                    Pre-order Now
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Open menu">
+                    <span class="material-icons-round">menu</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-background-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 px-6 py-4 space-y-4">
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="/">Home</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="/privacy.html">Privacy</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="/terms.html" aria-current="page">Terms</a>
+            <a class="block sm:hidden bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-medium text-center text-sm" href="/#kickstarter">Pre-order Now</a>
+        </div>
+    </nav>
+
+    <!-- ===================== CONTENT ===================== -->
+    <main class="pt-32 pb-20">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-10 shadow-card">
+                <header class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold">Terms of Service</h1>
+                    <p class="mt-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        Effective date: February 17, 2026
+                    </p>
+                </header>
+
+                <article class="prose prose-gray dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-a:text-primary hover:prose-a:text-primary-hover">
+                    <p>
+                        These Terms of Service ("<strong>Terms</strong>") govern your access to and use of Sentimo’s websites, mobile applications, and related services (collectively, the "<strong>Service</strong>").
+                        The Service is designed to help two partnered users create and send notes (text, drawings, photos) that may be printed via a compatible Bluetooth label printer.
+                    </p>
+
+                    <p>
+                        By accessing or using the Service, you agree to these Terms. If you do not agree, do not use the Service.
+                        If you use the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms.
+                    </p>
+
+                    <h2>1. Who We Are</h2>
+                    <p>
+                        The Service is operated by <strong>Sentimo Inc.</strong> ("<strong>Sentimo</strong>", "<strong>we</strong>", "<strong>us</strong>", or "<strong>our</strong>").
+                        Contact information is provided in the “Contact Us” section below.
+                    </p>
+
+                    <h2>2. Eligibility</h2>
+                    <p>
+                        You must be at least 13 years old to use the Service. If you are under the age of majority where you live,
+                        you may use the Service only with permission of a parent or legal guardian.
+                    </p>
+
+                    <h2>3. Accounts and Security</h2>
+                    <ul>
+                        <li>You may need an account to use some or all of the Service.</li>
+                        <li>You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account.</li>
+                        <li>You agree to provide accurate information and keep it up to date.</li>
+                        <li>If you believe your account has been compromised, contact us promptly.</li>
+                    </ul>
+
+                    <h2>4. Partner Pairing</h2>
+                    <p>
+                        Some features require pairing two users ("partners") using a pairing flow (for example, a code).
+                        You agree not to attempt to pair with someone without their permission. We may limit pairing attempts or disable pairing features
+                        to prevent abuse.
+                    </p>
+
+                    <h2>5. Your Content</h2>
+                    <p>
+                        The Service may allow you to create, upload, transmit, and store content such as text, images, drawings, and other materials ("<strong>User Content</strong>").
+                        You retain your rights in your User Content as between you and Sentimo.
+                    </p>
+
+                    <h3>5.1 License to operate the Service</h3>
+                    <p>
+                        You grant Sentimo a limited, non-exclusive, worldwide, royalty-free license to host, store, reproduce, process, and transmit your User Content
+                        solely as necessary to operate, maintain, and provide the Service (for example, to deliver notes to your paired partner and enable printing).
+                    </p>
+
+                    <h3>5.2 Content responsibility</h3>
+                    <p>
+                        You are responsible for your User Content and represent that you have all rights necessary to provide it to the Service.
+                        You also agree that your User Content will comply with these Terms and applicable law.
+                    </p>
+
+                    <h2>6. Acceptable Use</h2>
+                    <p>You agree not to:</p>
+                    <ul>
+                        <li>Use the Service for unlawful, harmful, harassing, threatening, or abusive purposes.</li>
+                        <li>Send content that infringes intellectual property rights or violates privacy or publicity rights.</li>
+                        <li>Attempt to gain unauthorized access to the Service, other accounts, or connected systems.</li>
+                        <li>Interfere with or disrupt the Service, including by introducing malware or excessive automated requests.</li>
+                        <li>Reverse engineer or attempt to extract source code from the Service except where prohibited by law (and then only to the minimum extent allowed).</li>
+                        <li>Use the Service to send spam or bulk unsolicited messages.</li>
+                    </ul>
+
+                    <h2>7. Bluetooth Printers and Hardware</h2>
+                    <p>
+                        The Service may interact with third-party Bluetooth label printers and related hardware.
+                        Printer performance depends on factors outside our control, including device compatibility, printer firmware, battery level,
+                        Bluetooth stability, paper type, and physical environment.
+                    </p>
+                    <ul>
+                        <li><strong>No guarantee of print delivery:</strong> We do not guarantee that a note will print successfully or at a particular time.</li>
+                        <li><strong>Safe operation:</strong> Follow the printer manufacturer’s instructions. Do not use damaged hardware.</li>
+                        <li><strong>Local connectivity:</strong> Bluetooth features require device permissions and may not work on all devices or OS versions.</li>
+                    </ul>
+
+                    <h2>8. Purchases, Pre-orders, and Kickstarter</h2>
+                    <p>
+                        If we offer purchases, pre-orders, or crowdfunding opportunities, those transactions may be processed by third parties (such as Kickstarter)
+                        and may be subject to their terms, policies, and refund rules. We are not responsible for third-party payment processing.
+                    </p>
+
+                    <h2>9. Third-Party Services</h2>
+                    <p>
+                        The Service may rely on third-party products and services (for example, cloud hosting, authentication providers, push notification services,
+                        app stores, and analytics). Your use of third-party services may be governed by their terms and privacy policies.
+                    </p>
+
+                    <h2>10. Intellectual Property</h2>
+                    <p>
+                        The Service (including its software, design, branding, and content other than User Content) is owned by Sentimo and its licensors and is protected by
+                        intellectual property laws. You may not copy, modify, distribute, sell, or lease any part of the Service unless we give you written permission.
+                    </p>
+
+                    <h2>11. Feedback</h2>
+                    <p>
+                        If you provide suggestions, ideas, or feedback, you grant Sentimo the right to use it without restriction or compensation.
+                    </p>
+
+                    <h2>12. Disclaimers</h2>
+                    <p>
+                        THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE." TO THE MAXIMUM EXTENT PERMITTED BY LAW, SENTIMO DISCLAIMS ALL WARRANTIES,
+                        EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+                    </p>
+                    <p>
+                        We do not warrant that the Service will be uninterrupted, secure, or error-free, or that notes will always be delivered or printed.
+                    </p>
+
+                    <h2>13. Limitation of Liability</h2>
+                    <p>
+                        TO THE MAXIMUM EXTENT PERMITTED BY LAW, SENTIMO AND ITS AFFILIATES, OFFICERS, EMPLOYEES, AGENTS, AND SUPPLIERS WILL NOT BE LIABLE FOR
+                        ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR GOODWILL,
+                        ARISING OUT OF OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE SERVICE.
+                    </p>
+                    <p>
+                        TO THE MAXIMUM EXTENT PERMITTED BY LAW, SENTIMO’S TOTAL LIABILITY FOR ALL CLAIMS RELATING TO THE SERVICE WILL NOT EXCEED
+                        THE AMOUNT YOU PAID TO SENTIMO FOR THE SERVICE IN THE 12 MONTHS BEFORE THE EVENT GIVING RISE TO THE CLAIM (OR $100 IF YOU PAID NOTHING).
+                    </p>
+
+                    <h2>14. Indemnification</h2>
+                    <p>
+                        You agree to defend, indemnify, and hold harmless Sentimo from and against any claims, liabilities, damages, losses, and expenses
+                        (including reasonable attorneys’ fees) arising out of or related to your use of the Service or your violation of these Terms.
+                    </p>
+
+                    <h2>15. Termination</h2>
+                    <p>
+                        You may stop using the Service at any time. We may suspend or terminate your access to the Service if we reasonably believe you violated these Terms,
+                        you create risk or legal exposure for us, or to protect the Service or other users.
+                    </p>
+
+                    <h2>16. Changes to the Service or Terms</h2>
+                    <p>
+                        We may update the Service and these Terms from time to time. If we make material changes, we will take reasonable steps to provide notice
+                        (for example, by posting an updated effective date). Continued use of the Service after changes become effective means you accept the updated Terms.
+                    </p>
+
+                    <h2>17. Governing Law</h2>
+                    <p>
+                        These Terms are governed by the laws of the State of Michigan, excluding its conflict-of-laws rules, except where applicable law requires otherwise.
+                    </p>
+
+                    <h2>18. Contact Us</h2>
+                    <p>
+                        Questions about these Terms? Contact us at <a href="mailto:support@sentimo.com">support@sentimo.com</a>.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="material-icons-round text-primary text-2xl">print</span>
+                        <span class="text-xl font-bold tracking-tight">Sentimo</span>
+                    </div>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm max-w-xs leading-relaxed mb-6">
+                        Bringing back the charm of physical notes in a digital world. Designed with love in Ann Arbor Michigan.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Facebook">
+                            <i class="material-icons-round">facebook</i>
+                        </a>
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Twitter">
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"></path></svg>
+                        </a>
+                        <a class="text-gray-400 hover:text-primary transition-colors" href="#" aria-label="Instagram">
+                            <span class="material-icons-round">photo_camera</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="/#how-it-works">How it Works</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/#features">Features</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Refills</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Download App</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Support</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Press Kit</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/privacy.html">Privacy Policy</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/terms.html" aria-current="page">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-xs text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
+                    &copy; 2026 Sentimo Inc. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <img alt="PayPal" class="h-4 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE8RhaaYZatFIi6wHxl-Kb7Z4ogUyuF9i4z-6DbLPTf4SZ41Ps2OrYX2J6mtASFxJxo9-8zGwZGyOs0s5EOI7kbzJG1bRy05ajReKzCkkpn68ZOdDky0G5QunDieDTtGIEcZoRirlTZ7b-rpm1YJi0eTzQNTij45kNAugOdeeO0_CcCvhjmaSgoR-h3XoehoWAUkFlcdknaFDKcPTYh3UCaphogpfLL9qN710NDaISftrW1KcQEgWwVpkxMVxd8y5s1oXpGHzzIvmy" />
+                    <img alt="Visa" class="h-3 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW8My3BowgHtvD8aQD47yRw2vfbpstGXN2P-xbrs0-7BGRRvGvwx79AyNBq3Sqq7Q_VuYoKIAUmWOMBiFSs5invuWRv3NyHpvYr6mPLxtmeNHepgOJ_JG0X2j85ytOwyY30BP256F9zjdKltQtpmitH0NDj8yCwH0o082MRGb0LiX8_XhBdj7KFytpE6Ic1mlS3ETUDudx1Yy4mEEeqtR1iCZnkwb4qhP-7tUMtGnCQHzkIu1xum3KH5xbZaYFMOyjI0nOEW1VMlLC" />
+                    <img alt="Mastercard" class="h-6 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Oxrx_AT6xQ1VNBin-4onHINmz7i1afLfEWvj16xjl2tPVjPyJtFAUmEMqjgQFPalZhSzlDQKYsIHZRh7g0HoKRdRx-hNfXfGvW6QUyzvh72kJz8lciHuJPT-VV6eDJn3_O1knCzhujyxdkRlddw8qO7gdDAg2xRBHl34c-3mVWDKi3tn3dFk5JqAjCUndG2IRG8hcJQ6buRKYt4k-BmE552ez9p2d3pXaIhbr83o4zkrcrf71WmNRtdWlFoeUmZZ5IzzXx0wiexr" />
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
