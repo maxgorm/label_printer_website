@@ -52,3 +52,6 @@ Vercel will automatically detect the static site configuration from `vercel.json
 - **Google Fonts** (DM Sans, Playfair Display)
 - **Material Icons**
 - **Vercel** for hosting
+
+
+Email list in resend.com
