@@ -6,5 +6,14 @@
   "scripts": {
     "dev": "npx serve public",
     "build": "echo 'Static site, no build needed'"
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
+    "@vercel/edge": "^1.2.2",
+    "resend": "^6.9.4"
   }
 }

@@ -308,3 +308,115 @@
         init();
     }
 })();
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('mailing-list-form');
+    const emailInput = document.getElementById('email-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    const messageDiv = document.getElementById('form-message');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+
+            if (!email || !email.includes('@')) return;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Subscribing...';
+            submitBtn.classList.add('opacity-70');
+            
+            try {
+                const response = await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = 'Thanks for subscribing! We will keep you updated.';
+                    messageDiv.className = 'text-sm mt-2 text-center w-full text-green-500';
+                    messageDiv.classList.remove('hidden');
+                    emailInput.value = '';
+                } else {
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                    messageDiv.className = 'text-sm mt-2 text-center w-full text-red-500';
+                    messageDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Error connecting to the server. Please try again.';
+                messageDiv.className = 'text-sm mt-2 text-center w-full text-red-500';
+                messageDiv.classList.remove('hidden');
+            } finally {
+                // Reset state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Get Notified';
+                submitBtn.classList.remove('opacity-70');
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+        });
+    }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('mailing-list-form');
+    const emailInput = document.getElementById('email-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    const messageDiv = document.getElementById('form-message');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+
+            if (!email || !email.includes('@')) return;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Subscribing...';
+            submitBtn.classList.add('opacity-70');
+            
+            try {
+                const response = await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = 'Thanks for subscribing! We will keep you updated.';
+                    messageDiv.className = 'text-sm mt-2 text-center w-full text-green-500';
+                    messageDiv.classList.remove('hidden');
+                    emailInput.value = '';
+                } else {
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                    messageDiv.className = 'text-sm mt-2 text-center w-full text-red-500';
+                    messageDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Error connecting to the server. Please try again.';
+                messageDiv.className = 'text-sm mt-2 text-center w-full text-red-500';
+                messageDiv.classList.remove('hidden');
+            } finally {
+                // Reset state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Get Notified';
+                submitBtn.classList.remove('opacity-70');
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+        });
+    }
+});

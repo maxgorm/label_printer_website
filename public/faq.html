@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - Sentimo</title>
+    <meta name="description" content="Frequently Asked Questions about Sentimo." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F53F7B",
+                        "primary-hover": "#D92E66",
+                        "accent-pink": "#FFE8F0",
+                        "background-light": "#FFF9F5",
+                        "background-dark": "#18181B",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#27272A",
+                        "text-main-light": "#1F2937",
+                        "text-main-dark": "#F3F4F6",
+                        "text-muted-light": "#6B7280",
+                        "text-muted-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "sans-serif"],
+                        serif: ["Playfair Display", "serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- ===================== NAVIGATION ===================== -->
+    <nav class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="/" class="flex items-center">
+                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" class="h-8 md:h-10 w-auto" />
+            </a>
+            <div class="flex items-center space-x-4">
+                <a class="nav-link hover:text-primary transition-colors text-sm font-medium text-text-muted-light dark:text-text-muted-dark" href="/">Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== FAQ CONTENT ===================== -->
+    <main class="flex-grow pt-32 pb-24">
+        <div class="max-w-3xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold mb-12 text-center">Frequently Asked Questions</h1>
+            
+            <div class="space-y-4">
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                        <span>How long does the paper last?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content hidden">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            One roll of thermal paper can print about 50-70 average-sized notes. The print itself lasts for years without fading if kept away from direct heat sources.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                        <span>Does it work with both iOS and Android?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content hidden">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            Yes! The Sentimo app is available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                        <span>Is there a monthly subscription?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content hidden">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            The core features of sending and receiving notes are completely free forever. We offer a premium "Sentimo Plus" for advanced drawing tools and huge cloud storage for history, but it's optional.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                        <span>Can I print photos?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content hidden">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            Absolutely. The app converts any photo from your gallery into a high-contrast black and white dithered image optimized for thermal printing.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                        <span>Do I need ink?</span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content hidden">
+                        <div class="text-text-muted-light dark:text-text-muted-dark px-6 pb-6 pt-0 leading-relaxed">
+                            Never! Sentimo uses thermal printing technology, meaning no ink, ever. You just need to refill the paper rolls when they run out.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pt-8 pb-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
+                    Sentimo&trade; is a trademark of Sentimo L.L.C.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="#" aria-label="TikTok">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.01.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.39-3.37-3.39-5.69.05-1.92 1.14-3.81 2.87-4.66 1.42-.71 3.09-.84 4.62-.48V16.3c-1.96-.33-4.06.66-4.57 2.65-.21.84-.04 1.74.52 2.45.64.84 1.77 1.19 2.8 1.11 1.73-.13 3.09-1.69 3.14-3.44.11-4.8.04-9.61.03-14.41-.01-1.57-.02-3.15-.02-4.65z"/></svg>
+                    </a>
+                    <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="#" aria-label="Instagram">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.76-6.98 6.979-.058 1.28-.072 1.688-.072 4.948s.014 3.668.072 4.948c.2 5.236 2.64 6.78 6.98 6.979 1.28.058 1.689.072 4.947.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.762 6.979-6.979.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-5.235-2.628-6.78-6.979-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
