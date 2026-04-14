@@ -267,7 +267,7 @@ Add a note:
 **Starting at $39 for 2 printers**
 
 ### Supporting copy
-Secure your Sentimo early and be part of our first production run.
+Secure your Sentimo 2-pack early and be part of our first production run.
 
 ### Pre-order note
 This is a pre-order. Shipping is expected to begin in August 2026. If we are unable to fulfill your order, you will receive a full refund.

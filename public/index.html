@@ -352,13 +352,16 @@
                     </p>
 
                     <!-- Quantity Selector -->
-                    <div class="flex items-center gap-4 mb-6 justify-center lg:justify-start">
-                        <label for="quantity-display" class="font-medium text-sm">Quantity:</label>
-                        <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
-                            <button id="qty-minus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
-                            <span id="quantity-display" class="px-4 py-2 text-lg font-bold min-w-[3rem] text-center">1</span>
-                            <button id="qty-plus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
+                    <div class="flex flex-col items-center lg:items-start gap-2 mb-6">
+                        <div class="flex items-center gap-4">
+                            <label for="quantity-display" class="font-medium text-sm">Quantity:</label>
+                            <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
+                                <button id="qty-minus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
+                                <span id="quantity-display" class="px-4 py-2 text-lg font-bold min-w-[3rem] text-center">1</span>
+                                <button id="qty-plus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
+                            </div>
                         </div>
+                        <p class="text-xs text-text-muted-light dark:text-text-muted-dark">Each set includes 2 printers (one for you, one for them)</p>
                     </div>
 
                     <!-- Pre-order disclosure -->
