@@ -19,6 +19,15 @@ html {
     opacity: 1;
 }
 
+/* Hide scrollbar on thumbnail row */
+.overflow-x-auto {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.overflow-x-auto::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     overflow-x: hidden;
 }
