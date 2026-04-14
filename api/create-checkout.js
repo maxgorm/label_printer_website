@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const { quantity } = req.body;
   const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
     const sessionParams = {
@@ -58,8 +58,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ url: session.url });
   } catch (error) {
-    console.error('Stripe checkout session error:', error);
-    return res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('Stripe checkout session error:', error.message || error);
+    return res.status(500).json({ error: 'Failed to create checkout session', detail: error.message });
   }
 }
 
