@@ -3,23 +3,25 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sentimo - Print love notes, instantly.</title>
-    <meta name="description" content="Connect with your partner through doodles and texts sent directly to their printer. No ink required, just pure connection." />
-    <meta name="keywords" content="Sentimo, love notes, thermal printer, couples, long distance, connection" />
+    <title>Sentimo - Send a message. They feel it.</title>
+    <meta name="description" content="Sentimo turns everyday messages into something physical. Send a note from the app, and it prints on your partner's Sentimo printer in seconds. Pre-order now." />
+    <meta name="keywords" content="Sentimo, love notes, thermal printer, couples, long distance, connection, pre-order" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Sentimo - Print love notes, instantly." />
-    <meta property="og:description" content="Send a message. They feel it. Connect through doodles and texts printed instantly." />
+    <meta property="og:title" content="Sentimo - Send a message. They feel it." />
+    <meta property="og:description" content="Connect with someone you love through little notes, doodles, and memories that print in their space. Pre-order now — shipping August 2026." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sentimonotes.com" />
     <meta property="og:image" content="/assets/IMG_4321.JPG" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Sentimo - Print love notes, instantly." />
-    <meta name="twitter:description" content="Send a message. They feel it." />
+    <meta name="twitter:title" content="Sentimo - Send a message. They feel it." />
+    <meta name="twitter:description" content="Connect with someone you love through little notes, doodles, and memories that print in their space." />
+    <meta name="twitter:image" content="/assets/IMG_4321.JPG" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -70,28 +72,62 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased">
 
+    <!-- ===================== ANNOUNCEMENT BANNER ===================== -->
+    <div id="announcement-banner" class="fixed w-full top-0 bg-primary text-white text-center py-2.5 px-4 text-sm font-medium z-[60]">
+        Now accepting pre-orders &mdash; Expected to ship beginning August 2026
+        <button onclick="this.parentElement.remove(); document.getElementById('navbar').style.top='0';" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white" aria-label="Close banner">
+            <span class="material-icons-round text-lg">close</span>
+        </button>
+    </div>
+
     <!-- ===================== NAVIGATION ===================== -->
-    <nav id="navbar" class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+    <nav id="navbar" class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300" style="top:0">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <!-- Logo -->
-            <a href="#" class="flex items-center">
+            <a href="/" class="flex items-center">
                 <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" class="h-8 md:h-10 w-auto" />
             </a>
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-text-muted-light dark:text-text-muted-dark">
-                
+                <a class="nav-link hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#benefits">Why Sentimo</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#whats-included">What's Included</a>
+                <a class="nav-link hover:text-primary transition-colors" href="#faq">FAQ</a>
             </div>
 
             <!-- Actions -->
             <div class="flex items-center space-x-4">
-                
+                <a class="hidden sm:inline-flex bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-sm" href="#reserve">
+                    Pre-Order Now
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Open menu">
+                    <span class="material-icons-round">menu</span>
+                </button>
             </div>
         </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-background-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 px-6 py-4 space-y-4">
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#how-it-works">How It Works</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#benefits">Why Sentimo</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#whats-included">What's Included</a>
+            <a class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#faq">FAQ</a>
+            <a class="block sm:hidden bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-medium text-center text-sm" href="#reserve">Pre-Order Now</a>
+        </div>
     </nav>
+    <script>
+    (function() {
+        var banner = document.getElementById('announcement-banner');
+        var navbar = document.getElementById('navbar');
+        if (banner && navbar) navbar.style.top = banner.offsetHeight + 'px';
+    })();
+    </script>
 
     <!-- ===================== HERO SECTION ===================== -->
-    <section class="relative pt-24 lg:pt-24 pb-6 lg:pb-6 overflow-hidden min-h-[calc(100vh-9rem)] flex items-center">
+    <section id="hero" class="relative pt-44 lg:pt-44 pb-12 lg:pb-16 overflow-hidden min-h-[calc(100vh-9rem)] flex items-center">
         <div class="max-w-7xl mx-auto px-6 w-full">
             <div class="grid lg:grid-cols-2 gap-10 items-center">
                 <!-- Hero Copy -->
@@ -102,22 +138,28 @@
                     </h1>
 
                     <p class="text-xl text-text-muted-light dark:text-text-muted-dark leading-relaxed max-w-lg">
-                        Connect with your partner through doodles and texts sent directly to their printer. No ink required, just pure connection.
+                        Connect with someone you love through little notes, doodles, and memories that print in their space.
                     </p>
 
-                    <div class="flex flex-col gap-3 w-full max-w-lg" id="join-mailing-list">
-                        <form id="mailing-list-form" class="flex flex-col sm:flex-row flex-1 relative gap-2 sm:gap-0">
-                            <input type="email" id="email-input" placeholder="Enter your email" required class="w-full sm:flex-1 px-8 py-4 rounded-full sm:rounded-r-none border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:ring-2 focus:ring-primary outline-none text-lg" />
-                            <button type="submit" id="submit-btn" class="flex items-center justify-center space-x-2 bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-full sm:rounded-l-none font-medium transition-colors z-10 text-lg">
-                                <span id="submit-text">Get Notified</span>
-                            </button>
-                        </form>
-                        <div id="form-message" class="hidden text-sm text-center w-full"></div>
+                    <p class="text-lg text-text-muted-light dark:text-text-muted-dark leading-relaxed max-w-lg">
+                        Sentimo turns everyday messages into something physical. Send a note from the app, and it prints on your partner's Sentimo printer in seconds.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#reserve" class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-lg" data-track="click_preorder_cta">
+                            Pre-Order Now
+                        </a>
+                        <a href="#how-it-works" class="inline-flex items-center justify-center border-2 border-gray-200 dark:border-gray-700 hover:border-primary text-text-main-light dark:text-text-main-dark px-8 py-4 rounded-full font-medium transition-all text-lg">
+                            See How It Works
+                        </a>
                     </div>
 
-                    <div class="pt-4">
-                        <p class="text-sm md:text-base text-text-muted-light dark:text-text-muted-dark">
-                            Starting at just <strong>$39</strong> for 2 printers.
+                    <div class="pt-2 space-y-1">
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">
+                            <strong>Pre-order now.</strong> Expected to begin shipping in August 2026.
+                        </p>
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark">
+                            If we are unable to fulfill your order, you will receive a full refund.
                         </p>
                     </div>
                 </div>
@@ -125,10 +167,9 @@
                 <!-- Hero Visual -->
                 <div class="relative lg:h-[600px] flex items-center justify-center fade-in-up" style="animation-delay: 0.2s;">
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-pink dark:bg-primary/10 rounded-full blur-3xl opacity-60"></div>
-
                     <div id="hero-card" class="relative z-10 w-full max-w-lg mx-auto hover:scale-105 transition-transform duration-500">
                         <div class="bg-surface-light dark:bg-surface-dark rounded-[2rem] shadow-2xl p-1.5 sm:p-2.5 border border-primary/10 dark:border-gray-800 relative hover:shadow-soft transition-shadow duration-500">
-                            <!-- Sentimo Image -->
+                            <!-- Replace with hero product image -->
                             <img alt="Sentimo Printer" class="rounded-2xl w-full h-auto object-cover" src="/assets/IMG_4321.JPG" />
                         </div>
                     </div>
@@ -137,22 +178,448 @@
         </div>
     </section>
 
-    <!-- ===================== FOOTER ===================== -->
-    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 py-4 transition-colors duration-300">
+    <!-- ===================== PRE-ORDER TRUST BLOCK ===================== -->
+    <section class="py-12 scroll-reveal">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="bg-accent-pink/50 dark:bg-primary/5 border border-primary/15 rounded-2xl p-8 text-center">
+                <h2 class="text-xl font-bold mb-4">Pre-order information</h2>
+                <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                    This product is currently available for pre-order. By placing an order, you understand that Sentimo is in pre-production and is expected to begin shipping in August 2026.
+                </p>
+                <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed mt-3">
+                    If manufacturing or logistics timelines change, we will keep you updated by email. If we are unable to fulfill your order, you will receive a full refund to your original payment method.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section id="how-it-works" class="py-20 scroll-reveal">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">How Sentimo works</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card text-center scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="w-16 h-16 bg-accent-pink dark:bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="material-icons-round text-primary text-3xl">link</span>
+                    </div>
+                    <span class="text-sm font-medium text-primary mb-2 block">Step 1</span>
+                    <h3 class="text-xl font-bold mb-3">Pair your printers</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                        Each Sentimo set comes with two printers made to stay connected through the Sentimo app.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card text-center scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="w-16 h-16 bg-accent-pink dark:bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="material-icons-round text-primary text-3xl">edit_note</span>
+                    </div>
+                    <span class="text-sm font-medium text-primary mb-2 block">Step 2</span>
+                    <h3 class="text-xl font-bold mb-3">Send something meaningful</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                        Write a note, draw a doodle, or send a memory from your phone.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card text-center scroll-reveal" style="animation-delay: 0.3s;">
+                    <div class="w-16 h-16 bg-accent-pink dark:bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="material-icons-round text-primary text-3xl">print</span>
+                    </div>
+                    <span class="text-sm font-medium text-primary mb-2 block">Step 3</span>
+                    <h3 class="text-xl font-bold mb-3">It prints for them</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                        Your message appears in their space as a real printed note they can keep.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== BENEFITS ===================== -->
+    <section id="benefits" class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">Why it feels different</h2>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="w-12 h-12 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center mb-5">
+                        <span class="material-icons-round text-primary text-xl">favorite</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">More than a text</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        A message they can actually hold onto.
+                    </p>
+                </div>
+
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card scroll-reveal" style="animation-delay: 0.15s;">
+                    <div class="w-12 h-12 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center mb-5">
+                        <span class="material-icons-round text-primary text-xl">people</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Built for connection</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        Designed for couples, long-distance relationships, and everyday closeness.
+                    </p>
+                </div>
+
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="w-12 h-12 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center mb-5">
+                        <span class="material-icons-round text-primary text-xl">bolt</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Simple and instant</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        Send from the app. Print in their space.
+                    </p>
+                </div>
+
+                <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-card scroll-reveal" style="animation-delay: 0.25s;">
+                    <div class="w-12 h-12 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center mb-5">
+                        <span class="material-icons-round text-primary text-xl">auto_stories</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Made to keep</h3>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+                        Little notes that end up on mirrors, desks, nightstands, and inside books.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ===================== RESERVE / PRE-ORDER BLOCK ===================== -->
+    <section id="reserve" class="py-20 scroll-reveal">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                <!-- Image Carousel (Left) -->
+                <div class="relative">
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
+                        <div class="aspect-square relative overflow-hidden">
+                            <video id="carousel-video" src="/assets/SentimoProductVid.mp4" controls playsinline preload="metadata" class="w-full h-full object-cover"></video>
+                            <img id="carousel-img" src="/assets/IMG_4321.JPG" alt="Sentimo Printer" class="w-full h-full object-cover transition-opacity duration-300" style="display:none;" />
+                        </div>
+                    </div>
+                    <!-- Thumbnails -->
+                    <div class="flex gap-3 mt-4">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-20 h-20 flex-shrink-0 transition-colors relative" data-index="0">
+                            <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+                                <span class="material-icons-round text-white text-3xl">play_circle</span>
+                            </div>
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-20 h-20 flex-shrink-0 transition-colors" data-index="1">
+                            <img src="/assets/IMG_4321.JPG" alt="Sentimo view 1" class="w-full h-full object-cover" />
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-20 h-20 flex-shrink-0 transition-colors" data-index="2">
+                            <img src="/assets/IMG_4360.JPG" alt="Sentimo view 2" class="w-full h-full object-cover" />
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-20 h-20 flex-shrink-0 transition-colors" data-index="3">
+                            <img src="/assets/Sentimo Couple.png" alt="Sentimo Couple" class="w-full h-full object-cover" />
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-20 h-20 flex-shrink-0 transition-colors" data-index="4">
+                            <img src="/assets/IMG_4364.JPG" alt="Sentimo view 4" class="w-full h-full object-cover" />
+                        </button>
+                    </div>
+                    <!-- Prev/Next buttons -->
+                    <button id="carousel-prev" class="absolute top-[45%] left-3 -translate-y-1/2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black transition-colors z-10" aria-label="Previous image">
+                        <span class="material-icons-round text-text-main-light dark:text-text-main-dark">chevron_left</span>
+                    </button>
+                    <button id="carousel-next" class="absolute top-[45%] right-3 -translate-y-1/2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black transition-colors z-10" aria-label="Next image">
+                        <span class="material-icons-round text-text-main-light dark:text-text-main-dark">chevron_right</span>
+                    </button>
+                </div>
+
+                <!-- Order Form (Right) -->
+                <div class="lg:sticky lg:top-40">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Reserve your Sentimo</h2>
+
+                    <div class="mb-2">
+                        <span class="text-xl text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
+                    </div>
+                    <div class="mb-6">
+                        <span class="text-4xl md:text-5xl font-bold text-primary">$39</span>
+                        <span class="text-lg text-text-muted-light dark:text-text-muted-dark ml-2">for 2 printers</span>
+                        <span class="ml-3 inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">PRE-ORDER PRICE</span>
+                    </div>
+
+                    <p class="text-text-muted-light dark:text-text-muted-dark mb-8">
+                        Secure your Sentimo early and be part of our first production run.
+                    </p>
+
+                    <!-- Quantity Selector -->
+                    <div class="flex items-center gap-4 mb-6">
+                        <label for="quantity-display" class="font-medium text-sm">Quantity:</label>
+                        <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
+                            <button id="qty-minus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
+                            <span id="quantity-display" class="px-4 py-2 text-lg font-bold min-w-[3rem] text-center">1</span>
+                            <button id="qty-plus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
+                        </div>
+                    </div>
+
+                    <!-- Pre-order disclosure -->
+                    <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-5 mb-6">
+                        <p class="text-sm text-text-muted-light dark:text-text-muted-dark leading-relaxed">
+                            This is a pre-order. Shipping is expected to begin in August 2026. If we are unable to fulfill your order, you will receive a full refund.
+                        </p>
+                    </div>
+
+                    <!-- Agreement Checkbox -->
+                    <div class="flex items-start gap-3 mb-8">
+                        <input type="checkbox" id="preorder-agree" class="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary" />
+                        <label for="preorder-agree" class="text-sm text-text-muted-light dark:text-text-muted-dark leading-relaxed cursor-pointer">
+                            I understand that this is a pre-order, that shipping is expected to begin in August 2026, and that I will be refunded if Sentimo is unable to fulfill my order.
+                        </label>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <button id="preorder-btn" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-10 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-lg w-full" data-track="click_preorder_cta">
+                        <span id="preorder-btn-text">Pre-Order Now</span>
+                        <span id="preorder-btn-spinner" class="hidden ml-2">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        </span>
+                    </button>
+                    <p id="preorder-error" class="hidden text-red-500 text-sm mt-3"></p>
+
+                    <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-4">
+                        By proceeding, you agree to our <a href="/terms.html" class="text-primary hover:underline">Terms</a> and <a href="/preorder-policy.html" class="text-primary hover:underline">Pre-Order Policy</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== WHAT'S INCLUDED ===================== -->
+    <section id="whats-included" class="py-20 scroll-reveal">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">What&rsquo;s included</h2>
+            </div>
+
+            <div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-8 md:p-12 border border-gray-100 dark:border-gray-800 shadow-card">
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-icons-round text-primary">print</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-1">2 Sentimo printers</h3>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">One for you, one for them.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-icons-round text-primary">receipt_long</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-1">Starter paper</h3>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Enough to start sending right away.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-icons-round text-primary">cable</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-1">Charging cables</h3>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Keep both printers powered up.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-accent-pink dark:bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-icons-round text-primary">menu_book</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold mb-1">Quick setup materials</h3>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Get connected in minutes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-8 text-center text-sm text-text-muted-light dark:text-text-muted-dark bg-accent-pink/30 dark:bg-primary/5 rounded-xl py-3 px-4">
+                    <strong>Sold as a 2-pack</strong> so you can start using it together right away.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ===================== NOT READY? EMAIL CAPTURE ===================== -->
+    <section class="py-12 scroll-reveal">
+        <div class="max-w-xl mx-auto px-6 text-center">
+            <h3 class="text-xl font-bold mb-3">Not ready to order yet?</h3>
+            <p class="text-sm text-text-muted-light dark:text-text-muted-dark mb-6">Get updates on Sentimo's progress and launch.</p>
+            <form id="mailing-list-form" class="flex flex-col sm:flex-row flex-1 relative gap-2 sm:gap-0">
+                <input type="email" id="email-input" placeholder="Enter your email" required class="w-full sm:flex-1 px-8 py-4 rounded-full sm:rounded-r-none border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:ring-2 focus:ring-primary outline-none text-lg" />
+                <button type="submit" id="submit-btn" class="flex items-center justify-center space-x-2 bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-full sm:rounded-l-none font-medium transition-colors z-10 text-lg">
+                    <span id="submit-text">Get Notified</span>
+                </button>
+            </form>
+            <div id="form-message" class="hidden text-sm text-center w-full mt-2"></div>
+        </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section id="faq" class="py-20 scroll-reveal">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Pre-Order & Shipping -->
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span class="flex items-center gap-3">
+                            <span class="material-icons-round text-primary">local_shipping</span>
+                            Pre-Order &amp; Shipping
+                        </span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-6 pt-0 space-y-5">
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Is this a pre-order?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes. Sentimo is currently available for pre-order. Shipping is expected to begin in August 2026.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">When will orders ship?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">We currently expect shipping to begin in August 2026. We will keep you updated via email if timelines change.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">What happens if timelines change?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">If manufacturing or logistics timelines change, we will email customers with updates. If we cannot fulfill your order, you will receive a full refund.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product & Setup -->
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span class="flex items-center gap-3">
+                            <span class="material-icons-round text-primary">devices</span>
+                            Product &amp; Setup
+                        </span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-6 pt-0 space-y-5">
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">What comes in the box?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Each Sentimo set includes two printers, starter paper, charging cables, and quick setup materials so you can begin using them together right away.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes! The Sentimo app will be available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Do I need ink?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Never! Sentimo uses thermal printing technology, meaning no ink, ever. You just need to refill the paper rolls when they run out.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">How long does the paper last?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">One roll of thermal paper can print about 50-70 average-sized notes. The print itself lasts for years without fading if kept away from direct heat sources.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Can I print photos?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Absolutely. The app converts any photo from your gallery into a high-contrast black and white dithered image optimized for thermal printing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment & Cancellation -->
+                <div class="faq-item bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <button class="faq-trigger flex justify-between items-center w-full font-medium cursor-pointer p-6 text-lg text-left">
+                        <span class="flex items-center gap-3">
+                            <span class="material-icons-round text-primary">payment</span>
+                            Payment &amp; Cancellation
+                        </span>
+                        <span class="faq-icon transition-transform duration-300">
+                            <span class="material-icons-round text-primary">expand_more</span>
+                        </span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-6 pt-0 space-y-5">
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Do I pay now or later?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Customers complete payment at checkout to reserve a unit from the first production run.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Can I cancel before it ships?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes. Pre-orders are fully refundable any time before shipment.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm mb-1">Is there a monthly subscription?</h4>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">The core features of sending and receiving notes are completely free forever. We may offer optional premium features in the future, but the essentials will always be free.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" class="h-8 w-auto" />
+                    </div>
+                    <p class="text-text-muted-light dark:text-text-muted-dark text-sm max-w-xs leading-relaxed mb-6">
+                        Bringing back the charm of physical notes in a digital world. Designed with ❤️ in Ann Arbor, Michigan.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="https://www.tiktok.com/@sentimonotes" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.01.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.39-3.37-3.39-5.69.05-1.92 1.14-3.81 2.87-4.66 1.42-.71 3.09-.84 4.62-.48V16.3c-1.96-.33-4.06.66-4.57 2.65-.21.84-.04 1.74.52 2.45.64.84 1.77 1.19 2.8 1.11 1.73-.13 3.09-1.69 3.14-3.44.11-4.8.04-9.61.03-14.41-.01-1.57-.02-3.15-.02-4.65z"/></svg>
+                        </a>
+                        <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="https://www.instagram.com/sentimonotes" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.76-6.98 6.979-.058 1.28-.072 1.688-.072 4.948s.014 3.668.072 4.948c.2 5.236 2.64 6.78 6.98 6.979 1.28.058 1.689.072 4.947.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.762 6.979-6.979.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-5.235-2.628-6.78-6.979-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="#how-it-works">How It Works</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#whats-included">What's Included</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#reserve">Pre-Order</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <li><a class="hover:text-primary transition-colors" href="/terms.html">Terms</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/preorder-policy.html">Pre-Order Policy</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/privacy.html">Privacy Policy</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="mailto:support@sentimonotes.com">support@sentimonotes.com</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-xs text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
                     Sentimo&trade; is a trademark of Sentimo L.L.C.
                 </p>
-                <div class="flex items-center space-x-6">
-                    <a class="text-gray-400 hover:text-primary transition-colors text-sm font-medium" href="/faq.html">FAQ</a>
-                    <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="https://www.tiktok.com/@sentimonotes" target="_blank" aria-label="TikTok">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.01.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.39-3.37-3.39-5.69.05-1.92 1.14-3.81 2.87-4.66 1.42-.71 3.09-.84 4.62-.48V16.3c-1.96-.33-4.06.66-4.57 2.65-.21.84-.04 1.74.52 2.45.64.84 1.77 1.19 2.8 1.11 1.73-.13 3.09-1.69 3.14-3.44.11-4.8.04-9.61.03-14.41-.01-1.57-.02-3.15-.02-4.65z"/></svg>
-                    </a>
-                    <a class="text-gray-400 hover:text-primary transition-colors flex items-center justify-center w-8 h-8" href="https://www.instagram.com/sentimonotes" target="_blank" aria-label="Instagram">
-                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 1.76-6.98 6.979-.058 1.28-.072 1.688-.072 4.948s.014 3.668.072 4.948c.2 5.236 2.64 6.78 6.98 6.979 1.28.058 1.689.072 4.947.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-1.762 6.979-6.979.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-5.235-2.628-6.78-6.979-6.98-1.28-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                    </a>
-                </div>
             </div>
         </div>
     </footer>
@@ -173,10 +640,77 @@
         </div>
     </div>
 
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+
     <!-- Scripts -->
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/preorder.js"></script>
+
+    <!-- Carousel Script -->
+    <script>
+    (function() {
+        'use strict';
+        const slides = [
+            { type: 'video', src: '/assets/SentimoProductVid.mp4' },
+            { type: 'image', src: '/assets/IMG_4321.JPG' },
+            { type: 'image', src: '/assets/IMG_4360.JPG' },
+            { type: 'image', src: '/assets/Sentimo Couple.png' },
+            { type: 'image', src: '/assets/IMG_4364.JPG' }
+        ];
+        let currentIndex = 0;
+        const mainImg = document.getElementById('carousel-img');
+        const mainVideo = document.getElementById('carousel-video');
+        const thumbs = document.querySelectorAll('.carousel-thumb');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+
+        function showSlide(index) {
+            currentIndex = (index + slides.length) % slides.length;
+            var slide = slides[currentIndex];
+
+            if (slide.type === 'video') {
+                if (mainImg) mainImg.style.display = 'none';
+                if (mainVideo) {
+                    mainVideo.style.display = 'block';
+                    mainVideo.src = slide.src;
+                }
+            } else {
+                if (mainVideo) {
+                    mainVideo.pause();
+                    mainVideo.style.display = 'none';
+                }
+                if (mainImg) {
+                    mainImg.style.display = 'block';
+                    mainImg.style.opacity = '0';
+                    setTimeout(function() {
+                        mainImg.src = slide.src;
+                        mainImg.style.opacity = '1';
+                    }, 150);
+                }
+            }
+
+            thumbs.forEach(function(thumb, i) {
+                if (i === currentIndex) {
+                    thumb.classList.add('border-primary');
+                    thumb.classList.remove('border-transparent');
+                } else {
+                    thumb.classList.remove('border-primary');
+                    thumb.classList.add('border-transparent');
+                }
+            });
+        }
+
+        thumbs.forEach(function(thumb) {
+            thumb.addEventListener('click', function() {
+                var idx = parseInt(thumb.getAttribute('data-index'), 10);
+                showSlide(idx);
+            });
+        });
+
+        if (prevBtn) prevBtn.addEventListener('click', function() { showSlide(currentIndex - 1); });
+        if (nextBtn) nextBtn.addEventListener('click', function() { showSlide(currentIndex + 1); });
+    })();
+    </script>
 </body>
 </html>
-
-
-

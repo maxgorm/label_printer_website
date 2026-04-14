@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed | Sentimo</title>
+    <meta name="description" content="Your Sentimo pre-order has been confirmed." />
+    <meta name="robots" content="noindex" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F53F7B",
+                        "primary-hover": "#D92E66",
+                        "accent-pink": "#FFE8F0",
+                        "background-light": "#FFF9F5",
+                        "background-dark": "#18181B",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#27272A",
+                        "text-main-light": "#1F2937",
+                        "text-main-dark": "#F3F4F6",
+                        "text-muted-light": "#6B7280",
+                        "text-muted-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "sans-serif"],
+                        serif: ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        xl: "1.5rem",
+                        "2xl": "2rem",
+                    },
+                    boxShadow: {
+                        soft: "0 20px 40px -15px rgba(245, 63, 123, 0.15)",
+                        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- ===================== NAVIGATION ===================== -->
+    <nav class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="/" class="flex items-center">
+                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" class="h-8 md:h-10 w-auto" />
+            </a>
+        </div>
+    </nav>
+
+    <!-- ===================== CONFIRMATION CONTENT ===================== -->
+    <main class="flex-grow flex items-center justify-center pt-32 pb-24 px-6">
+        <div class="max-w-lg mx-auto text-center">
+            <!-- Success Icon -->
+            <div class="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-8">
+                <span class="material-icons-round text-green-600 dark:text-green-400 text-4xl">check_circle</span>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Thank you for your pre-order!</h1>
+
+            <p class="text-lg text-text-muted-light dark:text-text-muted-dark mb-6">
+                Your Sentimo pre-order has been confirmed. You will receive a confirmation email shortly.
+            </p>
+
+            <!-- Pre-order reminder -->
+            <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-6 mb-8 text-left">
+                <h2 class="font-bold text-lg mb-3">What happens next</h2>
+                <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
+                    <li class="flex items-start gap-3">
+                        <span class="material-icons-round text-primary text-lg mt-0.5">schedule</span>
+                        <span><strong>This is a pre-order.</strong> Sentimo is expected to begin shipping in <strong>August 2026</strong>.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-icons-round text-primary text-lg mt-0.5">email</span>
+                        <span>We will send you updates by email as production progresses.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-icons-round text-primary text-lg mt-0.5">shield</span>
+                        <span>If we are unable to fulfill your order, you will receive a full refund.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="text-sm text-text-muted-light dark:text-text-muted-dark mb-8">
+                Questions? Contact us at <a href="mailto:support@sentimonotes.com" class="text-primary hover:underline">support@sentimonotes.com</a>
+            </p>
+
+            <a href="/" class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50">
+                Back to Home
+            </a>
+        </div>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 py-6 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-text-muted-light dark:text-text-muted-dark mb-4 md:mb-0">
+                    Sentimo&trade; is a trademark of Sentimo L.L.C.
+                </p>
+                <div class="flex items-center space-x-6 text-sm">
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/terms.html">Terms</a>
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/preorder-policy.html">Pre-Order Policy</a>
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/privacy.html">Privacy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Track checkout completion
+        if (typeof window.gtag === 'function') {
+            const params = new URLSearchParams(window.location.search);
+            window.gtag('event', 'checkout_completed', {
+                session_id: params.get('session_id') || '',
+            });
+        }
+    </script>
+</body>
+</html>
