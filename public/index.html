@@ -301,29 +301,29 @@
                 <div class="relative">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div class="aspect-square relative overflow-hidden">
-                            <video id="carousel-video" src="/assets/SentimoProductVid.mp4" controls playsinline preload="metadata" class="w-full h-full object-cover"></video>
-                            <img id="carousel-img" src="/assets/IMG_4321.JPG" alt="Sentimo Printer" class="w-full h-full object-cover transition-opacity duration-300" style="display:none;" />
+                                <video id="carousel-video" src="/assets/SentimoProductVid.mp4" controls playsinline preload="metadata" class="w-full h-full object-cover" style="display:none;"></video>
+                                <img id="carousel-img" src="/assets/IMG_4321.JPG" alt="Sentimo Printer" class="w-full h-full object-cover transition-opacity duration-300" />
                         </div>
                     </div>
                     <!-- Thumbnails -->
                     <div class="flex gap-2 sm:gap-3 mt-4 overflow-x-auto pb-2">
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors relative" data-index="0">
-                            <div class="w-full h-full bg-gray-900 flex items-center justify-center">
-                                <span class="material-icons-round text-white text-2xl sm:text-3xl">play_circle</span>
-                            </div>
-                        </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="1">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="0">
                             <img src="/assets/IMG_4321.JPG" alt="Sentimo view 1" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="2">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="1">
                             <img src="/assets/IMG_4360.JPG" alt="Sentimo view 2" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="3">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="2">
                             <img src="/assets/Sentimo Couple.png" alt="Sentimo Couple" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="4">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="3">
                             <img src="/assets/IMG_4364.JPG" alt="Sentimo view 4" class="w-full h-full object-cover" />
                         </button>
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors relative" data-index="4">
+                                <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+                                    <span class="material-icons-round text-white text-2xl sm:text-3xl">play_circle</span>
+                                </div>
+                            </button>
                     </div>
                     <!-- Prev/Next buttons -->
                     <button id="carousel-prev" class="absolute top-[45%] left-3 -translate-y-1/2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black transition-colors z-10" aria-label="Previous image">
@@ -655,11 +655,11 @@
     (function() {
         'use strict';
         const slides = [
-            { type: 'video', src: '/assets/SentimoProductVid.mp4' },
             { type: 'image', src: '/assets/IMG_4321.JPG' },
             { type: 'image', src: '/assets/IMG_4360.JPG' },
             { type: 'image', src: '/assets/Sentimo Couple.png' },
-            { type: 'image', src: '/assets/IMG_4364.JPG' }
+            { type: 'image', src: '/assets/IMG_4364.JPG' },
+            { type: 'video', src: '/assets/SentimoProductVid.mp4' }
         ];
         let currentIndex = 0;
         const mainImg = document.getElementById('carousel-img');
