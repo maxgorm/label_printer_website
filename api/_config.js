@@ -12,11 +12,11 @@ const PREORDER_CONFIG = {
   product_description: 'Sentimo Pre-Order — 2 Printers + Starter Kit. Expected to ship August 2026.',
 
   // Pricing (in cents for Stripe)
-  unit_price_cents: 3900,
+  unit_price_cents: 4900,
   currency: 'usd',
 
   // Display price
-  display_price: '$39',
+  display_price: '$49',
 
   // Shipping timeline
   expected_ship_label: 'August 2026',
