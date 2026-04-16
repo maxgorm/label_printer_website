@@ -82,11 +82,13 @@
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased">
 
     <!-- ===================== ANNOUNCEMENT BANNER ===================== -->
-    <div id="announcement-banner" class="fixed w-full top-0 bg-primary text-white text-center py-2.5 px-4 text-sm font-medium z-[60]">
-        Now accepting pre-orders &mdash; Expected to ship beginning August 2026
-        <button onclick="this.parentElement.remove(); document.getElementById('navbar').style.top='0';" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white" aria-label="Close banner">
-            <span class="material-icons-round text-lg">close</span>
-        </button>
+    <div id="announcement-banner" class="fixed top-0 z-[60] w-full bg-primary text-white">
+        <div class="relative mx-auto max-w-7xl px-4 py-2 text-center text-xs font-medium leading-snug sm:px-6 sm:py-2.5 sm:text-sm">
+            <p class="pr-10 sm:pr-12">Now accepting pre-orders &mdash; Expected to ship beginning August 2026</p>
+            <button onclick="this.closest('#announcement-banner').remove(); document.getElementById('navbar').style.top='0';" class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-white/80 transition-colors hover:text-white sm:right-4" aria-label="Close banner">
+                <span class="material-icons-round text-lg leading-none">close</span>
+            </button>
+        </div>
     </div>
 
     <!-- ===================== NAVIGATION ===================== -->
@@ -131,7 +133,15 @@
     (function() {
         var banner = document.getElementById('announcement-banner');
         var navbar = document.getElementById('navbar');
-        if (banner && navbar) navbar.style.top = banner.offsetHeight + 'px';
+
+        function syncNavbarOffset() {
+            if (!navbar) return;
+            navbar.style.top = banner ? banner.offsetHeight + 'px' : '0';
+        }
+
+        syncNavbarOffset();
+        window.addEventListener('load', syncNavbarOffset);
+        window.addEventListener('resize', syncNavbarOffset);
     })();
     </script>
 
@@ -303,11 +313,11 @@
 
 
     <!-- ===================== RESERVE / PRE-ORDER BLOCK ===================== -->
-    <section id="reserve" class="py-20 scroll-reveal">
+    <section id="reserve" class="py-14 lg:py-10 scroll-reveal">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-12 items-start">
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-10 items-start lg:items-center">
                 <!-- Image Carousel (Left) -->
-                <div class="relative">
+                <div class="relative lg:max-w-[32rem] lg:justify-self-center">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div class="aspect-square relative overflow-hidden">
                                 <video id="carousel-video" src="/assets/SentimoProductVid.mp4" controls playsinline preload="metadata" class="w-full h-full object-cover" style="display:none;"></video>
@@ -315,20 +325,20 @@
                         </div>
                     </div>
                     <!-- Thumbnails -->
-                    <div class="flex gap-2 sm:gap-3 mt-4 overflow-x-auto pb-2">
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="0">
+                    <div class="flex gap-2 sm:gap-3 mt-3 overflow-x-auto pb-2">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="0">
                             <img src="/assets/IMG_4321.JPG" alt="Sentimo view 1" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="1">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="1">
                             <img src="/assets/IMG_4360.JPG" alt="Sentimo view 2" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="2">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="2">
                             <img src="/assets/Sentimo Couple.png" alt="Sentimo Couple" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors" data-index="3">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="3">
                             <img src="/assets/IMG_4364.JPG" alt="Sentimo view 4" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 transition-colors relative" data-index="4">
+                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors relative" data-index="4">
                                 <div class="w-full h-full bg-gray-900 flex items-center justify-center">
                                     <span class="material-icons-round text-white text-2xl sm:text-3xl">play_circle</span>
                                 </div>
@@ -344,44 +354,44 @@
                 </div>
 
                 <!-- Order Form (Right) -->
-                <div class="lg:sticky lg:top-40 text-center lg:text-left">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Pre-Order a Sentimo Duo Pack</h2>
+                <div class="lg:sticky lg:top-[8.25rem] lg:max-w-[29rem] lg:justify-self-end text-center lg:text-left">
+                    <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Pre-Order a Sentimo Duo Pack</h2>
 
-                    <div class="mb-2">
-                        <span class="text-xl text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
+                    <div class="mb-1.5">
+                        <span class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
                     </div>
-                    <div class="mb-6 flex flex-wrap items-baseline justify-center lg:justify-start gap-2">
-                        <span class="text-4xl md:text-5xl font-bold text-primary">$39</span>
-                        <span class="text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
+                    <div class="mb-5 flex flex-wrap items-baseline justify-center lg:justify-start gap-2">
+                        <span class="text-4xl md:text-[3rem] font-bold text-primary">$39</span>
+                        <span class="text-base md:text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
                         <span class="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">PRE-ORDER PRICE</span>
                     </div>
 
-                    <p class="text-text-muted-light dark:text-text-muted-dark mb-8">
+                    <p class="text-sm sm:text-base text-text-muted-light dark:text-text-muted-dark mb-6">
                         Secure your Sentimo early and be part of our first production run.
                     </p>
 
                     <!-- Quantity Selector -->
-                    <div class="flex flex-col items-center lg:items-start gap-2 mb-6">
-                        <div class="flex items-center gap-4">
+                    <div class="flex flex-col items-center lg:items-start gap-2 mb-5">
+                        <div class="flex items-center gap-3">
                             <label for="quantity-display" class="font-medium text-sm">Quantity:</label>
                             <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
-                                <button id="qty-minus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
-                                <span id="quantity-display" class="px-4 py-2 text-lg font-bold min-w-[3rem] text-center">1</span>
-                                <button id="qty-plus" class="px-4 py-2 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
+                                <button id="qty-minus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
+                                <span id="quantity-display" class="px-4 py-1.5 text-lg font-bold min-w-[3rem] text-center">1</span>
+                                <button id="qty-plus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
                             </div>
                         </div>
                         <p class="text-xs text-text-muted-light dark:text-text-muted-dark">Each set includes 2 printers (one for you, one for them)</p>
                     </div>
 
                     <!-- Pre-order disclosure -->
-                    <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-5 mb-6">
+                    <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-4 mb-5">
                         <p class="text-sm text-text-muted-light dark:text-text-muted-dark leading-relaxed">
                             This is a pre-order. Shipping is expected to begin in August 2026. If we are unable to fulfill your order, you will receive a full refund.
                         </p>
                     </div>
 
                     <!-- Agreement Checkbox -->
-                    <div class="flex items-start gap-3 mb-8 text-left">
+                    <div class="flex items-start gap-3 mb-6 text-left">
                         <input type="checkbox" id="preorder-agree" class="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary" />
                         <label for="preorder-agree" class="text-sm text-text-muted-light dark:text-text-muted-dark leading-relaxed cursor-pointer">
                             I understand that this is a pre-order, that shipping is expected to begin in August 2026, and that I will be refunded if Sentimo is unable to fulfill my order.
@@ -389,7 +399,7 @@
                     </div>
 
                     <!-- CTA Button -->
-                    <button id="preorder-btn" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-10 py-4 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-lg w-full" data-track="click_preorder_cta">
+                    <button id="preorder-btn" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-base sm:text-lg w-full" data-track="click_preorder_cta">
                         <span id="preorder-btn-text">Pre-Order Now</span>
                         <span id="preorder-btn-spinner" class="hidden ml-2">
                             <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
@@ -397,7 +407,7 @@
                     </button>
                     <p id="preorder-error" class="hidden text-red-500 text-sm mt-3"></p>
 
-                    <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-4">
+                    <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-3">
                         By proceeding, you agree to our <a href="/terms.html" class="text-primary hover:underline">Terms</a> and <a href="/preorder-policy.html" class="text-primary hover:underline">Pre-Order Policy</a>.
                     </p>
                 </div>
