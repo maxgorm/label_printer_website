@@ -6,7 +6,7 @@ You are a senior full-stack product engineer, conversion-focused ecommerce desig
 
 Implement a polished, trustworthy, high-converting **pre-order flow** for Sentimo that:
 - clearly discloses that this is a **pre-order**
-- states that **shipping is expected to begin in August 2026**
+- states that **shipping is expected to begin in summer 2026**
 - states that if Sentimo is **unable to fulfill orders, customers will receive a full refund**
 - integrates **Stripe Checkout** for payment collection
 - reduces chargeback risk through strong customer communication and transparent checkout copy
@@ -36,7 +36,7 @@ Use these facts consistently throughout the implementation:
 - Trademark footer language may reference: **“Sentimo™ is a trademark of Sentimo L.L.C.”**
 - The product is sold as a **2-pack**
 - Entry pricing can start at **$39 for 2 printers** if needed in teaser copy, but the implementation should support changing price easily from a config value
-- Shipping messaging must say: **“Expected to begin shipping in August 2026”**
+- Shipping messaging must say: **“Expected to begin shipping in summer 2026”**
 - Refund messaging must say: **“If we are unable to fulfill your order, you will receive a full refund.”**
 
 ## Compliance and risk requirements
@@ -61,7 +61,7 @@ Preferred implementation:
 - create a product / price model that supports one-time pre-orders
 - store order metadata including:
   - order type = pre-order
-  - expected ship month = August 2026
+  - expected ship month = summer 2026
   - product SKU
   - quantity
   - customer email
@@ -182,7 +182,7 @@ Primary: **Pre-Order Now**
 Secondary: **See How It Works**
 
 ### Microcopy under CTA
-**Pre-order now. Expected to begin shipping in August 2026.**  
+**Pre-order now. Expected to begin shipping in summer 2026.**  
 **If we are unable to fulfill your order, you will receive a full refund.**
 
 ---
@@ -193,12 +193,12 @@ Secondary: **See How It Works**
 **Pre-order information**
 
 ### Copy
-This product is currently available for pre-order. By placing an order, you understand that Sentimo is in pre-production and is expected to begin shipping in August 2026.
+This product is currently available for pre-order. By placing an order, you understand that Sentimo is in pre-production and is expected to begin shipping in summer 2026.
 
 If manufacturing or logistics timelines change, we will keep you updated by email. If we are unable to fulfill your order, you will receive a full refund to your original payment method.
 
 Add a required checkbox near checkout initiation with this exact or substantially similar text:
-**I understand that this is a pre-order, that shipping is expected to begin in August 2026, and that I will be refunded if Sentimo is unable to fulfill my order.**
+**I understand that this is a pre-order, that shipping is expected to begin in summer 2026, and that I will be refunded if Sentimo is unable to fulfill my order.**
 
 ---
 
@@ -270,7 +270,7 @@ Add a note:
 Secure your Sentimo 2-pack early and be part of our first production run.
 
 ### Pre-order note
-This is a pre-order. Shipping is expected to begin in August 2026. If we are unable to fulfill your order, you will receive a full refund.
+This is a pre-order. Shipping is expected to begin in summer 2026. If we are unable to fulfill your order, you will receive a full refund.
 
 ### CTA
 **Pre-Order Now**
@@ -285,7 +285,7 @@ Yes. Sentimo is currently available for pre-order.
 
 ### FAQ 2
 **When will orders ship?**  
-We currently expect shipping to begin in August 2026.
+We currently expect shipping to begin in summer 2026.
 
 ### FAQ 3
 **What happens if timelines change?**  
@@ -332,7 +332,7 @@ When you place a pre-order for Sentimo, you are reserving a unit from an upcomin
 Payment is collected at the time you place your pre-order.
 
 ### Section: Estimated shipping
-We currently expect Sentimo pre-orders to begin shipping in August 2026. This is our estimated timeline, not a guaranteed delivery date.
+We currently expect Sentimo pre-orders to begin shipping in summer 2026. This is our estimated timeline, not a guaranteed delivery date.
 
 ### Section: Delays
 Manufacturing, freight, customs, and fulfillment timelines can change. If there is a material delay to your order, we will notify you by email and provide an updated timeline. If required, customers will have the option to continue waiting or cancel for a refund.
@@ -356,7 +356,7 @@ Hi {{first_name_or_customer}},
 
 Thank you for reserving Sentimo.
 
-Your pre-order has been received and confirmed. Sentimo is expected to begin shipping in August 2026.
+Your pre-order has been received and confirmed. Sentimo is expected to begin shipping in summer 2026.
 
 We’ll send you updates as production progresses. If we are unable to fulfill your order, you will receive a full refund.
 
@@ -541,7 +541,7 @@ If easy within the current stack, also implement:
 - support page or help email link
 - simple announcement banner:
   - **Now accepting pre-orders**
-  - **Expected to ship August 2026**
+  - **Expected to ship summer 2026**
 
 ## Deliverables
 

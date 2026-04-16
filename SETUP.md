@@ -93,7 +93,7 @@ All configurable values live in **`api/_config.js`**:
 
 ```js
 unit_price_cents: 3900,        // Change price (in cents)
-expected_ship_label: 'August 2026', // Change ship date
+expected_ship_label: 'summer 2026', // Change ship date
 refund_message: '...',         // Change refund copy
 ```
 

@@ -9,7 +9,7 @@ const PREORDER_CONFIG = {
   // Product
   product_name: 'Sentimo 2-Pack',
   product_slug: 'sentimo-2-pack',
-  product_description: 'Sentimo Pre-Order — 2 Printers + Starter Kit. Expected to ship August 2026.',
+  product_description: 'Sentimo Pre-Order — 2 Printers + Starter Kit. Expected to ship summer 2026.',
 
   // Pricing (in cents for Stripe)
   unit_price_cents: 4900,
@@ -19,7 +19,7 @@ const PREORDER_CONFIG = {
   display_price: '$49',
 
   // Shipping timeline
-  expected_ship_label: 'August 2026',
+  expected_ship_label: 'summer 2026',
 
   // Order type
   order_type: 'preorder',
