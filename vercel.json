@@ -1,6 +1,7 @@
 {
   "outputDirectory": "public",
   "rewrites": [
+    { "source": "/download", "destination": "/download.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "headers": [
