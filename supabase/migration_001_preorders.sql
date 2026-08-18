@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS preorders (
 
   -- Order classification
   order_type                 TEXT NOT NULL DEFAULT 'preorder',
-  expected_ship_label        TEXT NOT NULL DEFAULT 'August 2026',
+  expected_ship_label        TEXT NOT NULL DEFAULT 'Fall 2026',
 
   -- Statuses
   order_status               TEXT NOT NULL DEFAULT 'pending',

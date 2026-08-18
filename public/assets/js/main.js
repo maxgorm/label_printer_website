@@ -288,6 +288,30 @@
         });
     }
 
+    // ===================== HERO VIDEO =====================
+    function initHeroVideo() {
+        const heroVideo = document.getElementById("hero-video");
+        if (!heroVideo || !window.matchMedia) return;
+
+        const desktopQuery = window.matchMedia("(min-width: 768px)");
+
+        function syncHeroVideo() {
+            const shouldAutoplay = desktopQuery.matches;
+            heroVideo.autoplay = shouldAutoplay;
+
+            if (shouldAutoplay) {
+                heroVideo.play().catch(() => {
+                    // Browser autoplay policies can still reject playback.
+                });
+            } else {
+                heroVideo.pause();
+            }
+        }
+
+        syncHeroVideo();
+        desktopQuery.addEventListener?.("change", syncHeroVideo);
+    }
+
     // ===================== INIT =====================
     function init() {
         initMobileMenu();
@@ -299,6 +323,7 @@
         initSmoothScroll();
         initFaqAccordion();
         initHeroHoverSync();
+        initHeroVideo();
     }
 
     // Run when DOM is ready
