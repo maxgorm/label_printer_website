@@ -376,6 +376,28 @@
                     <fieldset class="mb-5 text-left">
                         <legend class="font-medium text-sm mb-2">Choose your setup:</legend>
                         <div class="grid sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Choose your Sentimo setup">
+                            <div class="relative">
+                                <input id="product-single" type="radio" name="product" value="single" class="sr-only" />
+                                <label for="product-single" data-product-option="single" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 pr-12 transition-colors hover:border-primary/50">
+                                    <span class="flex items-start justify-between gap-2">
+                                        <span class="font-bold">Single Printer</span>
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49</span>
+                                    </span>
+                                    <span class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29</span>
+                                    <span class="text-xs font-medium text-primary">Great for a shared family printer</span>
+                                </label>
+                                <button id="single-info-button" type="button" class="group absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-primary/50 text-sm font-bold leading-none text-primary transition-colors hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/40" aria-label="Why order one?" aria-expanded="false" aria-controls="single-info-popover" title="Why order one?">
+                                    i
+                                    <span role="tooltip" class="pointer-events-none invisible absolute right-0 top-full z-30 mt-2 w-max rounded-md bg-gray-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:visible group-hover:opacity-100">Why order one?</span>
+                                </button>
+                                <div id="single-info-popover" class="absolute right-0 top-full z-20 mt-2 hidden w-[min(20rem,calc(100vw-3rem))] rounded-xl border border-primary/20 bg-surface-light p-4 text-left shadow-xl dark:bg-surface-dark" role="dialog" aria-labelledby="single-info-title" aria-describedby="single-info-description">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <p id="single-info-title" class="font-bold text-text-main-light dark:text-text-main-dark">Why order one?</p>
+                                        <button id="single-info-close" type="button" class="text-xl leading-none text-text-muted-light hover:text-primary dark:text-text-muted-dark" aria-label="Close why order one message">&times;</button>
+                                    </div>
+                                    <p id="single-info-description" class="mt-2 text-sm leading-relaxed text-text-muted-light dark:text-text-muted-dark">One Sentimo printer can receive notes from many people. Send one to Grandma, and all the grandkids can send notes through the app&mdash;even if they don&rsquo;t have Sentimo printers themselves.</p>
+                                </div>
+                            </div>
                             <label data-product-option="duo" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-primary bg-primary/5 p-4 transition-colors">
                                 <input type="radio" name="product" value="duo" class="sr-only" checked />
                                 <span class="flex items-start justify-between gap-2">
@@ -384,15 +406,6 @@
                                 </span>
                                 <span class="text-sm text-text-muted-light dark:text-text-muted-dark">2 printers for $49</span>
                                 <span class="text-xs font-medium text-primary">One for you, one for them</span>
-                            </label>
-                            <label data-product-option="single" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 transition-colors hover:border-primary/50">
-                                <input type="radio" name="product" value="single" class="sr-only" />
-                                <span class="flex items-start justify-between gap-2">
-                                    <span class="font-bold">Single Printer</span>
-                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49</span>
-                                </span>
-                                <span class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29</span>
-                                <span class="text-xs font-medium text-primary">Great for a shared family printer</span>
                             </label>
                         </div>
                     </fieldset>
@@ -409,10 +422,6 @@
                         </div>
                         <p id="quantity-help" class="text-xs text-text-muted-light dark:text-text-muted-dark">Each 2-pack includes 2 printers (one for you, one for them)</p>
                     </div>
-
-                    <p class="mb-5 rounded-xl bg-accent-pink/30 px-4 py-3 text-left text-sm leading-relaxed text-text-muted-light dark:text-text-muted-dark">
-                        One printer can receive notes from multiple people. Send one to Grandma and let all the grandkids send notes from the app, even if they don&rsquo;t have printers of their own.
-                    </p>
 
                     <!-- Pre-order disclosure -->
                     <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-4 mb-5">
@@ -698,7 +707,7 @@
 
     <!-- Scripts -->
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js?v=20260907"></script>
+    <script src="/assets/js/preorder.js?v=20260908"></script>
 
     <!-- Carousel Script -->
     <script>

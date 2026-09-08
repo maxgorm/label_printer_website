@@ -21,6 +21,9 @@
   const priceSubtitle = document.getElementById('price-subtitle');
   const quantityHelp = document.getElementById('quantity-help');
   const preorderBtnLabel = document.getElementById('preorder-btn-text');
+  const singleInfoButton = document.getElementById('single-info-button');
+  const singleInfoPopover = document.getElementById('single-info-popover');
+  const singleInfoClose = document.getElementById('single-info-close');
 
   let quantity = 1;
   let selectedProduct = 'duo';
@@ -90,6 +93,44 @@
   });
 
   updateProductDisplay();
+
+  // ===================== SINGLE-PRINTER INFO =====================
+  function setSingleInfoOpen(isOpen) {
+    if (!singleInfoPopover || !singleInfoButton) return;
+
+    singleInfoPopover.classList.toggle('hidden', !isOpen);
+    singleInfoButton.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  singleInfoButton?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSingleInfoOpen(singleInfoPopover?.classList.contains('hidden'));
+  });
+
+  singleInfoClose?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSingleInfoOpen(false);
+    singleInfoButton?.focus();
+  });
+
+  singleInfoPopover?.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (singleInfoPopover && !singleInfoPopover.classList.contains('hidden') && !singleInfoPopover.contains(event.target) && event.target !== singleInfoButton) {
+      setSingleInfoOpen(false);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && singleInfoPopover && !singleInfoPopover.classList.contains('hidden')) {
+      setSingleInfoOpen(false);
+      singleInfoButton?.focus();
+    }
+  });
 
   function updateQtyDisplay() {
     if (qtyDisplay) qtyDisplay.textContent = quantity;
