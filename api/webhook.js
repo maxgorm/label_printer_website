@@ -93,6 +93,11 @@ async function handleCheckoutCompleted(stripe, session) {
   const customerEmail = fullSession.customer_details?.email;
   const customerName = fullSession.customer_details?.name || fullSession.shipping_details?.name || '';
   const quantity = parseInt(metadata.quantity, 10) || 1;
+  const product = PREORDER_CONFIG.products[metadata.product_key] ||
+    Object.values(PREORDER_CONFIG.products).find(({ slug }) => slug === metadata.product_slug) ||
+    PREORDER_CONFIG.products[PREORDER_CONFIG.default_product];
+  const productName = metadata.product_name || product.name;
+  const unitPrice = parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents;
   const totalAmount = fullSession.amount_total;
 
   // Insert order into Supabase
@@ -102,9 +107,9 @@ async function handleCheckoutCompleted(stripe, session) {
     stripe_customer_id: fullSession.customer || null,
     email: customerEmail,
     full_name: customerName,
-    product_slug: metadata.product_slug || PREORDER_CONFIG.product_slug,
+    product_slug: metadata.product_slug || product.slug,
     quantity: quantity,
-    unit_price: PREORDER_CONFIG.unit_price_cents,
+    unit_price: unitPrice,
     total_amount: totalAmount,
     currency: fullSession.currency || PREORDER_CONFIG.currency,
     order_type: metadata.order_type || PREORDER_CONFIG.order_type,
@@ -136,6 +141,7 @@ async function handleCheckoutCompleted(stripe, session) {
         html: buildConfirmationEmail({
           name: customerName || 'there',
           orderNumber: fullSession.id.slice(-8).toUpperCase(),
+          productName,
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
         }),
@@ -201,7 +207,7 @@ function formatCurrency(amountCents, currency = 'usd') {
   }).format(amountCents / 100);
 }
 
-function buildConfirmationEmail({ name, orderNumber, quantity, amount }) {
+function buildConfirmationEmail({ name, orderNumber, productName, quantity, amount }) {
   return `
     <div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1F2937;">
       <div style="text-align: center; margin-bottom: 32px;">
@@ -215,7 +221,7 @@ function buildConfirmationEmail({ name, orderNumber, quantity, amount }) {
       <div style="background: #FFF9F5; border: 1px solid #FFE8F0; border-radius: 12px; padding: 20px; margin: 24px 0;">
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">Order summary</h3>
         <p style="margin: 4px 0;"><strong>Order number:</strong> ${escapeHtml(orderNumber)}</p>
-        <p style="margin: 4px 0;"><strong>Product:</strong> Sentimo 2-Pack</p>
+        <p style="margin: 4px 0;"><strong>Product:</strong> ${escapeHtml(productName)}</p>
         <p style="margin: 4px 0;"><strong>Quantity:</strong> ${quantity}</p>
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>
       </div>

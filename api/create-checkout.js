@@ -10,8 +10,15 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe secret key is not configured' });
   }
 
-  const { quantity } = req.body;
+  const { quantity, product: productKey } = req.body || {};
   const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
+  const selectedProductKey = productKey || PREORDER_CONFIG.default_product;
+  const selectedProduct = PREORDER_CONFIG.products[selectedProductKey];
+
+  if (!selectedProduct) {
+    return res.status(400).json({ error: 'Invalid product selection' });
+  }
+
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   try {
@@ -23,16 +30,20 @@ export default async function handler(req, res) {
           price_data: {
             currency: PREORDER_CONFIG.currency,
             product_data: {
-              name: PREORDER_CONFIG.product_name,
-              description: PREORDER_CONFIG.product_description,
+              name: selectedProduct.name,
+              description: selectedProduct.description,
             },
-            unit_amount: PREORDER_CONFIG.unit_price_cents,
+            unit_amount: selectedProduct.unit_price_cents,
           },
           quantity: qty,
         },
       ],
       metadata: {
-        product_slug: PREORDER_CONFIG.product_slug,
+        product_key: selectedProductKey,
+        product_slug: selectedProduct.slug,
+        product_name: selectedProduct.name,
+        unit_price_cents: String(selectedProduct.unit_price_cents),
+        printer_count: String(selectedProduct.printer_count),
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: PREORDER_CONFIG.expected_ship_label,
         quantity: String(qty),

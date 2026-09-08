@@ -92,10 +92,13 @@ stripe listen --forward-to localhost:3000/api/webhook
 All configurable values live in **`api/_config.js`**:
 
 ```js
-unit_price_cents: 3900,        // Change price (in cents)
+products.single.unit_price_cents: 2900, // Single printer price (in cents)
+products.duo.unit_price_cents: 4900,    // 2-pack price (in cents)
 expected_ship_label: 'Fall 2026', // Change ship date
 refund_message: '...',         // Change refund copy
 ```
+
+The checkout defaults to the 2-pack and accepts `product: 'single'` or `product: 'duo'` from the order form. Stripe Checkout receives the selected product name, description, price, and quantity from this catalog; the webhook stores the selected product and unit price in Supabase.
 
 After updating `_config.js`, also update the corresponding copy in:
 - `public/index.html` — hero microcopy, trust block, reserve section, FAQ

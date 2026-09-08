@@ -13,10 +13,35 @@
   const preorderBtnText = document.getElementById('preorder-btn-text');
   const preorderBtnSpinner = document.getElementById('preorder-btn-spinner');
   const preorderError = document.getElementById('preorder-error');
+  const productOptions = document.querySelectorAll('[data-product-option]');
+  const productRadios = document.querySelectorAll('input[name="product"]');
+  const priceOriginal = document.getElementById('price-original');
+  const priceOriginalWrap = document.getElementById('price-original-wrap');
+  const priceCurrent = document.getElementById('price-current');
+  const priceSubtitle = document.getElementById('price-subtitle');
+  const quantityHelp = document.getElementById('quantity-help');
+  const preorderBtnLabel = document.getElementById('preorder-btn-text');
 
   let quantity = 1;
+  let selectedProduct = 'duo';
   const MAX_QTY = 10;
   const MIN_QTY = 1;
+  const PRODUCTS = {
+    single: {
+      currentPrice: '$29',
+      originalPrice: '$49',
+      subtitle: 'for 1 printer',
+      quantityHelp: 'Each single-printer option includes 1 printer and starter materials',
+      buttonLabel: 'Pre-Order Single Printer',
+    },
+    duo: {
+      currentPrice: '$49',
+      originalPrice: '$69',
+      subtitle: 'for 2 printers',
+      quantityHelp: 'Each 2-pack includes 2 printers (one for you, one for them)',
+      buttonLabel: 'Pre-Order 2-Pack',
+    },
+  };
 
   // ===================== ANALYTICS HELPERS =====================
   function trackEvent(eventName, data) {
@@ -34,6 +59,38 @@
   trackEvent('page_view_preorder', { page: 'preorder' });
 
   // ===================== QUANTITY CONTROLS =====================
+  function updateProductDisplay() {
+    const product = PRODUCTS[selectedProduct];
+    if (!product) return;
+
+    if (priceOriginal) priceOriginal.textContent = product.originalPrice;
+    if (priceOriginalWrap) priceOriginalWrap.classList.toggle('hidden', !product.originalPrice);
+    if (priceCurrent) priceCurrent.textContent = product.currentPrice;
+    if (priceSubtitle) priceSubtitle.textContent = product.subtitle;
+    if (quantityHelp) quantityHelp.textContent = product.quantityHelp;
+    if (preorderBtnLabel) preorderBtnLabel.textContent = product.buttonLabel;
+
+    productOptions.forEach((option) => {
+      const isSelected = option.dataset.productOption === selectedProduct;
+      option.classList.toggle('border-primary', isSelected);
+      option.classList.toggle('bg-primary/5', isSelected);
+      option.classList.toggle('border-gray-200', !isSelected);
+      option.classList.toggle('dark:border-gray-700', !isSelected);
+      option.setAttribute('aria-checked', String(isSelected));
+    });
+  }
+
+  productRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      if (radio.checked) {
+        selectedProduct = radio.value;
+        updateProductDisplay();
+      }
+    });
+  });
+
+  updateProductDisplay();
+
   function updateQtyDisplay() {
     if (qtyDisplay) qtyDisplay.textContent = quantity;
   }
@@ -64,7 +121,7 @@
     if (!checkbox?.checked) return;
 
     // Track CTA click
-    trackEvent('checkout_started', { quantity });
+    trackEvent('checkout_started', { quantity, product: selectedProduct });
 
     // Set loading state
     preorderBtn.disabled = true;
@@ -76,7 +133,7 @@
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({ quantity, product: selectedProduct }),
       });
 
       const contentType = response.headers.get('content-type');

@@ -228,9 +228,9 @@
                         <span class="material-icons-round text-primary text-3xl">link</span>
                     </div>
                     <span class="text-sm font-medium text-primary mb-2 block">Step 1</span>
-                    <h3 class="text-xl font-bold mb-3">Pair your printers</h3>
+                    <h3 class="text-xl font-bold mb-3">Connect your printer(s)</h3>
                     <p class="text-text-muted-light dark:text-text-muted-dark leading-relaxed">
-                        Each Sentimo set comes with two printers made to stay connected through the Sentimo app.
+                        The 2-pack gives each person a printer, while a single printer can be a shared connection for notes from family and friends.
                     </p>
                 </div>
 
@@ -357,20 +357,45 @@
 
                 <!-- Order Form (Right) -->
                 <div class="lg:sticky lg:top-[8.25rem] lg:max-w-[29rem] lg:justify-self-end text-center lg:text-left">
-                    <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Pre-Order a Sentimo Duo Pack</h2>
+                    <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Pre-Order Sentimo</h2>
 
-                    <div class="mb-1.5">
-                        <span class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
+                    <div id="price-original-wrap" class="mb-1.5">
+                        <span id="price-original" class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
                     </div>
                     <div class="mb-5 flex flex-wrap items-baseline justify-center lg:justify-start gap-2">
-                        <span class="text-4xl md:text-[3rem] font-bold text-primary">$49</span>
-                        <span class="text-base md:text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
+                        <span id="price-current" class="text-4xl md:text-[3rem] font-bold text-primary">$49</span>
+                        <span id="price-subtitle" class="text-base md:text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
                         <span class="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">PRE-ORDER PRICE</span>
                     </div>
 
                     <p class="text-sm sm:text-base text-text-muted-light dark:text-text-muted-dark mb-6">
                         Secure your Sentimo early and be part of our first production run.
                     </p>
+
+                    <!-- Product Selection -->
+                    <fieldset class="mb-5 text-left">
+                        <legend class="font-medium text-sm mb-2">Choose your setup:</legend>
+                        <div class="grid sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Choose your Sentimo setup">
+                            <label data-product-option="duo" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-primary bg-primary/5 p-4 transition-colors">
+                                <input type="radio" name="product" value="duo" class="sr-only" checked />
+                                <span class="flex items-start justify-between gap-2">
+                                    <span class="font-bold">2-Pack</span>
+                                    <span class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">Best value</span>
+                                </span>
+                                <span class="text-sm text-text-muted-light dark:text-text-muted-dark">2 printers for $49</span>
+                                <span class="text-xs font-medium text-primary">One for you, one for them</span>
+                            </label>
+                            <label data-product-option="single" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 transition-colors hover:border-primary/50">
+                                <input type="radio" name="product" value="single" class="sr-only" />
+                                <span class="flex items-start justify-between gap-2">
+                                    <span class="font-bold">Single Printer</span>
+                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49</span>
+                                </span>
+                                <span class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29</span>
+                                <span class="text-xs font-medium text-primary">Great for a shared family printer</span>
+                            </label>
+                        </div>
+                    </fieldset>
 
                     <!-- Quantity Selector -->
                     <div class="flex flex-col items-center lg:items-start gap-2 mb-5">
@@ -382,8 +407,12 @@
                                 <button id="qty-plus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
                             </div>
                         </div>
-                        <p class="text-xs text-text-muted-light dark:text-text-muted-dark">Each set includes 2 printers (one for you, one for them)</p>
+                        <p id="quantity-help" class="text-xs text-text-muted-light dark:text-text-muted-dark">Each 2-pack includes 2 printers (one for you, one for them)</p>
                     </div>
+
+                    <p class="mb-5 rounded-xl bg-accent-pink/30 px-4 py-3 text-left text-sm leading-relaxed text-text-muted-light dark:text-text-muted-dark">
+                        One printer can receive notes from multiple people. Send one to Grandma and let all the grandkids send notes from the app, even if they don&rsquo;t have printers of their own.
+                    </p>
 
                     <!-- Pre-order disclosure -->
                     <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-4 mb-5">
@@ -431,8 +460,8 @@
                             <span class="material-icons-round text-primary">print</span>
                         </div>
                         <div>
-                            <h3 class="font-bold mb-1">2 Sentimo printers</h3>
-                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">One for you, one for them.</p>
+                            <h3 class="font-bold mb-1">1 or 2 Sentimo printers</h3>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Choose a single printer or the 2-pack.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
@@ -450,7 +479,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold mb-1">Charging cables</h3>
-                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Keep both printers powered up.</p>
+                            <p class="text-sm text-text-muted-light dark:text-text-muted-dark">Keep your printer(s) powered up.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
@@ -465,7 +494,7 @@
                 </div>
 
                 <p class="mt-8 text-center text-sm text-text-muted-light dark:text-text-muted-dark bg-accent-pink/30 dark:bg-primary/5 rounded-xl py-3 px-4">
-                    <strong>Sold as a 2-pack</strong> so you can start using it together right away.
+                    The 2-pack is the easiest way to start using Sentimo together, while the single-printer option is ideal for a shared family connection.
                 </p>
             </div>
         </div>
@@ -540,7 +569,7 @@
                         <div class="px-6 pb-6 pt-0 space-y-5">
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">What comes in the box?</h4>
-                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Each Sentimo set includes two printers, starter paper, charging cables, and quick setup materials so you can begin using them together right away.</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Choose a single printer or a 2-pack. Each option includes the printer(s), starter paper, charging cables, and quick setup materials so you can begin sending notes right away.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h4>
@@ -669,7 +698,7 @@
 
     <!-- Scripts -->
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js"></script>
+    <script src="/assets/js/preorder.js?v=20260907"></script>
 
     <!-- Carousel Script -->
     <script>
