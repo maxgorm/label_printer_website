@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Reset your Sentimo password." />
+    <title>Reset your Sentimo password</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <style>
+        :root {
+            color-scheme: light;
+            --background: #fff9f5;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #f53f7b;
+            --primary-dark: #d92e66;
+            --border: #eadfe0;
+            --error: #b42318;
+            --error-background: #fff1f0;
+            --success: #137333;
+            --success-background: #edf8ef;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 50% 0%, #ffe8f0 0, transparent 34%),
+                var(--background);
+            color: var(--text);
+            font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+        }
+
+        main { width: min(100%, 460px); }
+
+        .brand {
+            margin-bottom: 24px;
+            text-align: center;
+            color: var(--text);
+            font-family: Georgia, serif;
+            font-size: 2.25rem;
+            letter-spacing: -0.06em;
+        }
+
+        .brand-mark { color: var(--primary); }
+
+        .card {
+            padding: 36px;
+            border: 1px solid rgba(245, 63, 123, 0.12);
+            border-radius: 28px;
+            background: var(--surface);
+            box-shadow: 0 20px 40px -15px rgba(245, 63, 123, 0.18);
+        }
+
+        h1 {
+            margin: 0;
+            text-align: center;
+            font-size: clamp(1.7rem, 5vw, 2.1rem);
+            line-height: 1.2;
+        }
+
+        .intro {
+            margin: 14px 0 28px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .account {
+            margin: -12px 0 24px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            background: #fff;
+            font: inherit;
+        }
+
+        input:focus {
+            outline: 3px solid rgba(245, 63, 123, 0.2);
+            border-color: var(--primary);
+        }
+
+        button, .link-button {
+            display: inline-flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            margin-top: 26px;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--primary);
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 160ms ease, transform 160ms ease;
+        }
+
+        button:hover, .link-button:hover { background: var(--primary-dark); }
+        button:active, .link-button:active { transform: translateY(1px); }
+        button:disabled { cursor: wait; opacity: 0.65; }
+
+        .message {
+            margin-top: 20px;
+            padding: 13px 15px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            border: 1px solid #f3b6b2;
+            color: var(--error);
+            background: var(--error-background);
+        }
+
+        .message.success {
+            border: 1px solid #b8ddbd;
+            color: var(--success);
+            background: var(--success-background);
+        }
+
+        .hidden { display: none; }
+
+        .help {
+            margin: 24px 0 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 28px 22px; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="brand" aria-label="Sentimo"><span class="brand-mark">♥</span> Sentimo</div>
+        <section class="card" aria-labelledby="page-title">
+            <h1 id="page-title">Reset your password</h1>
+            <p id="intro" class="intro">Choose a new password for your Sentimo account.</p>
+
+            <div id="loading" class="message" role="status">Checking your reset link…</div>
+
+            <form id="reset-form" class="hidden" novalidate>
+                <p id="account" class="account"></p>
+                <label for="password">New password</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required />
+                <label for="confirm-password">Confirm new password</label>
+                <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" minlength="6" required />
+                <button id="submit-button" type="submit">Update password</button>
+                <div id="form-error" class="message error hidden" role="alert"></div>
+            </form>
+
+            <div id="success" class="hidden" role="status">
+                <div class="message success">Your password has been updated successfully.</div>
+                <a class="link-button" href="/">Return to Sentimo</a>
+            </div>
+
+            <div id="link-error" class="message error hidden" role="alert"></div>
+            <p class="help">If you did not request a password reset, you can safely close this page.</p>
+        </section>
+    </main>
+
+    <script type="module" referrerpolicy="no-referrer">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import {
+            confirmPasswordReset,
+            getAuth,
+            verifyPasswordResetCode,
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get("mode");
+        const actionCode = params.get("oobCode");
+        const apiKey = params.get("apiKey");
+
+        // Remove one-time credentials from the visible URL and browser history
+        // as soon as they have been read. They remain only in this page's
+        // in-memory variables while Firebase validates the action.
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        const loading = document.getElementById("loading");
+        const form = document.getElementById("reset-form");
+        const account = document.getElementById("account");
+        const formError = document.getElementById("form-error");
+        const linkError = document.getElementById("link-error");
+        const success = document.getElementById("success");
+        const submitButton = document.getElementById("submit-button");
+
+        function showLinkError(message) {
+            loading.classList.add("hidden");
+            form.classList.add("hidden");
+            linkError.textContent = message;
+            linkError.classList.remove("hidden");
+        }
+
+        function friendlyAuthError(error) {
+            switch (error?.code) {
+                case "auth/expired-action-code":
+                    return "This password reset link has expired. Request a new one from the Sentimo app.";
+                case "auth/invalid-action-code":
+                    return "This password reset link is invalid or has already been used. Request a new one from the Sentimo app.";
+                case "auth/user-disabled":
+                    return "This account is currently disabled. Please contact Sentimo support.";
+                default:
+                    return "We could not verify this password reset link. Request a new one from the Sentimo app.";
+            }
+        }
+
+        if (mode !== "resetPassword" || !actionCode || !apiKey) {
+            showLinkError("This password reset link is incomplete. Request a new one from the Sentimo app.");
+        } else {
+            const app = initializeApp({
+                apiKey,
+                authDomain: "sentimo-39059.firebaseapp.com",
+                projectId: "sentimo-39059",
+            });
+            const auth = getAuth(app);
+
+            try {
+                const email = await verifyPasswordResetCode(auth, actionCode);
+                account.textContent = `Resetting the password for ${email}`;
+                loading.classList.add("hidden");
+                form.classList.remove("hidden");
+            } catch (error) {
+                showLinkError(friendlyAuthError(error));
+            }
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                formError.classList.add("hidden");
+
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirm-password").value;
+
+                if (password.length < 6) {
+                    formError.textContent = "Your password must be at least 6 characters.";
+                    formError.classList.remove("hidden");
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    formError.textContent = "The passwords do not match.";
+                    formError.classList.remove("hidden");
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = "Updating password…";
+
+                try {
+                    await confirmPasswordReset(auth, actionCode, password);
+                    form.classList.add("hidden");
+                    success.classList.remove("hidden");
+                } catch (error) {
+                    formError.textContent = friendlyAuthError(error);
+                    formError.classList.remove("hidden");
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Update password";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
