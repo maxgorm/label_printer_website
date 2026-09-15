@@ -179,7 +179,7 @@
             </form>
 
             <div id="success" class="hidden" role="status">
-                <div class="message success">Your password has been updated successfully.</div>
+                <div id="success-message" class="message success">Your password has been updated successfully.</div>
                 <a class="link-button" href="/">Return to Sentimo</a>
             </div>
 
@@ -191,6 +191,8 @@
     <script type="module" referrerpolicy="no-referrer">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
         import {
+            applyActionCode,
+            checkActionCode,
             confirmPasswordReset,
             getAuth,
             verifyPasswordResetCode,
@@ -212,6 +214,7 @@
         const formError = document.getElementById("form-error");
         const linkError = document.getElementById("link-error");
         const success = document.getElementById("success");
+        const successMessage = document.getElementById("success-message");
         const submitButton = document.getElementById("submit-button");
 
         function showLinkError(message) {
@@ -219,6 +222,14 @@
             form.classList.add("hidden");
             linkError.textContent = message;
             linkError.classList.remove("hidden");
+        }
+
+        function showSuccess(message) {
+            loading.classList.add("hidden");
+            form.classList.add("hidden");
+            linkError.classList.add("hidden");
+            successMessage.textContent = message;
+            success.classList.remove("hidden");
         }
 
         function friendlyAuthError(error) {
@@ -230,12 +241,12 @@
                 case "auth/user-disabled":
                     return "This account is currently disabled. Please contact Sentimo support.";
                 default:
-                    return "We could not verify this password reset link. Request a new one from the Sentimo app.";
+                    return "We could not complete this email action. Request a new link from the Sentimo app.";
             }
         }
 
-        if (mode !== "resetPassword" || !actionCode || !apiKey) {
-            showLinkError("This password reset link is incomplete. Request a new one from the Sentimo app.");
+        if (!actionCode || !apiKey || !["resetPassword", "recoverEmail", "verifyEmail"].includes(mode)) {
+            showLinkError("This email action link is incomplete or unsupported. Request a new link from the Sentimo app.");
         } else {
             const app = initializeApp({
                 apiKey,
@@ -244,48 +255,69 @@
             });
             const auth = getAuth(app);
 
-            try {
-                const email = await verifyPasswordResetCode(auth, actionCode);
-                account.textContent = `Resetting the password for ${email}`;
-                loading.classList.add("hidden");
-                form.classList.remove("hidden");
-            } catch (error) {
-                showLinkError(friendlyAuthError(error));
-            }
-
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault();
-                formError.classList.add("hidden");
-
-                const password = document.getElementById("password").value;
-                const confirmPassword = document.getElementById("confirm-password").value;
-
-                if (password.length < 6) {
-                    formError.textContent = "Your password must be at least 6 characters.";
-                    formError.classList.remove("hidden");
-                    return;
-                }
-
-                if (password !== confirmPassword) {
-                    formError.textContent = "The passwords do not match.";
-                    formError.classList.remove("hidden");
-                    return;
-                }
-
-                submitButton.disabled = true;
-                submitButton.textContent = "Updating password…";
-
+            if (mode === "resetPassword") {
                 try {
-                    await confirmPasswordReset(auth, actionCode, password);
-                    form.classList.add("hidden");
-                    success.classList.remove("hidden");
+                    const email = await verifyPasswordResetCode(auth, actionCode);
+                    account.textContent = `Resetting the password for ${email}`;
+                    loading.classList.add("hidden");
+                    form.classList.remove("hidden");
                 } catch (error) {
-                    formError.textContent = friendlyAuthError(error);
-                    formError.classList.remove("hidden");
-                    submitButton.disabled = false;
-                    submitButton.textContent = "Update password";
+                    showLinkError(friendlyAuthError(error));
                 }
-            });
+
+                form.addEventListener("submit", async (event) => {
+                    event.preventDefault();
+                    formError.classList.add("hidden");
+
+                    const password = document.getElementById("password").value;
+                    const confirmPassword = document.getElementById("confirm-password").value;
+
+                    if (password.length < 6) {
+                        formError.textContent = "Your password must be at least 6 characters.";
+                        formError.classList.remove("hidden");
+                        return;
+                    }
+
+                    if (password !== confirmPassword) {
+                        formError.textContent = "The passwords do not match.";
+                        formError.classList.remove("hidden");
+                        return;
+                    }
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = "Updating password…";
+
+                    try {
+                        await confirmPasswordReset(auth, actionCode, password);
+                        showSuccess("Your password has been updated successfully.");
+                    } catch (error) {
+                        formError.textContent = friendlyAuthError(error);
+                        formError.classList.remove("hidden");
+                        submitButton.disabled = false;
+                        submitButton.textContent = "Update password";
+                    }
+                });
+            } else if (mode === "verifyEmail") {
+                try {
+                    await applyActionCode(auth, actionCode);
+                    document.getElementById("page-title").textContent = "Email verified";
+                    document.getElementById("intro").textContent = "Your Sentimo email address is now verified.";
+                    showSuccess("Your email address has been verified successfully.");
+                } catch (error) {
+                    showLinkError("We could not verify this email address. Request a new verification link from the Sentimo app.");
+                }
+            } else {
+                try {
+                    const info = await checkActionCode(auth, actionCode);
+                    await applyActionCode(auth, actionCode);
+                    const restoredEmail = info.data.email;
+                    document.getElementById("page-title").textContent = "Email restored";
+                    document.getElementById("intro").textContent = "Your Sentimo email address has been restored.";
+                    showSuccess(`Your email address has been restored${restoredEmail ? ` to ${restoredEmail}` : ""}.`);
+                } catch (error) {
+                    showLinkError("We could not restore this email address. Request a new link from the Sentimo app.");
+                }
+            }
         }
     </script>
 </body>
