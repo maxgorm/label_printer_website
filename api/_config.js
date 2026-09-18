@@ -28,6 +28,12 @@ const PREORDER_CONFIG = {
     },
   },
   default_product: 'duo',
+  available_colors: ['pink', 'white', 'black'],
+  color_labels: {
+    pink: 'Pink',
+    white: 'White',
+    black: 'Black',
+  },
   currency: 'usd',
 
   // Shipping timeline

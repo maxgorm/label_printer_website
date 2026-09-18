@@ -98,6 +98,7 @@ async function handleCheckoutCompleted(stripe, session) {
     PREORDER_CONFIG.products[PREORDER_CONFIG.default_product];
   const productName = metadata.product_name || product.name;
   const unitPrice = parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents;
+  const printerColors = formatPrinterColors(metadata.printer_colors);
   const totalAmount = fullSession.amount_total;
 
   // Insert order into Supabase
@@ -125,6 +126,7 @@ async function handleCheckoutCompleted(stripe, session) {
     shipping_state: shipping.state || null,
     shipping_postal_code: shipping.postal_code || null,
     shipping_country: shipping.country || null,
+    notes: printerColors ? `Printer colors: ${printerColors}` : null,
   });
 
   if (dbError) {
@@ -142,6 +144,7 @@ async function handleCheckoutCompleted(stripe, session) {
           name: customerName || 'there',
           orderNumber: fullSession.id.slice(-8).toUpperCase(),
           productName,
+          printerColors,
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
         }),
@@ -207,7 +210,16 @@ function formatCurrency(amountCents, currency = 'usd') {
   }).format(amountCents / 100);
 }
 
-function buildConfirmationEmail({ name, orderNumber, productName, quantity, amount }) {
+function formatPrinterColors(value) {
+  return String(value || '')
+    .split(',')
+    .map((color) => color.trim())
+    .filter(Boolean)
+    .map((color) => PREORDER_CONFIG.color_labels[color] || color)
+    .join(', ');
+}
+
+function buildConfirmationEmail({ name, orderNumber, productName, printerColors, quantity, amount }) {
   return `
     <div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1F2937;">
       <div style="text-align: center; margin-bottom: 32px;">
@@ -222,6 +234,7 @@ function buildConfirmationEmail({ name, orderNumber, productName, quantity, amou
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">Order summary</h3>
         <p style="margin: 4px 0;"><strong>Order number:</strong> ${escapeHtml(orderNumber)}</p>
         <p style="margin: 4px 0;"><strong>Product:</strong> ${escapeHtml(productName)}</p>
+        <p style="margin: 4px 0;"><strong>Printer color(s):</strong> ${escapeHtml(printerColors || 'Not specified')}</p>
         <p style="margin: 4px 0;"><strong>Quantity:</strong> ${quantity}</p>
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>
       </div>

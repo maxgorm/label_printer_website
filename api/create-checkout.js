@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe secret key is not configured' });
   }
 
-  const { quantity, product: productKey } = req.body || {};
+  const { quantity, product: productKey, colors } = req.body || {};
   const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
   const selectedProductKey = productKey || PREORDER_CONFIG.default_product;
   const selectedProduct = PREORDER_CONFIG.products[selectedProductKey];
@@ -18,6 +18,15 @@ export default async function handler(req, res) {
   if (!selectedProduct) {
     return res.status(400).json({ error: 'Invalid product selection' });
   }
+
+  const requiredColorCount = selectedProduct.printer_count;
+  if (!Array.isArray(colors) || colors.length !== requiredColorCount || colors.some((color) => !PREORDER_CONFIG.available_colors.includes(color))) {
+    return res.status(400).json({
+      error: `Please select ${requiredColorCount} valid printer color${requiredColorCount === 1 ? '' : 's'}`,
+    });
+  }
+
+  const colorSummary = colors.map((color) => PREORDER_CONFIG.color_labels[color]).join(', ');
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
@@ -31,7 +40,7 @@ export default async function handler(req, res) {
             currency: PREORDER_CONFIG.currency,
             product_data: {
               name: selectedProduct.name,
-              description: selectedProduct.description,
+              description: `${selectedProduct.description} Colors: ${colorSummary}.`,
             },
             unit_amount: selectedProduct.unit_price_cents,
           },
@@ -47,6 +56,9 @@ export default async function handler(req, res) {
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: PREORDER_CONFIG.expected_ship_label,
         quantity: String(qty),
+        printer_colors: colors.join(','),
+        printer_color_1: colors[0],
+        ...(colors[1] ? { printer_color_2: colors[1] } : {}),
       },
       success_url: `${getBaseUrl(req)}${PREORDER_CONFIG.success_url}`,
       cancel_url: `${getBaseUrl(req)}${PREORDER_CONFIG.cancel_url}`,

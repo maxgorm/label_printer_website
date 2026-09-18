@@ -1,6 +1,6 @@
 /**
  * Sentimo Pre-Order Checkout Logic
- * Handles: quantity selection, checkbox gating, Stripe Checkout redirect, analytics events
+ * Handles: quantity selection, color selection, checkbox gating, Stripe Checkout redirect, analytics events
  */
 (function () {
   'use strict';
@@ -24,9 +24,14 @@
   const singleInfoButton = document.getElementById('single-info-button');
   const singleInfoPopover = document.getElementById('single-info-popover');
   const singleInfoClose = document.getElementById('single-info-close');
+  const colorSelectionHelp = document.getElementById('color-selection-help');
+  const colorPickers = document.querySelectorAll('.color-picker');
+  const colorOptions = document.querySelectorAll('[data-color-option]');
+  const colorRadios = document.querySelectorAll('.color-radio');
 
   let quantity = 1;
   let selectedProduct = 'duo';
+  let selectedColors = [null, null];
   const MAX_QTY = 10;
   const MIN_QTY = 1;
   const PRODUCTS = {
@@ -36,14 +41,22 @@
       subtitle: 'for 1 printer',
       quantityHelp: 'Each single-printer option includes 1 printer and starter materials',
       buttonLabel: 'Pre-Order Single Printer',
+      printerCount: 1,
     },
     duo: {
       currentPrice: '$49',
       originalPrice: '$69',
       subtitle: 'for 2 printers',
-      quantityHelp: 'Each 2-pack includes 2 printers (one for you, one for them)',
+      quantityHelp: 'Each 2-pack includes 2 printers (choose a color for each; the colors can match)',
       buttonLabel: 'Pre-Order 2-Pack',
+      printerCount: 2,
     },
+  };
+
+  const COLOR_LABELS = {
+    pink: 'Pink',
+    white: 'White',
+    black: 'Black',
   };
 
   // ===================== ANALYTICS HELPERS =====================
@@ -81,6 +94,52 @@
       option.classList.toggle('dark:border-gray-700', !isSelected);
       option.setAttribute('aria-checked', String(isSelected));
     });
+
+    updateColorSelection();
+  }
+
+  function requiredColorCount() {
+    return PRODUCTS[selectedProduct]?.printerCount || 2;
+  }
+
+  function hasCompleteColorSelection() {
+    return selectedColors.slice(0, requiredColorCount()).every(Boolean);
+  }
+
+  function updateColorSelection() {
+    const requiredCount = requiredColorCount();
+    const selectedForOrder = selectedColors.slice(0, requiredCount);
+
+    colorPickers.forEach((picker, index) => {
+      const isVisible = index < requiredCount;
+      picker.classList.toggle('hidden', !isVisible);
+      picker.setAttribute('aria-hidden', String(!isVisible));
+    });
+
+    colorOptions.forEach((option) => {
+      const printerIndex = Number(option.dataset.printerIndex);
+      const isSelected = selectedColors[printerIndex] === option.dataset.colorOption;
+      option.classList.toggle('border-primary', isSelected);
+      option.classList.toggle('bg-primary/5', isSelected);
+      option.classList.toggle('border-gray-200', !isSelected);
+      option.classList.toggle('dark:border-gray-700', !isSelected);
+      option.setAttribute('aria-checked', String(isSelected));
+    });
+
+    if (colorSelectionHelp) {
+      if (hasCompleteColorSelection()) {
+        const colorSummary = selectedForOrder.map((color) => COLOR_LABELS[color]).join(' + ');
+        colorSelectionHelp.textContent = `Selected: ${colorSummary}. This selection applies to each package.`;
+      } else if (requiredCount === 1) {
+        colorSelectionHelp.textContent = 'Choose one color for your single printer.';
+      } else {
+        colorSelectionHelp.textContent = 'Choose two colors for your 2-pack. You can choose the same color twice.';
+      }
+    }
+
+    if (preorderBtn) {
+      preorderBtn.disabled = !(checkbox?.checked && hasCompleteColorSelection());
+    }
   }
 
   productRadios.forEach((radio) => {
@@ -89,6 +148,14 @@
         selectedProduct = radio.value;
         updateProductDisplay();
       }
+    });
+  });
+
+  colorRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const printerIndex = Number(radio.dataset.printerIndex);
+      selectedColors[printerIndex] = radio.value;
+      updateColorSelection();
     });
   });
 
@@ -152,17 +219,20 @@
 
   // ===================== CHECKBOX GATING =====================
   checkbox?.addEventListener('change', () => {
-    if (preorderBtn) {
-      preorderBtn.disabled = !checkbox.checked;
-    }
+    updateColorSelection();
   });
 
   // ===================== PRE-ORDER BUTTON =====================
   preorderBtn?.addEventListener('click', async () => {
-    if (!checkbox?.checked) return;
+    if (!checkbox?.checked || !hasCompleteColorSelection()) {
+      updateColorSelection();
+      return;
+    }
+
+    const colors = selectedColors.slice(0, requiredColorCount());
 
     // Track CTA click
-    trackEvent('checkout_started', { quantity, product: selectedProduct });
+    trackEvent('checkout_started', { quantity, product: selectedProduct, colors });
 
     // Set loading state
     preorderBtn.disabled = true;
@@ -174,7 +244,7 @@
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity, product: selectedProduct }),
+        body: JSON.stringify({ quantity, product: selectedProduct, colors }),
       });
 
       const contentType = response.headers.get('content-type');
@@ -200,7 +270,7 @@
       }
 
       // Reset button
-      preorderBtn.disabled = !checkbox.checked;
+      preorderBtn.disabled = !(checkbox.checked && hasCompleteColorSelection());
       if (preorderBtnText) preorderBtnText.textContent = 'Pre-Order Now';
       if (preorderBtnSpinner) preorderBtnSpinner.classList.add('hidden');
     }

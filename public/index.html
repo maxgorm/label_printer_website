@@ -429,6 +429,54 @@
                         </div>
                     </fieldset>
 
+                    <!-- Printer Color Selection -->
+                    <fieldset id="color-selection" class="mb-5 text-left" aria-describedby="color-selection-help">
+                        <legend class="font-medium text-sm mb-2">Choose your printer color(s):</legend>
+                        <p id="color-selection-help" class="text-xs text-text-muted-light dark:text-text-muted-dark mb-3" aria-live="polite">Choose two colors for your 2-pack. You can choose the same color twice.</p>
+                        <div id="color-pickers" class="space-y-4">
+                            <div class="color-picker" data-printer-index="0">
+                                <p class="text-sm font-medium mb-2">Printer 1</p>
+                                <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Printer 1 color">
+                                    <label data-color-option="pink" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-0" value="pink" data-printer-index="0" />
+                                        <img src="/assets/Sentimo_Pink.jpg" alt="Pink Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">Pink</span>
+                                    </label>
+                                    <label data-color-option="white" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-0" value="white" data-printer-index="0" />
+                                        <img src="/assets/Sentimo_White.png" alt="White Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">White</span>
+                                    </label>
+                                    <label data-color-option="black" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-0" value="black" data-printer-index="0" />
+                                        <img src="/assets/Sentimo_black.png" alt="Black Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">Black</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="color-picker" data-printer-index="1">
+                                <p class="text-sm font-medium mb-2">Printer 2</p>
+                                <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Printer 2 color">
+                                    <label data-color-option="pink" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-1" value="pink" data-printer-index="1" />
+                                        <img src="/assets/Sentimo_Pink.jpg" alt="Pink Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">Pink</span>
+                                    </label>
+                                    <label data-color-option="white" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-1" value="white" data-printer-index="1" />
+                                        <img src="/assets/Sentimo_White.png" alt="White Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">White</span>
+                                    </label>
+                                    <label data-color-option="black" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-2 text-center transition-colors hover:border-primary/50">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-1" value="black" data-printer-index="1" />
+                                        <img src="/assets/Sentimo_black.png" alt="Black Sentimo printer" class="aspect-square w-full rounded-lg object-cover" />
+                                        <span class="mt-1 block text-xs font-medium">Black</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- Quantity Selector -->
                     <div class="flex flex-col items-center lg:items-start gap-2 mb-5">
                         <div class="flex items-center gap-3">
@@ -726,7 +774,7 @@
 
     <!-- Scripts -->
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js?v=20260908"></script>
+    <script src="/assets/js/preorder.js?v=20260918"></script>
 
     <!-- Carousel Script -->
     <script>
