@@ -338,29 +338,32 @@
                 <div class="relative lg:max-w-[32rem] lg:justify-self-center">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div class="aspect-square relative overflow-hidden">
-                                <video id="carousel-video" src="/assets/SentimoProductVid.mp4" controls playsinline preload="metadata" class="w-full h-full object-cover" style="display:none;"></video>
-                                <img id="carousel-img" src="/assets/IMG_4321.JPG" alt="Sentimo Printer" class="w-full h-full object-cover transition-opacity duration-300" />
+                            <img id="carousel-img" src="/assets/Hero.png" alt="Sentimo printers with love notes" class="w-full h-full object-cover transition-opacity duration-300" />
                         </div>
                     </div>
                     <!-- Thumbnails -->
                     <div class="flex gap-2 sm:gap-3 mt-3 overflow-x-auto pb-2">
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="0">
-                            <img src="/assets/IMG_4321.JPG" alt="Sentimo view 1" class="w-full h-full object-cover" />
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="0">
+                            <img src="/assets/Hero.png" alt="Sentimo printers with love notes" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="1">
-                            <img src="/assets/IMG_4360.JPG" alt="Sentimo view 2" class="w-full h-full object-cover" />
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="1">
+                            <img src="/assets/3-w-printer.png" alt="Sentimo printer with a handwritten note" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="2">
-                            <img src="/assets/Sentimo Couple.png" alt="Sentimo Couple" class="w-full h-full object-cover" />
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="2">
+                            <img src="/assets/4.png" alt="Sentimo printing a handwritten note" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="3">
-                            <img src="/assets/IMG_4364.JPG" alt="Sentimo view 4" class="w-full h-full object-cover" />
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="3">
+                            <img src="/assets/5-no-logo.png" alt="Sentimo printer being used at a table" class="w-full h-full object-cover" />
                         </button>
-                            <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors relative" data-index="4">
-                                <div class="w-full h-full bg-gray-900 flex items-center justify-center">
-                                    <span class="material-icons-round text-white text-2xl sm:text-3xl">play_circle</span>
-                                </div>
-                            </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="4">
+                            <img src="/assets/6.png" alt="Pink and white Sentimo printers" class="w-full h-full object-cover" />
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="5">
+                            <img src="/assets/7.png" alt="Sentimo printers and included accessories" class="w-full h-full object-cover" />
+                        </button>
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="6">
+                            <img src="/assets/8.png" alt="Pink, white, and black Sentimo printers" class="w-full h-full object-cover" />
+                        </button>
                     </div>
                     <!-- Prev/Next buttons -->
                     <button id="carousel-prev" class="absolute top-[45%] left-3 -translate-y-1/2 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black transition-colors z-10" aria-label="Previous image">
@@ -730,42 +733,28 @@
     (function() {
         'use strict';
         const slides = [
-            { type: 'image', src: '/assets/IMG_4321.JPG' },
-            { type: 'image', src: '/assets/IMG_4360.JPG' },
-            { type: 'image', src: '/assets/Sentimo Couple.png' },
-            { type: 'image', src: '/assets/IMG_4364.JPG' },
-            { type: 'video', src: '/assets/SentimoProductVid.mp4' }
+            '/assets/Hero.png',
+            '/assets/3-w-printer.png',
+            '/assets/4.png',
+            '/assets/5-no-logo.png',
+            '/assets/6.png',
+            '/assets/7.png',
+            '/assets/8.png'
         ];
         let currentIndex = 0;
         const mainImg = document.getElementById('carousel-img');
-        const mainVideo = document.getElementById('carousel-video');
         const thumbs = document.querySelectorAll('.carousel-thumb');
         const prevBtn = document.getElementById('carousel-prev');
         const nextBtn = document.getElementById('carousel-next');
 
         function showSlide(index) {
             currentIndex = (index + slides.length) % slides.length;
-            var slide = slides[currentIndex];
-
-            if (slide.type === 'video') {
-                if (mainImg) mainImg.style.display = 'none';
-                if (mainVideo) {
-                    mainVideo.style.display = 'block';
-                    mainVideo.src = slide.src;
-                }
-            } else {
-                if (mainVideo) {
-                    mainVideo.pause();
-                    mainVideo.style.display = 'none';
-                }
-                if (mainImg) {
-                    mainImg.style.display = 'block';
-                    mainImg.style.opacity = '0';
-                    setTimeout(function() {
-                        mainImg.src = slide.src;
-                        mainImg.style.opacity = '1';
-                    }, 150);
-                }
+            if (mainImg) {
+                mainImg.style.opacity = '0';
+                setTimeout(function() {
+                    mainImg.src = slides[currentIndex];
+                    mainImg.style.opacity = '1';
+                }, 150);
             }
 
             thumbs.forEach(function(thumb, i) {
