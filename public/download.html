@@ -12,12 +12,12 @@
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Download Sentimo - Coming Soon</title>
-    <meta name="description" content="The Sentimo app is coming soon to the App Store and Google Play." />
+    <title>Download Sentimo</title>
+    <meta name="description" content="Download the Sentimo app from the App Store or Google Play." />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Download Sentimo - Coming Soon" />
-    <meta property="og:description" content="The Sentimo app is coming soon to the App Store and Google Play." />
+    <meta property="og:title" content="Download Sentimo" />
+    <meta property="og:description" content="Download the Sentimo app from the App Store or Google Play." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sentimonotes.com/download" />
     <meta property="og:image" content="/assets/IMG_4321.JPG" />
@@ -66,6 +66,23 @@
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="/assets/css/styles.css" />
+
+    <script>
+        (function () {
+            const appStoreUrl = 'https://apps.apple.com/us/app/sentimo-send-something-real/id6802939815';
+            const googlePlayUrl = 'https://play.google.com/store/apps/details?id=com.sentimo.sentimo_app';
+            const userAgent = navigator.userAgent || '';
+            const isIOS = /iPad|iPhone|iPod/i.test(userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isAndroid = /Android/i.test(userAgent);
+
+            if (isIOS) {
+                window.location.replace(appStoreUrl);
+            } else if (isAndroid) {
+                window.location.replace(googlePlayUrl);
+            }
+        })();
+    </script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex min-h-screen flex-col">
 
@@ -81,7 +98,7 @@
         </div>
     </nav>
 
-    <!-- ===================== DOWNLOAD PLACEHOLDER ===================== -->
+    <!-- ===================== DOWNLOAD CTA ===================== -->
     <main class="flex-grow pt-32 pb-20">
         <section class="relative overflow-hidden">
             <div class="absolute left-1/2 top-16 h-72 w-72 -translate-x-1/2 rounded-full bg-accent-pink blur-3xl opacity-70 dark:bg-primary/10"></div>
@@ -91,33 +108,21 @@
                     <p class="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-primary">Sentimo app</p>
                     <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
                         Download Sentimo
-                        <span class="handwritten block pt-2 text-primary font-normal">coming soon.</span>
+                        <span class="handwritten block pt-2 text-primary font-normal">send something real.</span>
                     </h1>
                     <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-text-muted-light dark:text-text-muted-dark lg:mx-0">
-                        The Sentimo app is coming soon to both app stores. iOS and Android downloads will be available here when the app launches.
+                        Download the Sentimo app and send notes, doodles, and memories straight to a Sentimo printer.
                     </p>
 
                     <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-                        <div class="inline-flex w-full max-w-xs items-center gap-4 rounded-2xl border border-white/20 bg-black px-5 py-3 text-left text-white shadow-card opacity-80" aria-label="App Store download coming soon">
-                            <span class="material-icons-round text-4xl">phone_iphone</span>
-                            <span>
-                                <span class="block text-xs font-medium uppercase tracking-wide text-white/70">Download on the</span>
-                                <span class="block text-2xl font-bold leading-tight">App Store</span>
-                            </span>
-                        </div>
+                        <a href="https://apps.apple.com/us/app/sentimo-send-something-real/id6802939815" class="block w-full max-w-xs transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30" aria-label="Download Sentimo on the App Store">
+                            <img src="/assets/app-store-badge.png" alt="Download on the App Store" class="h-auto w-full" />
+                        </a>
 
-                        <div class="inline-flex w-full max-w-xs items-center gap-4 rounded-2xl border border-white/20 bg-black px-5 py-3 text-left text-white shadow-card opacity-80" aria-label="Google Play download coming soon">
-                            <span class="material-icons-round text-4xl text-primary">play_arrow</span>
-                            <span>
-                                <span class="block text-xs font-medium uppercase tracking-wide text-white/70">Get it on</span>
-                                <span class="block text-2xl font-bold leading-tight">Google Play</span>
-                            </span>
-                        </div>
+                        <a href="https://play.google.com/store/apps/details?id=com.sentimo.sentimo_app" class="block w-full max-w-xs transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/30" aria-label="Get Sentimo on Google Play">
+                            <img src="/assets/google-play-badge.png" alt="Get it on Google Play" class="h-auto w-full" />
+                        </a>
                     </div>
-
-                    <p class="mt-4 text-sm text-text-muted-light dark:text-text-muted-dark">
-                        App Store and Google Play availability coming soon.
-                    </p>
 
                     <div class="mt-10">
                         <a href="/" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-medium text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary-hover hover:shadow-primary/50">

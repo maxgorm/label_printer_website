@@ -173,6 +173,22 @@
                         </a>
                     </div>
 
+                    <a id="mobile-download-cta" href="/download" class="hidden inline-flex items-center justify-center gap-2 bg-accent-pink hover:bg-primary/10 text-primary px-8 py-4 rounded-full font-medium transition-all text-lg" data-track="click_download_cta">
+                        Download the App
+                        <span class="material-icons-round text-xl">download</span>
+                    </a>
+                    <script>
+                    (function () {
+                        const userAgent = navigator.userAgent || '';
+                        const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+                        const downloadCta = document.getElementById('mobile-download-cta');
+
+                        if (downloadCta && isMobileDevice) {
+                            downloadCta.classList.remove('hidden');
+                        }
+                    })();
+                    </script>
+
                     <div class="pt-2 space-y-1">
                         <p class="text-sm text-text-muted-light dark:text-text-muted-dark">
                             <strong>Pre-order now.</strong> Expected to begin shipping in Fall 2026.
@@ -582,7 +598,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h4>
-                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes! The Sentimo app will be available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes! The Sentimo app is available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">Do I need ink?</h4>
@@ -695,8 +711,8 @@
             <div class="bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
                 <div class="text-center text-gray-400">
                     <span class="material-icons-round text-6xl mb-4 block">play_circle_filled</span>
-                    <p class="text-lg">Video coming soon</p>
-                    <p class="text-sm mt-1">Stay tuned for our launch video!</p>
+                    <p class="text-lg">Watch the Sentimo product video</p>
+                    <p class="text-sm mt-1">See how Sentimo turns messages into something real.</p>
                 </div>
             </div>
         </div>
