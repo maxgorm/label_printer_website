@@ -32,6 +32,13 @@ body {
     overflow-x: hidden;
 }
 
+/* Compact printer color cards: crop the supplied product photos around the printer. */
+.color-photo {
+    display: block;
+    transform: scale(1.35);
+    transform-origin: center 58%;
+}
+
 /* --- Typography --- */
 .handwritten {
     font-family: 'Playfair Display', serif;

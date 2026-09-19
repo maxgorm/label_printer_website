@@ -27,6 +27,11 @@ export default async function handler(req, res) {
   }
 
   const colorSummary = colors.map((color) => PREORDER_CONFIG.color_labels[color]).join(', ');
+  const colorMetadata = {
+    printer_colors: colorSummary,
+    printer_color_1: PREORDER_CONFIG.color_labels[colors[0]],
+    ...(colors[1] ? { printer_color_2: PREORDER_CONFIG.color_labels[colors[1]] } : {}),
+  };
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
@@ -56,9 +61,10 @@ export default async function handler(req, res) {
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: PREORDER_CONFIG.expected_ship_label,
         quantity: String(qty),
-        printer_colors: colors.join(','),
-        printer_color_1: colors[0],
-        ...(colors[1] ? { printer_color_2: colors[1] } : {}),
+        ...colorMetadata,
+      },
+      payment_intent_data: {
+        metadata: colorMetadata,
       },
       success_url: `${getBaseUrl(req)}${PREORDER_CONFIG.success_url}`,
       cancel_url: `${getBaseUrl(req)}${PREORDER_CONFIG.cancel_url}`,
