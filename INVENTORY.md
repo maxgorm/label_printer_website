@@ -1,0 +1,20 @@
+# Sentimo orders and inventory
+
+The Supabase `preorders` table stores both website and TikTok orders. `channel` identifies the source, `color_counts` contains the number of physical printers by color, and `quantity` is the number of purchased packages. The `inventory_stock` view shows `physical_on_hand`, `sold_unshipped`, and `available_to_sell` for each color.
+
+```sql
+SELECT * FROM public.inventory_stock ORDER BY color;
+SELECT created_at, channel, external_order_id, email, quantity, color_counts,
+       order_status, fulfillment_status
+FROM public.preorders ORDER BY created_at DESC;
+```
+
+The opening balance is 400 white, 400 pink, and 200 black. Two creator/giveaway units are recorded as movements: one white and one pink. The four website orders through October 3, 2026 are recorded as paid and pending fulfillment. Their printer counts are white 1, pink 4, and black 7. Until any of those orders ships, the resulting available stock is white 398, pink 395, and black 193.
+
+When a paid order ships, change its `fulfillment_status` to `shipped` or `fulfilled`. A database trigger records a negative physical movement for each color once; the order stops counting as unshipped. Do not add a second manual shipment movement for the same order. To record another giveaway, damage, return, or correction, insert a row in `inventory_movements` with a unique `reference_key` and signed `quantity_delta`.
+
+Website orders are inserted from the Stripe `checkout.session.completed` webhook. An insert failure returns an error to Stripe so it can retry. Customer confirmation emails come from `noreply@sentimonotes.com` through Resend after the order is saved. Historical backfilled orders are not emailed by the backfill.
+
+TikTok Shop can use the same table and stock view, but an automatic feed needs a TikTok Shop Partner Center app, seller authorization, and the Order Information API scope. Until that connection exists, TikTok orders must be entered with `channel = 'tiktok'`, the exact TikTok `external_order_id`, the SKU-derived `color_counts`, and the correct order and fulfillment statuses. The database enforces one row per TikTok order ID. Do not treat a paid TikTok order as a website Stripe checkout.
+
+The migration is `supabase/migration_002_orders_inventory.sql`. It must be applied before the updated webhook is deployed. Keep Stripe, Supabase service-role, and Resend keys only in Vercel environment variables; never place them in this repository.

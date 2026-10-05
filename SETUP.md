@@ -35,7 +35,8 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
 1. Create a Supabase project at [supabase.com](https://supabase.com)
 2. Go to the SQL Editor
 3. Run the migration in `supabase/migration_001_preorders.sql`
-4. Copy your project URL and service role key into env vars
+4. Run `supabase/migration_002_orders_inventory.sql` for color counts and inventory
+5. Copy your project URL and service role key into env vars
 
 ---
 
@@ -49,6 +50,7 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
      - `checkout.session.completed`
      - `charge.refunded`
 4. Copy the webhook signing secret into `STRIPE_WEBHOOK_SECRET`
+5. Enable the event destination after deploying the updated webhook
 
 ### Stripe Tax
 
@@ -112,8 +114,10 @@ real card.
 1. Create a Resend account at [resend.com](https://resend.com)
 2. Verify your sending domain (`sentimonotes.com`)
 3. Create an API key
-4. The webhook handler sends from `orders@sentimonotes.com` — make sure this is verified
+4. The webhook handler sends confirmations from `noreply@sentimonotes.com` and directs questions to `support@sentimonotes.com`. Verify the `sentimonotes.com` domain in the Resend account that owns `RESEND_API_KEY`.
 5. For the mailing list subscriber flow (existing), set up an Audience and copy the ID
+
+See `INVENTORY.md` for stock and fulfillment handling.
 
 ---
 

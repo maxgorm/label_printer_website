@@ -83,10 +83,12 @@ async function handleCheckoutCompleted(stripe, session) {
   const supabase = getSupabaseClient();
   const resend = getResendClient();
 
-  // Retrieve the full session with line items
-  const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-    expand: ['line_items', 'customer_details', 'shipping_details'],
-  });
+  // Customer and shipping details are regular Session fields, not expandable objects.
+  const fullSession = await stripe.checkout.sessions.retrieve(session.id);
+
+  if (fullSession.payment_status !== 'paid') {
+    return;
+  }
 
   const metadata = fullSession.metadata || {};
   const shipping = fullSession.shipping_details?.address || {};
@@ -99,9 +101,10 @@ async function handleCheckoutCompleted(stripe, session) {
   const productName = metadata.product_name || product.name;
   const unitPrice = parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents;
   const printerColors = formatPrinterColors(metadata.printer_colors);
+  const colorCounts = parseColorCounts(metadata, product.printer_count, quantity);
   const totalAmount = fullSession.amount_total;
 
-  // Insert order into Supabase
+  // Stripe retries events. A duplicate delivery must never reset fulfillment or stock.
   const { error: dbError } = await supabase.from('preorders').insert({
     stripe_checkout_session_id: fullSession.id,
     stripe_payment_intent_id: fullSession.payment_intent,
@@ -109,6 +112,9 @@ async function handleCheckoutCompleted(stripe, session) {
     email: customerEmail,
     full_name: customerName,
     product_slug: metadata.product_slug || product.slug,
+    channel: 'web',
+    color_counts: colorCounts,
+    source_created_at: new Date(fullSession.created * 1000).toISOString(),
     quantity: quantity,
     unit_price: unitPrice,
     total_amount: totalAmount,
@@ -129,15 +135,22 @@ async function handleCheckoutCompleted(stripe, session) {
     notes: printerColors ? `Printer colors: ${printerColors}` : null,
   });
 
-  if (dbError) {
-    console.error('Failed to insert preorder:', dbError);
+  if (dbError && dbError.code !== '23505') {
+    throw dbError;
   }
 
+  const { data: savedOrder, error: readError } = await supabase
+    .from('preorders')
+    .select('id, confirmation_email_sent_at')
+    .eq('stripe_checkout_session_id', fullSession.id)
+    .single();
+  if (readError || !savedOrder) throw readError || new Error('Saved order not found');
+
   // Send confirmation email
-  if (customerEmail && resend) {
-    try {
-      await resend.emails.send({
-        from: `Sentimo <orders@sentimonotes.com>`,
+  if (customerEmail && !savedOrder.confirmation_email_sent_at) {
+    if (!resend) throw new Error('Resend is not configured for order confirmations');
+    const { error: emailError } = await resend.emails.send({
+        from: PREORDER_CONFIG.confirmation_from,
         to: customerEmail,
         subject: 'Your Sentimo pre-order is confirmed',
         html: buildConfirmationEmail({
@@ -148,10 +161,12 @@ async function handleCheckoutCompleted(stripe, session) {
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
         }),
-      });
-    } catch (emailErr) {
-      console.error('Failed to send confirmation email:', emailErr);
-    }
+      }, { idempotencyKey: `sentimo-confirmation/${fullSession.id}` });
+    if (emailError) throw emailError;
+    const { error: updateError } = await supabase.from('preorders')
+      .update({ confirmation_email_sent_at: new Date().toISOString() })
+      .eq('id', savedOrder.id);
+    if (updateError) throw updateError;
   }
 }
 
@@ -163,32 +178,32 @@ async function handleRefund(charge) {
   if (!paymentIntentId) return;
 
   const refundedAmount = charge.amount_refunded;
+  const fullyRefunded = refundedAmount >= charge.amount;
 
   const { error: dbError } = await supabase
     .from('preorders')
     .update({
-      order_status: 'refunded',
-      refund_status: 'refunded',
+      order_status: fullyRefunded ? 'refunded' : 'partially_refunded',
+      refund_status: fullyRefunded ? 'refunded' : 'partial',
       refund_amount: refundedAmount,
       updated_at: new Date().toISOString(),
     })
     .eq('stripe_payment_intent_id', paymentIntentId);
 
-  if (dbError) {
-    console.error('Failed to update refund status:', dbError);
-  }
+  if (dbError) throw dbError;
 
   // Get the order to send refund email
-  const { data: order } = await supabase
+  const { data: order, error: orderError } = await supabase
     .from('preorders')
-    .select('email, full_name, stripe_checkout_session_id, total_amount, currency')
+    .select('id, email, full_name, stripe_checkout_session_id, total_amount, currency, refund_email_amount')
     .eq('stripe_payment_intent_id', paymentIntentId)
     .single();
+  if (orderError || !order) throw orderError || new Error('Refunded order not found');
 
-  if (order?.email && resend) {
-    try {
-      await resend.emails.send({
-        from: `Sentimo <orders@sentimonotes.com>`,
+  if (order.email && order.refund_email_amount !== refundedAmount) {
+    if (!resend) throw new Error('Resend is not configured for refund confirmations');
+    const { error: emailError } = await resend.emails.send({
+        from: PREORDER_CONFIG.confirmation_from,
         to: order.email,
         subject: 'Your Sentimo refund has been processed',
         html: buildRefundEmail({
@@ -196,11 +211,27 @@ async function handleRefund(charge) {
           orderNumber: order.stripe_checkout_session_id?.slice(-8).toUpperCase() || '',
           amount: formatCurrency(refundedAmount, order.currency),
         }),
-      });
-    } catch (emailErr) {
-      console.error('Failed to send refund email:', emailErr);
-    }
+      }, { idempotencyKey: `sentimo-refund/${paymentIntentId}/${refundedAmount}` });
+    if (emailError) throw emailError;
+    const { error: updateError } = await supabase.from('preorders')
+      .update({ refund_email_sent_at: new Date().toISOString(), refund_email_amount: refundedAmount })
+      .eq('id', order.id);
+    if (updateError) throw updateError;
   }
+}
+
+export function parseColorCounts(metadata, printerCount, packageQuantity) {
+  const colors = [metadata.printer_color_1, metadata.printer_color_2]
+    .filter(Boolean)
+    .map((color) => String(color).trim().toLowerCase());
+  if (colors.length !== printerCount ||
+      colors.some((color) => !PREORDER_CONFIG.available_colors.includes(color))) {
+    throw new Error('Checkout session is missing valid printer colors');
+  }
+  return colors.reduce((counts, color) => {
+    counts[color] = (counts[color] || 0) + packageQuantity;
+    return counts;
+  }, {});
 }
 
 function formatCurrency(amountCents, currency = 'usd') {
@@ -238,7 +269,7 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
         <p style="margin: 4px 0;"><strong>Quantity:</strong> ${quantity}</p>
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>
       </div>
-      <p>If you have any questions, reply to this email or contact us at <a href="mailto:${PREORDER_CONFIG.support_email}" style="color: #F53F7B;">${PREORDER_CONFIG.support_email}</a>.</p>
+      <p>If you have any questions, contact us at <a href="mailto:${PREORDER_CONFIG.support_email}" style="color: #F53F7B;">${PREORDER_CONFIG.support_email}</a>.</p>
       <p>Thank you,<br />Sentimo</p>
       <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 32px 0;" />
       <p style="font-size: 12px; color: #9CA3AF;">Sentimo™ is a trademark of Sentimo L.L.C.</p>

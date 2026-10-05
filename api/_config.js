@@ -51,6 +51,7 @@ const PREORDER_CONFIG = {
 
   // Support
   support_email: 'support@sentimonotes.com',
+  confirmation_from: 'Sentimo <noreply@sentimonotes.com>',
 
   // Refund copy
   refund_message: 'If we are unable to fulfill your order, you will receive a full refund.',
