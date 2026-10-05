@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe webhook environment is not configured' });
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
   const sig = req.headers['stripe-signature'];
   // Vercel may preserve whitespace pasted with the dashboard secret.
@@ -69,7 +69,7 @@ function getSupabaseClient() {
     throw new Error('Supabase environment is not configured');
   }
 
-  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+  return createClient(process.env.SUPABASE_URL.trim(), process.env.SUPABASE_SERVICE_ROLE_KEY.trim());
 }
 
 function getResendClient() {
@@ -77,7 +77,7 @@ function getResendClient() {
     return null;
   }
 
-  return new Resend(process.env.RESEND_API_KEY);
+  return new Resend(process.env.RESEND_API_KEY.trim());
 }
 
 async function handleCheckoutCompleted(stripe, session) {
