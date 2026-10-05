@@ -141,7 +141,7 @@ async function handleCheckoutCompleted(stripe, session) {
 
   const { data: savedOrder, error: readError } = await supabase
     .from('preorders')
-    .select('id, confirmation_email_sent_at')
+    .select('id, order_number, confirmation_email_sent_at')
     .eq('stripe_checkout_session_id', fullSession.id)
     .single();
   if (readError || !savedOrder) throw readError || new Error('Saved order not found');
@@ -155,7 +155,7 @@ async function handleCheckoutCompleted(stripe, session) {
         subject: 'Your Sentimo pre-order is confirmed',
         html: buildConfirmationEmail({
           name: customerName || 'there',
-          orderNumber: fullSession.id.slice(-8).toUpperCase(),
+          orderNumber: savedOrder.order_number,
           productName,
           printerColors,
           quantity,
@@ -195,7 +195,7 @@ async function handleRefund(charge) {
   // Get the order to send refund email
   const { data: order, error: orderError } = await supabase
     .from('preorders')
-    .select('id, email, full_name, stripe_checkout_session_id, total_amount, currency, refund_email_amount')
+    .select('id, email, full_name, order_number, total_amount, currency, refund_email_amount')
     .eq('stripe_payment_intent_id', paymentIntentId)
     .single();
   if (orderError || !order) throw orderError || new Error('Refunded order not found');
@@ -208,7 +208,7 @@ async function handleRefund(charge) {
         subject: 'Your Sentimo refund has been processed',
         html: buildRefundEmail({
           name: order.full_name || 'there',
-          orderNumber: order.stripe_checkout_session_id?.slice(-8).toUpperCase() || '',
+          orderNumber: order.order_number,
           amount: formatCurrency(refundedAmount, order.currency),
         }),
       }, { idempotencyKey: `sentimo-refund/${paymentIntentId}/${refundedAmount}` });

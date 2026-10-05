@@ -1,10 +1,10 @@
 # Sentimo orders and inventory
 
-The Supabase `preorders` table stores both website and TikTok orders. `channel` identifies the source, `color_counts` contains the number of physical printers by color, and `quantity` is the number of purchased packages. The `inventory_stock` view shows `physical_on_hand`, `sold_unshipped`, and `available_to_sell` for each color.
+The Supabase `preorders` table stores both website and TikTok orders. `order_number` is the five-digit seller order number, starting at `00010`; `00001`-`00009` are reserved for testers. Supabase automatically assigns the next number on insert. `channel` identifies the source, `color_counts` contains the number of physical printers by color, and `quantity` is the number of purchased packages. The `inventory_stock` view shows `physical_on_hand`, `sold_unshipped`, and `available_to_sell` for each color.
 
 ```sql
 SELECT * FROM public.inventory_stock ORDER BY color;
-SELECT created_at, channel, external_order_id, email, quantity, color_counts,
+SELECT order_number, created_at, channel, external_order_id, email, quantity, color_counts,
        order_status, fulfillment_status
 FROM public.preorders ORDER BY created_at DESC;
 ```
@@ -17,4 +17,4 @@ Website orders are inserted from the Stripe `checkout.session.completed` webhook
 
 TikTok Shop can use the same table and stock view, but an automatic feed needs a TikTok Shop Partner Center app, seller authorization, and the Order Information API scope. Until that connection exists, TikTok orders must be entered with `channel = 'tiktok'`, the exact TikTok `external_order_id`, the SKU-derived `color_counts`, and the correct order and fulfillment statuses. The database enforces one row per TikTok order ID. Do not treat a paid TikTok order as a website Stripe checkout.
 
-The migration is `supabase/migration_002_orders_inventory.sql`. It must be applied before the updated webhook is deployed. Keep Stripe, Supabase service-role, and Resend keys only in Vercel environment variables; never place them in this repository.
+The migrations are `supabase/migration_002_orders_inventory.sql` and `supabase/migration_003_order_numbers.sql`, applied in that order. Keep Stripe, Supabase service-role, and Resend keys only in Vercel environment variables; never place them in this repository.
