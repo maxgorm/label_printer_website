@@ -30,7 +30,8 @@ export default async function handler(req, res) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   const sig = req.headers['stripe-signature'];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  // Vercel may preserve whitespace pasted with the dashboard secret.
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET.trim();
 
   let event;
   try {
