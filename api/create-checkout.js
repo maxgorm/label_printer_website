@@ -38,12 +38,16 @@ export default async function handler(req, res) {
   try {
     const sessionParams = {
       mode: 'payment',
+      automatic_tax: { enabled: true },
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
             currency: PREORDER_CONFIG.currency,
+            // Listed prices are the subtotal; Stripe adds applicable tax.
+            tax_behavior: 'exclusive',
             product_data: {
+              tax_code: PREORDER_CONFIG.product_tax_code,
               name: selectedProduct.name,
               description: `${selectedProduct.description} Colors: ${colorSummary}.`,
             },

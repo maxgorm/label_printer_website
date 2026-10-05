@@ -35,6 +35,9 @@ const PREORDER_CONFIG = {
     black: 'Black',
   },
   currency: 'usd',
+  // Stripe Tax: Consumer Electronics (physical devices for personal use).
+  // https://docs.stripe.com/tax/tax-codes
+  product_tax_code: 'txcd_34020027',
 
   // Shipping timeline
   expected_ship_label: 'Fall 2026',

@@ -50,6 +50,61 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
      - `charge.refunded`
 4. Copy the webhook signing secret into `STRIPE_WEBHOOK_SECRET`
 
+### Stripe Tax
+
+The reserve form in `public/index.html` sends the pack, quantity, and colors via
+`public/assets/js/preorder.js` to `POST /api/create-checkout`. That endpoint is the
+only Checkout Session creation path. It uses Stripe 17.7.0 and inline
+`price_data` / `product_data`, rather than saved Product/Price IDs or Payment Links.
+No static Payment Links are referenced by the website.
+
+Each new session enables `automatic_tax.enabled`. Each inline price specifies
+`tax_behavior: 'exclusive'` so applicable tax is added to the listed subtotal.
+Each inline product uses `api/_config.js`'s `product_tax_code`, currently
+`txcd_34020027` (**Consumer Electronics**, physical devices for personal use),
+verified against [Stripe's tax code list](https://docs.stripe.com/tax/tax-codes).
+This overrides the account preset for both packs and all colors. The existing
+inline product/price creation strategy is preserved; no separate catalog products
+or prices are provisioned by this change.
+
+The existing US shipping address collection remains enabled. Stripe Tax uses the
+delivery address entered in Checkout for these guest purchases, then applies
+the account's active registrations and tax rules. No rate is hard-coded.
+See [Stripe's Checkout tax guide](https://docs.stripe.com/tax/checkout/page).
+
+In the **live-mode** Stripe Dashboard, confirm Tax setup is complete (business
+origin address and an active Michigan registration with the correct start date).
+Change the preset category in **Settings → Tax** from Electronically Supplied
+Services to Consumer Electronics for consistency with Sentimo's physical goods.
+This preset change is not required by the corrected website path because its
+products now carry an explicit category. Existing saved products, previously
+created sessions, and external Payment Links are not modified. If you distribute
+Payment Links elsewhere, enable automatic tax and correct their product category
+and price tax behavior separately. No saved Product ID is used by this website.
+
+To verify production without buying: start a **new** checkout, choose the $49
+2-pack with quantity 1 and no discount, and enter a valid Michigan delivery
+address. Once Stripe recalculates, expect $2.94 tax and $51.94 total. Repeat for
+the $29 single ($1.74 tax, $30.74 total), another color, and an address in a state
+without an active registration. Let Stripe decide tax in that state. Open the
+promotion-code control and, if available, apply an existing valid code; tax should
+recalculate on the discounted taxable subtotal. Stop before submitting payment.
+In Stripe's session/API request details, verify `automatic_tax.enabled: true`,
+the physical product tax code, exclusive tax behavior, and collected shipping
+location. Tax can remain pending until a complete delivery address is entered.
+
+Success redirects to `/order-confirmed.html?session_id=...`; cancellation returns
+to `/#reserve`. The signed `checkout.session.completed` webhook stores Stripe's
+`amount_total` (including tax) and shipping details in Supabase and uses that total
+in the confirmation email. These handlers remain unchanged.
+
+Run `npm test` to verify the real SDK's serialized session requests for both packs,
+every color combination, the default offer, shipping, promo-code eligibility,
+prices, metadata, and redirects. These are offline contract tests, not proof of
+live registration state or a live tax calculation. Use a separately configured
+Stripe test-mode account for end-to-end test payments; never test by charging a
+real card.
+
 ---
 
 ## 4. Resend setup

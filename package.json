@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node --test",
     "dev": "npx serve public",
     "build": "echo 'Static site, no build needed'"
   },
