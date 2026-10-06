@@ -105,39 +105,46 @@ async function handleCheckoutCompleted(stripe, session) {
   const colorCounts = parseColorCounts(metadata, product.printer_count, quantity);
   const totalAmount = fullSession.amount_total;
 
-  // Stripe retries events. A duplicate delivery must never reset fulfillment or stock.
-  const { error: dbError } = await supabase.from('preorders').insert({
-    stripe_checkout_session_id: fullSession.id,
-    stripe_payment_intent_id: fullSession.payment_intent,
-    stripe_customer_id: fullSession.customer || null,
-    email: customerEmail,
-    full_name: customerName,
-    product_slug: metadata.product_slug || product.slug,
-    channel: 'web',
-    color_counts: colorCounts,
-    source_created_at: new Date(fullSession.created * 1000).toISOString(),
-    quantity: quantity,
-    unit_price: unitPrice,
-    total_amount: totalAmount,
-    currency: fullSession.currency || PREORDER_CONFIG.currency,
-    order_type: metadata.order_type || PREORDER_CONFIG.order_type,
-    expected_ship_label: metadata.expected_ship || PREORDER_CONFIG.expected_ship_label,
-    order_status: 'paid',
-    fulfillment_status: 'pending',
-    refund_status: null,
-    refund_amount: null,
-    shipping_name: customerName,
-    shipping_line1: shipping.line1 || null,
-    shipping_line2: shipping.line2 || null,
-    shipping_city: shipping.city || null,
-    shipping_state: shipping.state || null,
-    shipping_postal_code: shipping.postal_code || null,
-    shipping_country: shipping.country || null,
-    notes: printerColors ? `Printer colors: ${printerColors}` : null,
-  });
+  // Stripe retries events. Read first so routine retries do not consume an order number.
+  const { data: priorOrder, error: priorError } = await supabase.from('preorders')
+    .select('id')
+    .eq('stripe_checkout_session_id', fullSession.id)
+    .maybeSingle();
+  if (priorError) throw priorError;
 
-  if (dbError && dbError.code !== '23505') {
-    throw dbError;
+  if (!priorOrder) {
+    const { error: dbError } = await supabase.from('preorders').insert({
+      stripe_checkout_session_id: fullSession.id,
+      stripe_payment_intent_id: fullSession.payment_intent,
+      stripe_customer_id: fullSession.customer || null,
+      email: customerEmail,
+      full_name: customerName,
+      product_slug: metadata.product_slug || product.slug,
+      channel: 'web',
+      color_counts: colorCounts,
+      source_created_at: new Date(fullSession.created * 1000).toISOString(),
+      quantity: quantity,
+      unit_price: unitPrice,
+      total_amount: totalAmount,
+      currency: fullSession.currency || PREORDER_CONFIG.currency,
+      order_type: metadata.order_type || PREORDER_CONFIG.order_type,
+      expected_ship_label: metadata.expected_ship || PREORDER_CONFIG.expected_ship_label,
+      order_status: 'paid',
+      fulfillment_status: 'pending',
+      refund_status: null,
+      refund_amount: null,
+      shipping_name: customerName,
+      shipping_line1: shipping.line1 || null,
+      shipping_line2: shipping.line2 || null,
+      shipping_city: shipping.city || null,
+      shipping_state: shipping.state || null,
+      shipping_postal_code: shipping.postal_code || null,
+      shipping_country: shipping.country || null,
+      notes: printerColors ? `Printer colors: ${printerColors}` : null,
+    });
+
+    // A concurrent delivery can still race the read; the unique session ID is authoritative.
+    if (dbError && dbError.code !== '23505') throw dbError;
   }
 
   const { data: savedOrder, error: readError } = await supabase
