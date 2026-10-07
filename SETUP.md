@@ -215,7 +215,7 @@ Look for `<!-- TODO: Replace with` comments in `index.html`.
 
 Paper is sold in packs of 3 rolls: **Classic** (3 white, $7.99), **Sweet** (pink, purple, yellow, $8.99) and **Bright** (mint, blue, orange, $8.99). They can be bought on their own (the `#paper` section) or optionally in the printer order form at full price. A printer order with no paper gets a pop-up offering **one** pack for **$4.99** per order. The server only accepts that price when the order contains a printer.
 
-In Stripe each paper pack is its own line item (the add-on is labelled "printer add-on price" and has `paper_addon: true` in its product metadata). Session metadata carries `paper_bundles`, `paper_addon`, `paper_packs` and `paper_summary`. Paper-only orders have `product_key: paper`.
+Customers can mix any number of Classic, Sweet and Bright packs (up to 10 of each), both in the printer form and in the standalone paper section. In Stripe each paper pack is its own line item (the add-on is labelled "printer add-on price" and has `paper_addon: true` in its product metadata). Session metadata carries `paper_bundles`, `paper_addon`, `paper_packs` and `paper_summary`. Paper-only orders have `product_key: paper`.
 
 Shipping: $4.99, or free when the pre-tax subtotal is $25 or more (printer orders are always above that). Stripe receives a fixed-amount shipping rate with the shipping tax code; confirm Stripe Tax settings if you want shipping taxed differently.
 

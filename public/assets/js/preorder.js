@@ -28,12 +28,8 @@
   const colorPickers = document.querySelectorAll('.color-picker');
   const colorOptions = document.querySelectorAll('[data-color-option]');
   const colorRadios = document.querySelectorAll('.color-radio');
-  const paperOptions = document.querySelectorAll('[data-paper-option]');
+  const paperCards = document.querySelectorAll('[data-paper-card]');
   const paperHelp = document.getElementById('paper-selection-help');
-  const paperQtyWrap = document.getElementById('paper-form-qty-wrap');
-  const paperQtyDisplay = document.getElementById('paper-form-qty');
-  const paperMinus = document.getElementById('paper-form-minus');
-  const paperPlus = document.getElementById('paper-form-plus');
   const addonModal = document.getElementById('paper-addon-modal');
   const addonBackdrop = document.getElementById('paper-addon-backdrop');
   const addonClose = document.getElementById('paper-addon-close');
@@ -46,8 +42,7 @@
   let quantity = 1;
   let selectedProduct = 'duo';
   let selectedColors = [null, null];
-  let paperChoice = null;
-  let paperQty = 1;
+  const paperQtys = { classic: 0, sweet: 0, bright: 0 };
   let addonChoice = null;
   const MAX_QTY = 10;
   const MIN_QTY = 1;
@@ -253,52 +248,49 @@
     return '$' + (cents / 100).toFixed(2);
   }
 
+  function paperPacks() {
+    return Object.values(paperQtys).reduce((sum, count) => sum + count, 0);
+  }
+
   function updatePaperSelection() {
-    paperOptions.forEach((option) => {
-      const isSelected = option.dataset.paperOption === paperChoice;
-      option.classList.toggle('border-primary', isSelected);
-      option.classList.toggle('bg-primary/5', isSelected);
-      option.classList.toggle('border-gray-200', !isSelected);
-      option.classList.toggle('dark:border-gray-700', !isSelected);
-      option.setAttribute('aria-pressed', String(isSelected));
+    paperCards.forEach((card) => {
+      const key = card.dataset.paperCard;
+      const count = paperQtys[key];
+      card.classList.toggle('border-primary', count > 0);
+      card.classList.toggle('bg-primary/5', count > 0);
+      card.classList.toggle('border-gray-200', count === 0);
+      card.classList.toggle('dark:border-gray-700', count === 0);
+      const add = card.querySelector('[data-paper-add]');
+      const stepper = card.querySelector('[data-paper-stepper]');
+      add.classList.toggle('hidden', count > 0);
+      stepper.classList.toggle('hidden', count === 0);
+      stepper.classList.toggle('flex', count > 0);
+      card.querySelector('[data-paper-qty]').textContent = count;
+      card.querySelector('[data-paper-plus]').disabled = count >= MAX_PAPER_QTY;
     });
 
-    if (paperQtyWrap) {
-      paperQtyWrap.classList.toggle('hidden', !paperChoice);
-      paperQtyWrap.classList.toggle('flex', Boolean(paperChoice));
-    }
-    if (paperQtyDisplay) paperQtyDisplay.textContent = paperQty;
-
     if (paperHelp) {
-      if (paperChoice) {
-        const bundle = PAPER_BUNDLES[paperChoice];
-        paperHelp.textContent = `Added: ${paperQty} × ${bundle.label} (3 rolls each) for ${formatCents(bundle.price * paperQty)}. Tap it again to remove it.`;
+      const lines = Object.entries(paperQtys).filter(([, count]) => count > 0);
+      if (lines.length) {
+        const total = lines.reduce((sum, [key, count]) => sum + PAPER_BUNDLES[key].price * count, 0);
+        const summary = lines.map(([key, count]) => `${count} × ${PAPER_BUNDLES[key].label}`).join(', ');
+        paperHelp.textContent = `Added: ${summary} (${paperPacks()} ${paperPacks() === 1 ? 'pack' : 'packs'}) for ${formatCents(total)}.`;
       } else {
-        paperHelp.textContent = 'Tap a pack to add it, or tap it again to remove it.';
+        paperHelp.textContent = 'Add as many packs of each as you like.';
       }
     }
   }
 
-  paperOptions.forEach((option) => {
-    option.addEventListener('click', () => {
-      paperChoice = paperChoice === option.dataset.paperOption ? null : option.dataset.paperOption;
-      if (!paperChoice) paperQty = 1;
-      updatePaperSelection();
-    });
-  });
+  function changePaper(key, delta) {
+    paperQtys[key] = Math.max(0, Math.min(MAX_PAPER_QTY, paperQtys[key] + delta));
+    updatePaperSelection();
+  }
 
-  paperMinus?.addEventListener('click', () => {
-    if (paperQty > 1) {
-      paperQty--;
-      updatePaperSelection();
-    }
-  });
-
-  paperPlus?.addEventListener('click', () => {
-    if (paperQty < MAX_PAPER_QTY) {
-      paperQty++;
-      updatePaperSelection();
-    }
+  paperCards.forEach((card) => {
+    const key = card.dataset.paperCard;
+    card.querySelector('[data-paper-add]').addEventListener('click', () => changePaper(key, 1));
+    card.querySelector('[data-paper-plus]').addEventListener('click', () => changePaper(key, 1));
+    card.querySelector('[data-paper-minus]').addEventListener('click', () => changePaper(key, -1));
   });
 
   updatePaperSelection();
@@ -394,7 +386,7 @@
     }
 
     // Anyone buying a printer without paper gets the $4.99 add-on offer first.
-    if (!paperChoice && !addonChoice && addonModal) {
+    if (paperPacks() === 0 && !addonChoice && addonModal) {
       openAddonModal();
       return;
     }
@@ -405,11 +397,14 @@
   async function startCheckout() {
     const colors = selectedColors.slice(0, requiredColorCount());
     const payload = { quantity, product: selectedProduct, colors };
-    if (paperChoice) payload.paper = [{ bundle: paperChoice, quantity: paperQty }];
+    const paper = Object.entries(paperQtys)
+      .filter(([, count]) => count > 0)
+      .map(([bundle, count]) => ({ bundle, quantity: count }));
+    if (paper.length) payload.paper = paper;
     if (addonChoice) payload.paper_addon = addonChoice;
 
     // Track CTA click
-    trackEvent('checkout_started', { quantity, product: selectedProduct, colors, paper: paperChoice, paper_addon: addonChoice });
+    trackEvent('checkout_started', { quantity, product: selectedProduct, colors, paper: paper.length ? paper : null, paper_addon: addonChoice });
 
     // Set loading state
     preorderBtn.disabled = true;

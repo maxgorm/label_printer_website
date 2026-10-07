@@ -6,10 +6,7 @@
 (function () {
   'use strict';
 
-  const options = document.querySelectorAll('[data-standalone-paper]');
-  const minus = document.getElementById('paper-minus');
-  const plus = document.getElementById('paper-plus');
-  const qtyDisplay = document.getElementById('paper-qty');
+  const cards = document.querySelectorAll('[data-standalone-card]');
   const totalDisplay = document.getElementById('paper-total');
   const shippingNote = document.getElementById('paper-shipping-note');
   const agree = document.getElementById('paper-agree');
@@ -17,7 +14,7 @@
   const buyText = document.getElementById('paper-buy-text');
   const errorEl = document.getElementById('paper-error');
 
-  if (!options.length || !buyBtn) return;
+  if (!cards.length || !buyBtn) return;
 
   const BUNDLES = {
     classic: { label: 'Classic', price: 799 },
@@ -28,79 +25,96 @@
   const FREE_SHIPPING_CENTS = 2500;
   const SHIPPING_CENTS = 499;
 
-  let selected = null;
-  let quantity = 1;
+  const quantities = { classic: 0, sweet: 0, bright: 0 };
 
   function formatCents(cents) {
     return '$' + (cents / 100).toFixed(2);
   }
 
-  function render() {
-    options.forEach((option) => {
-      const isSelected = option.dataset.standalonePaper === selected;
-      option.classList.toggle('border-primary', isSelected);
-      option.classList.toggle('bg-primary/5', isSelected);
-      option.classList.toggle('border-gray-200', !isSelected);
-      option.classList.toggle('dark:border-gray-700', !isSelected);
-      option.setAttribute('aria-pressed', String(isSelected));
-    });
-
-    qtyDisplay.textContent = quantity;
-
-    if (selected) {
-      const subtotal = BUNDLES[selected].price * quantity;
-      const shipping = subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS;
-      totalDisplay.textContent = formatCents(subtotal);
-      shippingNote.textContent = shipping === 0
-        ? 'Free shipping on this order (orders of $25 or more before tax). Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.'
-        : `Shipping is ${formatCents(shipping)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
-    } else {
-      totalDisplay.textContent = '';
-      shippingNote.textContent = 'Choose a pack. Shipping is $4.99, or free on orders of $25 or more before tax.';
-    }
-
-    buyBtn.disabled = !(selected && agree?.checked);
+  function totals() {
+    const lines = Object.entries(quantities).filter(([, count]) => count > 0);
+    return {
+      lines,
+      packs: lines.reduce((sum, [, count]) => sum + count, 0),
+      subtotal: lines.reduce((sum, [key, count]) => sum + BUNDLES[key].price * count, 0),
+    };
   }
 
-  options.forEach((option) => {
-    option.addEventListener('click', () => {
-      selected = option.dataset.standalonePaper;
-      render();
+  function render() {
+    cards.forEach((card) => {
+      const key = card.dataset.standaloneCard;
+      const count = quantities[key];
+      card.classList.toggle('border-primary', count > 0);
+      card.classList.toggle('bg-primary/5', count > 0);
+      card.classList.toggle('border-gray-200', count === 0);
+      card.classList.toggle('dark:border-gray-700', count === 0);
+      const add = card.querySelector('[data-standalone-add]');
+      const stepper = card.querySelector('[data-standalone-stepper]');
+      add.classList.toggle('hidden', count > 0);
+      stepper.classList.toggle('hidden', count === 0);
+      stepper.classList.toggle('flex', count > 0);
+      card.querySelector('[data-standalone-qty]').textContent = count;
+      card.querySelector('[data-standalone-plus]').disabled = count >= MAX_QTY;
     });
-  });
 
-  minus?.addEventListener('click', () => {
-    if (quantity > 1) {
-      quantity--;
-      render();
+    const { lines, packs, subtotal } = totals();
+    const ship = window.SentimoShipping;
+    const international = Boolean(ship?.isInternational());
+    if (packs > 0) {
+      const summary = lines.map(([key, count]) => `${count} × ${BUNDLES[key].label}`).join(', ');
+      totalDisplay.textContent = `${summary}: ${formatCents(subtotal)}`;
+      const shipping = ship
+        ? ship.quote({ subtotalCents: subtotal, hasPrinter: false })
+        : { cents: subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS, international: false };
+      if (international) {
+        shippingNote.textContent = `International shipping for this order: ${shipping.cents === null ? 'calculated' : formatCents(shipping.cents)} (USPS), added at checkout. Import duties, taxes, and customs fees charged by your country are not included. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+      } else {
+        shippingNote.textContent = shipping.cents === 0
+          ? 'Free shipping on this order (orders of $25 or more before tax). Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.'
+          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+      }
+    } else {
+      totalDisplay.textContent = '';
+      shippingNote.textContent = international
+        ? 'Choose your packs. International shipping is calculated by destination and shown here.'
+        : 'Choose your packs. Shipping is $4.99, or free on orders of $25 or more before tax.';
     }
-  });
 
-  plus?.addEventListener('click', () => {
-    if (quantity < MAX_QTY) {
-      quantity++;
-      render();
-    }
+    buyBtn.disabled = !(packs > 0 && agree?.checked);
+  }
+
+  function change(key, delta) {
+    quantities[key] = Math.max(0, Math.min(MAX_QTY, quantities[key] + delta));
+    render();
+  }
+
+  cards.forEach((card) => {
+    const key = card.dataset.standaloneCard;
+    card.querySelector('[data-standalone-add]').addEventListener('click', () => change(key, 1));
+    card.querySelector('[data-standalone-plus]').addEventListener('click', () => change(key, 1));
+    card.querySelector('[data-standalone-minus]').addEventListener('click', () => change(key, -1));
   });
 
   agree?.addEventListener('change', render);
+  window.SentimoShipping?.onChange(render);
 
   buyBtn.addEventListener('click', async () => {
-    if (!selected || !agree?.checked) return;
+    const { lines, packs } = totals();
+    if (!packs || !agree?.checked) return;
 
     buyBtn.disabled = true;
     buyText.textContent = 'Processing...';
     errorEl?.classList.add('hidden');
 
     if (typeof window.gtag === 'function') {
-      window.gtag('event', 'paper_checkout_started', { bundle: selected, quantity });
+      window.gtag('event', 'paper_checkout_started', { packs });
     }
 
     try {
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paper: [{ bundle: selected, quantity }] }),
+        body: JSON.stringify({ paper: lines.map(([bundle, quantity]) => ({ bundle, quantity })) }),
       });
 
       const contentType = response.headers.get('content-type');

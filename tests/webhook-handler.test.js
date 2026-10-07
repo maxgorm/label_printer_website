@@ -169,3 +169,25 @@ test('an old-style printer order with no paper metadata still works', async () =
   assert.deepEqual(inserts[0].roll_counts, {});
   assert.deepEqual(inserts[0].paper_bundles, {});
 });
+
+test('a mixed paper order records every bundle and the right rolls per color', async () => {
+  const { res, inserts, emails } = await runWebhook({
+    ...baseSession,
+    id: 'cs_test_4',
+    amount_total: 3396,
+    total_details: { amount_shipping: 0 },
+    metadata: {
+      product_key: 'paper', product_slug: 'sentimo-paper', product_name: 'Sentimo Thermal Paper',
+      unit_price_cents: '0', printer_count: '0', quantity: '4', shipping_cents: '0',
+      paper_bundles: '{"classic":2,"sweet":1,"bright":1}', paper_addon: '', paper_packs: '4',
+      paper_summary: '2 × Classic (3 rolls), 1 × Sweet (3 rolls), 1 × Bright (3 rolls)',
+    },
+  });
+  assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+  const row = inserts[0];
+  assert.deepEqual(row.paper_bundles, { classic: 2, sweet: 1, bright: 1 });
+  assert.deepEqual(row.roll_counts, { white: 6, pink: 1, purple: 1, yellow: 1, mint: 1, blue: 1, orange: 1 });
+  assert.equal(row.quantity, 4);
+  assert.match(emails[0].html, /2 × Classic/);
+  assert.match(emails[0].html, /1 × Bright/);
+});
