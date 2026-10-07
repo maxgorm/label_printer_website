@@ -86,3 +86,84 @@ for (const body of [
     assert.equal(requests.length, 0);
   });
 }
+
+// ---- Pricing, thermal paper, and shipping ----
+
+test('printer prices end in .99 and shipping is free on printer orders', async () => {
+  assert.equal(config.products.single.unit_price_cents, 2999);
+  assert.equal(config.products.duo.unit_price_cents, 4999);
+  assert.equal(config.products.single.original_price, '$49.99');
+  assert.equal(config.products.duo.original_price, '$69.99');
+  const { res, requests } = await invoke({ product: 'duo', colors: ['pink', 'white'], quantity: 1 });
+  assert.equal(res.statusCode, 200);
+  const { params } = requests[0];
+  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '4999');
+  assert.equal(params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
+  assert.equal(params.get('shipping_options[0][shipping_rate_data][display_name]'), 'Free shipping');
+  assert.equal(params.get('shipping_options[0][shipping_rate_data][tax_behavior]'), 'exclusive');
+});
+
+test('paper-only order charges flat shipping below $25', async () => {
+  const { res, requests } = await invoke({ paper: [{ bundle: 'classic', quantity: 3 }] });
+  assert.equal(res.statusCode, 200);
+  const { params } = requests[0];
+  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '799');
+  assert.equal(params.get('line_items[0][quantity]'), '3');
+  assert.equal(params.get('line_items[0][price_data][product_data][tax_code]'), config.paper_tax_code);
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), null);
+  assert.equal(params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '499');
+  assert.equal(params.get('metadata[product_key]'), 'paper');
+  assert.equal(params.get('metadata[paper_bundles]'), JSON.stringify({ classic: 3 }));
+  assert.equal(params.has('metadata[printer_color_1]'), false);
+});
+
+test('paper-only order ships free at $25 before tax', async () => {
+  const four = await invoke({ paper: [{ bundle: 'classic', quantity: 4 }] }); // $31.96
+  assert.equal(four.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
+  const three = await invoke({ paper: [{ bundle: 'sweet', quantity: 3 }] }); // $26.97
+  assert.equal(three.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
+  const two = await invoke({ paper: [{ bundle: 'sweet', quantity: 2 }] }); // $17.98
+  assert.equal(two.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '499');
+});
+
+test('full-price paper in the printer form is a separate line item', async () => {
+  const { res, requests } = await invoke({
+    product: 'single', colors: ['black'], quantity: 1, paper: [{ bundle: 'bright', quantity: 2 }],
+  });
+  assert.equal(res.statusCode, 200);
+  const { params } = requests[0];
+  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '2999');
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '899');
+  assert.equal(params.get('line_items[1][quantity]'), '2');
+  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_bundle]'), 'bright');
+  assert.equal(params.get('metadata[paper_addon]'), '');
+});
+
+test('the $4.99 add-on is one discounted pack with a printer', async () => {
+  const { res, requests } = await invoke({
+    product: 'duo', colors: ['pink', 'pink'], quantity: 3, paper_addon: 'sweet',
+  });
+  assert.equal(res.statusCode, 200);
+  const { params } = requests[0];
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '499');
+  assert.equal(params.get('line_items[1][quantity]'), '1');
+  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_addon]'), 'true');
+  assert.match(params.get('line_items[1][price_data][product_data][description]'), /\$8\.99/);
+  assert.equal(params.get('metadata[paper_addon]'), 'sweet');
+  assert.equal(params.get('metadata[paper_packs]'), '1');
+});
+
+test('the add-on price needs a printer and a real bundle', async () => {
+  for (const body of [
+    { paper: [{ bundle: 'classic', quantity: 1 }], paper_addon: 'classic' },
+    { product: 'duo', colors: ['pink', 'white'], paper_addon: 'gold' },
+    { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'gold', quantity: 1 }] },
+    { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'classic', quantity: 11 }] },
+    { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'classic', quantity: 0 }] },
+    { paper_addon: 'sweet' },
+  ]) {
+    const { res, requests } = await invoke(body);
+    assert.equal(res.statusCode, 400, JSON.stringify(body));
+    assert.equal(requests.length, 0);
+  }
+});

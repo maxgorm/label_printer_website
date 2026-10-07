@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import PREORDER_CONFIG from './_config.js';
+import { describePaper, parsePaperMetadata } from './_paper.js';
 
 // Disable body parsing so we can read the raw body for signature verification
 export const config = {
@@ -96,13 +97,20 @@ async function handleCheckoutCompleted(stripe, session) {
   const customerEmail = fullSession.customer_details?.email;
   const customerName = fullSession.customer_details?.name || fullSession.shipping_details?.name || '';
   const quantity = parseInt(metadata.quantity, 10) || 1;
-  const product = PREORDER_CONFIG.products[metadata.product_key] ||
+  const paperOnly = metadata.product_key === 'paper';
+  const product = paperOnly ? null : (PREORDER_CONFIG.products[metadata.product_key] ||
     Object.values(PREORDER_CONFIG.products).find(({ slug }) => slug === metadata.product_slug) ||
-    PREORDER_CONFIG.products[PREORDER_CONFIG.default_product];
-  const productName = metadata.product_name || product.name;
-  const unitPrice = parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents;
-  const printerColors = formatPrinterColors(metadata.printer_colors);
-  const colorCounts = parseColorCounts(metadata, product.printer_count, quantity);
+    PREORDER_CONFIG.products[PREORDER_CONFIG.default_product]);
+  const productName = paperOnly ? 'Sentimo Thermal Paper' : (metadata.product_name || product.name);
+  const unitPrice = paperOnly ? null : (parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents);
+  const printerColors = paperOnly ? '' : formatPrinterColors(metadata.printer_colors);
+  const colorCounts = paperOnly ? {} : parseColorCounts(metadata, product.printer_count, quantity);
+  const paper = parsePaperMetadata(metadata);
+  if (paperOnly && !Object.keys(paper.bundles).length) {
+    throw new Error('Paper order is missing thermal paper bundles');
+  }
+  const paperSummary = describePaper(paper);
+  const shippingAmount = fullSession.total_details?.amount_shipping ?? null;
   const totalAmount = fullSession.amount_total;
 
   // Stripe retries events. Read first so routine retries do not consume an order number.
@@ -119,9 +127,12 @@ async function handleCheckoutCompleted(stripe, session) {
       stripe_customer_id: fullSession.customer || null,
       email: customerEmail,
       full_name: customerName,
-      product_slug: metadata.product_slug || product.slug,
+      product_slug: paperOnly ? 'sentimo-paper' : (metadata.product_slug || product.slug),
       channel: 'web',
       color_counts: colorCounts,
+      paper_bundles: paper.bundles,
+      roll_counts: paper.rolls,
+      shipping_amount: shippingAmount,
       source_created_at: new Date(fullSession.created * 1000).toISOString(),
       quantity: quantity,
       unit_price: unitPrice,
@@ -140,7 +151,10 @@ async function handleCheckoutCompleted(stripe, session) {
       shipping_state: shipping.state || null,
       shipping_postal_code: shipping.postal_code || null,
       shipping_country: shipping.country || null,
-      notes: printerColors ? `Printer colors: ${printerColors}` : null,
+      notes: [
+        printerColors ? `Printer colors: ${printerColors}` : '',
+        paperSummary ? `Thermal paper: ${paperSummary}` : '',
+      ].filter(Boolean).join(' | ') || null,
     });
 
     // A concurrent delivery can still race the read; the unique session ID is authoritative.
@@ -166,6 +180,8 @@ async function handleCheckoutCompleted(stripe, session) {
           orderNumber: savedOrder.order_number,
           productName,
           printerColors,
+          paperSummary,
+          shippingAmount: shippingAmount === null ? '' : (shippingAmount === 0 ? 'Free' : formatCurrency(shippingAmount, fullSession.currency)),
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
         }),
@@ -258,7 +274,7 @@ function formatPrinterColors(value) {
     .join(', ');
 }
 
-function buildConfirmationEmail({ name, orderNumber, productName, printerColors, quantity, amount }) {
+function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, quantity, amount }) {
   return `
     <div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1F2937;">
       <div style="text-align: center; margin-bottom: 32px;">
@@ -273,8 +289,10 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">Order summary</h3>
         <p style="margin: 4px 0;"><strong>Order number:</strong> ${escapeHtml(orderNumber)}</p>
         <p style="margin: 4px 0;"><strong>Product:</strong> ${escapeHtml(productName)}</p>
-        <p style="margin: 4px 0;"><strong>Printer color(s):</strong> ${escapeHtml(printerColors || 'Not specified')}</p>
+        ${printerColors ? `<p style="margin: 4px 0;"><strong>Printer color(s):</strong> ${escapeHtml(printerColors)}</p>` : ''}
+        ${paperSummary ? `<p style="margin: 4px 0;"><strong>Thermal paper:</strong> ${escapeHtml(paperSummary)}</p>` : ''}
         <p style="margin: 4px 0;"><strong>Quantity:</strong> ${quantity}</p>
+        ${shippingAmount ? `<p style="margin: 4px 0;"><strong>Shipping:</strong> ${escapeHtml(shippingAmount)}</p>` : ''}
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>
       </div>
       <p>If you have any questions, contact us at <a href="mailto:${PREORDER_CONFIG.support_email}" style="color: #F53F7B;">${PREORDER_CONFIG.support_email}</a>.</p>

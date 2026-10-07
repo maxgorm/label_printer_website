@@ -7,6 +7,10 @@ html {
     scroll-padding-top: 100px;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+}
+
 /* --- Carousel thumbnail active state --- */
 .carousel-thumb {
     cursor: pointer;

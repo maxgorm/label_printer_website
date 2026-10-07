@@ -18,3 +18,11 @@ Website orders are inserted from the Stripe `checkout.session.completed` webhook
 TikTok Shop can use the same table and stock view, but an automatic feed needs a TikTok Shop Partner Center app, seller authorization, and the Order Information API scope. Until that connection exists, TikTok orders must be entered with `channel = 'tiktok'`, the exact TikTok `external_order_id`, the SKU-derived `color_counts`, and the correct order and fulfillment statuses. The database enforces one row per TikTok order ID. Do not treat a paid TikTok order as a website Stripe checkout.
 
 The migrations are `supabase/migration_002_orders_inventory.sql`, `supabase/migration_003_order_numbers.sql`, and `supabase/migration_004_gapless_order_numbers.sql`, applied in that order. The last migration assigns numbers in a database transaction so failed or duplicate inserts do not create gaps. Keep Stripe, Supabase service-role, and Resend keys only in Vercel environment variables; never place them in this repository.
+
+## Thermal paper rolls
+
+Paper is tracked per roll color in `paper_movements`, with the `paper_stock` view (`physical_on_hand`, `sold_unshipped`, `available_to_sell`). Orders store `paper_bundles` (packs) and `roll_counts` (rolls). Opening stock on 2026-10-07 is 39 white rolls (13 Classic packs) and 12 rolls each of pink, purple, yellow, mint, blue and orange (12 Sweet packs and 12 Bright packs). Marking an order shipped deducts its rolls once, in the same trigger as printers. Record giveaways, damage and corrections by inserting into `paper_movements` with a unique `reference_key`. Apply `supabase/migration_005_paper_and_tracking.sql` after migration 004.
+
+## Shipping and tracking
+
+Set `tracking_number` (and optionally `tracking_carrier`) and `fulfillment_status = 'shipped'` on an order. A Supabase Database Webhook calls `/api/shipment-notify`, which emails the customer once and sets `shipping_email_sent_at`. See `SETUP.md`.

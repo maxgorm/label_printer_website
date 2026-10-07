@@ -27,6 +27,7 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
 | `RESEND_API_KEY` | Resend API key for transactional email |
 | `RESEND_AUDIENCE_ID` | Resend audience ID for mailing list subscribers |
 | `ADMIN_API_KEY` | A secure random string for admin-only API endpoints |
+| `SHIPMENT_WEBHOOK_SECRET` | A long random string. The Supabase Database Webhook sends it in the `x-webhook-secret` header to `/api/shipment-notify` |
 
 ---
 
@@ -36,6 +37,7 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
 2. Go to the SQL Editor
 3. Run the migration in `supabase/migration_001_preorders.sql`
 4. Run `supabase/migration_002_orders_inventory.sql` for color counts and inventory
+4a. Run `migration_003`, then `migration_004` (order numbers), then `migration_005_paper_and_tracking.sql` (thermal paper stock, shipping charge, tracking columns)
 5. Copy your project URL and service role key into env vars
 
 ---
@@ -84,10 +86,10 @@ created sessions, and external Payment Links are not modified. If you distribute
 Payment Links elsewhere, enable automatic tax and correct their product category
 and price tax behavior separately. No saved Product ID is used by this website.
 
-To verify production without buying: start a **new** checkout, choose the $49
+To verify production without buying: start a **new** checkout, choose the $49.99
 2-pack with quantity 1 and no discount, and enter a valid Michigan delivery
-address. Once Stripe recalculates, expect $2.94 tax and $51.94 total. Repeat for
-the $29 single ($1.74 tax, $30.74 total), another color, and an address in a state
+address. Once Stripe recalculates, expect the tax Stripe shows for $49.99 (and free shipping). Repeat for
+the $29.99 single, another color, and an address in a state
 without an active registration. Let Stripe decide tax in that state. Open the
 promotion-code control and, if available, apply an existing valid code; tax should
 recalculate on the discounted taxable subtotal. Stop before submitting payment.
@@ -151,8 +153,12 @@ stripe listen --forward-to localhost:3000/api/webhook
 All configurable values live in **`api/_config.js`**:
 
 ```js
-products.single.unit_price_cents: 2900, // Single printer price (in cents)
-products.duo.unit_price_cents: 4900,    // 2-pack price (in cents)
+products.single.unit_price_cents: 2999, // Single printer price (in cents)
+products.duo.unit_price_cents: 4999,    // 2-pack price (in cents)
+paper_bundles.*.price_cents: 799 / 899, // Classic / Sweet and Bright (in cents)
+paper_addon_price_cents: 499,           // $4.99 add-on, 1 per order, printer orders only
+shipping_flat_cents: 499,               // under the free-shipping threshold
+free_shipping_threshold_cents: 2500,    // pre-tax subtotal for free shipping
 expected_ship_label: 'Fall 2026', // Change ship date
 refund_message: '...',         // Change refund copy
 ```
@@ -202,3 +208,22 @@ Look for `<!-- TODO: Replace with` comments in `index.html`.
 - [ ] Email capture (mailing list) form still works
 - [ ] Footer links all resolve correctly
 - [ ] Social links open in new tab
+
+---
+
+## Thermal paper
+
+Paper is sold in packs of 3 rolls: **Classic** (3 white, $7.99), **Sweet** (pink, purple, yellow, $8.99) and **Bright** (mint, blue, orange, $8.99). They can be bought on their own (the `#paper` section) or optionally in the printer order form at full price. A printer order with no paper gets a pop-up offering **one** pack for **$4.99** per order. The server only accepts that price when the order contains a printer.
+
+In Stripe each paper pack is its own line item (the add-on is labelled "printer add-on price" and has `paper_addon: true` in its product metadata). Session metadata carries `paper_bundles`, `paper_addon`, `paper_packs` and `paper_summary`. Paper-only orders have `product_key: paper`.
+
+Shipping: $4.99, or free when the pre-tax subtotal is $25 or more (printer orders are always above that). Stripe receives a fixed-amount shipping rate with the shipping tax code; confirm Stripe Tax settings if you want shipping taxed differently.
+
+Paper orders ship with the printers (Fall 2026). Each order shows `paper_bundles` and per-color `roll_counts` in Supabase; `paper_stock` shows `physical_on_hand`, `sold_unshipped` and `available_to_sell` per roll color. Checkout refuses a paper selection that exceeds `available_to_sell`.
+
+## Shipping notifications
+
+1. Apply `migration_005` (adds `tracking_carrier`, `tracking_number`, `shipped_at`, `shipping_email_sent_at`).
+2. Set `SHIPMENT_WEBHOOK_SECRET` in Vercel.
+3. In Supabase go to **Database → Webhooks → Create**: table `preorders`, event **Update**, type HTTP Request, `POST https://<your-domain>/api/shipment-notify`, and add the header `x-webhook-secret` with the same secret.
+4. To ship an order, paste the tracking number into `tracking_number` (optionally set `tracking_carrier` to `usps`, `ups` or `fedex`; it is detected otherwise) and set `fulfillment_status` to `shipped`. The customer gets one email with a tracking link, and stock is deducted by the existing trigger. Any order of the two edits works; the email goes out once both are present.
