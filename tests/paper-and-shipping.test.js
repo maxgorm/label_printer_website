@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { parsePaperMetadata, rollCountsFor, mergeBundles, shippingCentsFor, describePaper } from '../api/_paper.js';
+import { parsePaperMetadata, rollCountsFor, mergeBundles, describePaper } from '../api/_paper.js';
+import {
+  INTERNATIONAL_RATES_CENTS, ZONES, isShippableCountry, shippingCentsFor, shippingCountryCodes, shippingOptionsForClient,
+} from '../api/_shipping.js';
 import { buildTrackingUrl, detectCarrier } from '../api/shipment-notify.js';
 
 test('bundles expand into individual rolls per color', () => {
@@ -33,10 +36,10 @@ test('orders without paper parse to nothing, and bad metadata is rejected', () =
 });
 
 test('shipping is $4.99 under $25 and free at $25 or more', () => {
-  assert.equal(shippingCentsFor(2397), 499);
-  assert.equal(shippingCentsFor(2499), 499);
-  assert.equal(shippingCentsFor(2500), 0);
-  assert.equal(shippingCentsFor(2999), 0);
+  assert.equal(shippingCentsFor({ subtotalCents: 2397 }), 499);
+  assert.equal(shippingCentsFor({ subtotalCents: 2499 }), 499);
+  assert.equal(shippingCentsFor({ subtotalCents: 2500 }), 0);
+  assert.equal(shippingCentsFor({ country: 'US', subtotalCents: 2999 }), 0);
 });
 
 test('tracking links and carrier detection', () => {
@@ -47,4 +50,38 @@ test('tracking links and carrier detection', () => {
   assert.equal(buildTrackingUrl('usps', '9400 1118 9922'), 'https://tools.usps.com/go/TrackConfirmAction?tLabels=940011189922');
   assert.equal(buildTrackingUrl('ups', '1Z999AA10123456784'), 'https://www.ups.com/track?tracknum=1Z999AA10123456784');
   assert.equal(buildTrackingUrl('other', 'x'), null);
+});
+
+test('international orders never get the US flat or free rate', () => {
+  for (const country of shippingCountryCodes().filter((code) => code !== 'US')) {
+    for (const subtotalCents of [500, 2499, 2500, 9999, 100000]) {
+      for (const hasPrinter of [true, false]) {
+        const cents = shippingCentsFor({ country, subtotalCents, hasPrinter });
+        assert.ok(cents > 499, `${country} ${subtotalCents} ${hasPrinter}: ${cents}`);
+      }
+    }
+  }
+  assert.ok(Object.values(INTERNATIONAL_RATES_CENTS).every((rate) => rate.light > 499 && rate.standard >= rate.light));
+});
+
+test('country list: US plus served countries, none of the embargoed ones', () => {
+  assert.equal(isShippableCountry('US'), true);
+  assert.equal(isShippableCountry('CA'), true);
+  assert.equal(isShippableCountry('GB'), true);
+  for (const blocked of ['KP', 'IR', 'CU', 'SY', 'RU', 'BY', 'XX', '', 'us']) {
+    assert.equal(isShippableCountry(blocked), false, blocked);
+  }
+  const all = shippingCountryCodes();
+  assert.equal(new Set(all).size, all.length, 'no country is listed in two zones');
+  assert.ok(all.every((code) => /^[A-Z]{2}$/.test(code)));
+  assert.equal(Object.keys(ZONES).length, Object.keys(INTERNATIONAL_RATES_CENTS).length);
+});
+
+test('client shipping options expose every country with its rates', () => {
+  const options = shippingOptionsForClient();
+  assert.equal(options.home, 'US');
+  assert.equal(options.flat_cents, 499);
+  assert.equal(options.free_threshold_cents, 2500);
+  assert.equal(options.countries.length, shippingCountryCodes().length - 1);
+  assert.ok(options.countries.every((c) => c.standard > 499 && c.light > 499));
 });

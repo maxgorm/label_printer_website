@@ -106,8 +106,7 @@ const PREORDER_CONFIG = {
   // Collect shipping address in Stripe Checkout
   collect_shipping: true,
 
-  // Shipping countries (ISO 3166-1 alpha-2)
-  shipping_countries: ['US'],
+  // Destination countries and international rates live in api/_shipping.js.
 };
 
 export default PREORDER_CONFIG;

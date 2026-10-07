@@ -537,6 +537,15 @@
                         </div>
                     </fieldset>
 
+                    <!-- Shipping destination -->
+                    <fieldset class="mb-5 text-left">
+                        <legend class="font-medium text-sm mb-2">Ship to:</legend>
+                        <select id="ship-country" data-ship-country aria-label="Shipping country" class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-3 py-2.5 text-sm focus:border-primary focus:ring-primary">
+                            <option value="US">United States (incl. Alaska, Hawaii &amp; territories)</option>
+                        </select>
+                        <p data-ship-note="printer" class="mt-2 text-xs text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Free shipping on printer orders within the United States, including Alaska, Hawaii, and U.S. territories.</p>
+                    </fieldset>
+
                     <!-- Pre-order disclosure -->
                     <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-4 mb-5">
                         <p class="text-sm text-text-muted-light dark:text-text-muted-dark leading-relaxed">
@@ -607,7 +616,13 @@
                         </div>
                         <span id="paper-total" class="text-sm font-bold text-primary"></span>
                     </div>
-                    <p id="paper-shipping-note" class="text-xs text-center text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Shipping is $4.99, or free on orders of $25 or more before tax.</p>
+                    <div class="w-full max-w-xs">
+                        <label for="paper-ship-country" class="mb-1 block text-xs font-medium">Ship to:</label>
+                        <select id="paper-ship-country" data-ship-country aria-label="Shipping country" class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-3 py-2.5 text-sm focus:border-primary focus:ring-primary">
+                            <option value="US">United States (incl. Alaska, Hawaii &amp; territories)</option>
+                        </select>
+                    </div>
+                    <p id="paper-shipping-note" class="text-xs text-center text-text-muted-light dark:text-text-muted-dark" aria-live="polite">US shipping is $4.99, or free on orders of $25 or more before tax. International shipping is calculated by destination.</p>
                     <div class="flex items-start gap-3 text-left">
                         <input type="checkbox" id="paper-agree" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
                         <label for="paper-agree" class="text-xs text-text-muted-light dark:text-text-muted-dark cursor-pointer">I understand that paper-only orders ship when Sentimo printers begin shipping in Fall 2026.</label>
@@ -914,8 +929,9 @@
     </div>
 
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js?v=20261007-paper"></script>
-    <script src="/assets/js/paper.js?v=20261007-paper"></script>
+    <script src="/assets/js/shipping.js?v=20261007-intl"></script>
+    <script src="/assets/js/preorder.js?v=20261007-intl"></script>
+    <script src="/assets/js/paper.js?v=20261007-intl"></script>
 
     <!-- Carousel Script -->
     <script>
