@@ -173,6 +173,10 @@
                         </a>
                     </div>
 
+                    <p class="-mt-2 text-center lg:text-left">
+                        <a href="#paper" class="text-sm font-medium text-primary hover:text-primary-hover underline underline-offset-2">Just need more paper rolls?</a>
+                    </p>
+
                     <a id="mobile-download-cta" href="/download" class="hidden inline-flex items-center justify-center gap-2 bg-accent-pink hover:bg-primary/10 text-primary px-8 py-4 rounded-full font-medium transition-all text-lg" data-track="click_download_cta">
                         Download the App
                         <span class="material-icons-round text-xl">download</span>
@@ -379,10 +383,10 @@
                     <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Pre-Order Sentimo</h2>
 
                     <div id="price-original-wrap" class="mb-1.5">
-                        <span id="price-original" class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69</span>
+                        <span id="price-original" class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69.99</span>
                     </div>
                     <div class="mb-5 flex flex-wrap items-baseline justify-center lg:justify-start gap-2">
-                        <span id="price-current" class="text-4xl md:text-[3rem] font-bold text-primary">$49</span>
+                        <span id="price-current" class="text-4xl md:text-[3rem] font-bold text-primary">$49.99</span>
                         <span id="price-subtitle" class="text-base md:text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
                         <span class="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">PRE-ORDER PRICE</span>
                     </div>
@@ -400,9 +404,9 @@
                                 <label for="product-single" data-product-option="single" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 pr-12 transition-colors hover:border-primary/50">
                                     <span class="flex items-start justify-between gap-2">
                                         <span class="font-bold">Single Printer</span>
-                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49</span>
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49.99</span>
                                     </span>
-                                    <span class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29</span>
+                                    <span class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29.99</span>
                                     <span class="text-xs font-medium text-primary">Great for a shared family printer</span>
                                 </label>
                                 <button id="single-info-button" type="button" class="group absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-primary/50 text-sm font-bold leading-none text-primary transition-colors hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/40" aria-label="Why order one?" aria-expanded="false" aria-controls="single-info-popover" title="Why order one?">
@@ -423,7 +427,7 @@
                                     <span class="font-bold">2-Pack</span>
                                     <span class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">Best value</span>
                                 </span>
-                                <span class="text-sm text-text-muted-light dark:text-text-muted-dark">2 printers for $49</span>
+                                <span class="text-sm text-text-muted-light dark:text-text-muted-dark">2 printers for $49.99</span>
                                 <span class="text-xs font-medium text-primary">One for you, one for them</span>
                             </label>
                         </div>
@@ -436,40 +440,40 @@
                         <div id="color-pickers" class="space-y-4">
                             <div class="color-picker" data-printer-index="0">
                                 <p class="text-sm font-medium mb-2">Printer 1</p>
-                                <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Printer 1 color">
-                                    <label data-color-option="pink" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                <div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Printer 1 color">
+                                    <label data-color-option="pink" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-0" value="pink" data-printer-index="0" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_Pink.jpg" alt="Pink Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-pink.webp" alt="Pink Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">Pink</span>
                                     </label>
-                                    <label data-color-option="white" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="white" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-0" value="white" data-printer-index="0" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_White_v2.png" alt="White Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-white.webp" alt="White Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">White</span>
                                     </label>
-                                    <label data-color-option="black" data-printer-index="0" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="black" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-0" value="black" data-printer-index="0" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_black.png" alt="Black Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-black.webp" alt="Black Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">Black</span>
                                     </label>
                                 </div>
                             </div>
                             <div class="color-picker" data-printer-index="1">
                                 <p class="text-sm font-medium mb-2">Printer 2</p>
-                                <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Printer 2 color">
-                                    <label data-color-option="pink" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                <div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Printer 2 color">
+                                    <label data-color-option="pink" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-1" value="pink" data-printer-index="1" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_Pink.jpg" alt="Pink Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-pink.webp" alt="Pink Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">Pink</span>
                                     </label>
-                                    <label data-color-option="white" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="white" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-1" value="white" data-printer-index="1" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_White_v2.png" alt="White Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-white.webp" alt="White Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">White</span>
                                     </label>
-                                    <label data-color-option="black" data-printer-index="1" class="color-option cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="black" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-1" value="black" data-printer-index="1" />
-                                        <span class="color-photo-frame mx-auto block h-14 w-14 overflow-hidden rounded-lg sm:h-16 sm:w-16"><img src="/assets/Sentimo_black.png" alt="Black Sentimo printer" class="color-photo h-full w-full object-cover" /></span>
+                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-black.webp" alt="Black Sentimo printer" class="h-full w-full object-contain" /></span>
                                         <span class="mt-1 block text-xs font-medium">Black</span>
                                     </label>
                                 </div>
@@ -480,7 +484,7 @@
                     <!-- Quantity Selector -->
                     <div class="flex flex-col items-center lg:items-start gap-2 mb-5">
                         <div class="flex items-center gap-3">
-                            <label for="quantity-display" class="font-medium text-sm">Quantity:</label>
+                            <label for="quantity-display" class="font-medium text-sm">Printer quantity:</label>
                             <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
                                 <button id="qty-minus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
                                 <span id="quantity-display" class="px-4 py-1.5 text-lg font-bold min-w-[3rem] text-center">1</span>
@@ -489,6 +493,49 @@
                         </div>
                         <p id="quantity-help" class="text-xs text-text-muted-light dark:text-text-muted-dark">Each 2-pack includes 2 printers (one for you, one for them)</p>
                     </div>
+
+                    <!-- Optional Thermal Paper (full price) -->
+                    <fieldset id="paper-selection" class="mb-5 text-left" aria-describedby="paper-selection-help">
+                        <legend class="font-medium text-sm mb-2">Add thermal paper <span class="ml-1 rounded-full bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-text-muted-light dark:text-text-muted-dark">Optional</span></legend>
+                        <p class="text-xs text-text-muted-light dark:text-text-muted-dark mb-1">Sticker thermal paper. Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes. 3 rolls per pack.</p>
+                        <p id="paper-selection-help" class="text-xs text-text-muted-light dark:text-text-muted-dark mb-3" aria-live="polite">Tap a pack to add it, or tap it again to remove it.</p>
+                        <div class="flex flex-wrap gap-2" role="group" aria-label="Optional thermal paper packs">
+                            <button type="button" data-paper-option="classic" aria-pressed="false" class="paper-option w-[7.75rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                                <span class="mt-1 block text-xs font-medium">Classic</span>
+                                <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
+                                <span class="block text-xs font-bold text-primary">$7.99</span>
+                            </button>
+                            <button type="button" data-paper-option="sweet" aria-pressed="false" class="paper-option w-[7.75rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/paper-sweet.webp" alt="Three rolls of pink, purple, and yellow thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                                <span class="mt-1 block text-xs font-medium">Sweet</span>
+                                <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">Pink, purple, yellow</span>
+                                <span class="block text-xs font-bold text-primary">$8.99</span>
+                            </button>
+                            <button type="button" data-paper-option="bright" aria-pressed="false" class="paper-option w-[7.75rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/paper-bright.webp" alt="Three rolls of mint, blue, and orange thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                                <span class="mt-1 block text-xs font-medium">Bright</span>
+                                <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">Mint, blue, orange</span>
+                                <span class="block text-xs font-bold text-primary">$8.99</span>
+                            </button>
+                        </div>
+                        <div id="paper-addon-applied" class="mt-3 hidden items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-2.5 text-left dark:border-green-800 dark:bg-green-900/20" role="status">
+                            <img id="paper-addon-applied-img" src="/assets/cutouts/paper-sweet.webp" alt="" class="h-12 w-12 flex-shrink-0 object-contain" />
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-bold text-green-700 dark:text-green-400">Add-on deal applied</p>
+                                <p id="paper-addon-applied-text" class="text-xs text-text-muted-light dark:text-text-muted-dark"></p>
+                            </div>
+                            <button type="button" id="paper-addon-remove" class="flex-shrink-0 text-xs font-medium underline text-text-muted-light hover:text-primary dark:text-text-muted-dark">Remove</button>
+                        </div>
+                        <div id="paper-form-qty-wrap" class="mt-3 hidden items-center gap-3">
+                            <span class="text-sm font-medium">Packs:</span>
+                            <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
+                                <button type="button" id="paper-form-minus" class="px-3 py-1 text-base font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease thermal paper packs">&minus;</button>
+                                <span id="paper-form-qty" class="px-3 py-1 text-base font-bold min-w-[2.5rem] text-center">1</span>
+                                <button type="button" id="paper-form-plus" class="px-3 py-1 text-base font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase thermal paper packs">&plus;</button>
+                            </div>
+                        </div>
+                    </fieldset>
 
                     <!-- Pre-order disclosure -->
                     <div class="bg-accent-pink/30 dark:bg-primary/5 border border-primary/10 rounded-xl p-4 mb-5">
@@ -517,6 +564,58 @@
                     <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-3">
                         By proceeding, you agree to our <a href="/terms.html" class="text-primary hover:underline">Terms</a> and <a href="/preorder-policy.html" class="text-primary hover:underline">Pre-Order Policy</a>.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== THERMAL PAPER ===================== -->
+    <section id="paper" class="py-10 scroll-reveal">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-surface-light dark:bg-surface-dark p-5 sm:p-6 shadow-card">
+                <div class="text-center mb-5">
+                    <h2 class="text-2xl font-bold">Thermal paper rolls</h2>
+                    <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Sticker thermal paper in packs of 3 rolls. Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes. Add one pack to a printer order for just $4.99 at checkout.</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3" role="group" aria-label="Thermal paper packs">
+                    <button type="button" data-standalone-paper="classic" aria-pressed="false" class="standalone-paper w-[7.5rem] sm:w-36 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 text-center transition-colors hover:border-primary/50">
+                        <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                        <span class="mt-2 block text-sm font-bold">Classic</span>
+                        <span class="block text-xs text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
+                        <span class="block text-sm font-bold text-primary">$7.99</span>
+                    </button>
+                    <button type="button" data-standalone-paper="sweet" aria-pressed="false" class="standalone-paper w-[7.5rem] sm:w-36 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 text-center transition-colors hover:border-primary/50">
+                        <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-sweet.webp" alt="Three rolls of pink, purple, and yellow thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                        <span class="mt-2 block text-sm font-bold">Sweet</span>
+                        <span class="block text-xs text-text-muted-light dark:text-text-muted-dark">Pink, purple, yellow</span>
+                        <span class="block text-sm font-bold text-primary">$8.99</span>
+                    </button>
+                    <button type="button" data-standalone-paper="bright" aria-pressed="false" class="standalone-paper w-[7.5rem] sm:w-36 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 text-center transition-colors hover:border-primary/50">
+                        <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-bright.webp" alt="Three rolls of mint, blue, and orange thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                        <span class="mt-2 block text-sm font-bold">Bright</span>
+                        <span class="block text-xs text-text-muted-light dark:text-text-muted-dark">Mint, blue, orange</span>
+                        <span class="block text-sm font-bold text-primary">$8.99</span>
+                    </button>
+                </div>
+                <div class="mt-4 flex flex-col items-center gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium">Packs:</span>
+                        <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden">
+                            <button type="button" id="paper-minus" class="px-3 py-1 text-base font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease packs">&minus;</button>
+                            <span id="paper-qty" class="px-3 py-1 text-base font-bold min-w-[2.5rem] text-center">1</span>
+                            <button type="button" id="paper-plus" class="px-3 py-1 text-base font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase packs">&plus;</button>
+                        </div>
+                        <span id="paper-total" class="text-sm font-bold text-primary"></span>
+                    </div>
+                    <p id="paper-shipping-note" class="text-xs text-center text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Shipping is $4.99, or free on orders of $25 or more before tax.</p>
+                    <div class="flex items-start gap-3 text-left">
+                        <input type="checkbox" id="paper-agree" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
+                        <label for="paper-agree" class="text-xs text-text-muted-light dark:text-text-muted-dark cursor-pointer">I understand that paper-only orders ship when Sentimo printers begin shipping in Fall 2026.</label>
+                    </div>
+                    <button id="paper-buy-btn" type="button" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-md shadow-primary/30 text-sm">
+                        <span id="paper-buy-text">Buy thermal paper</span>
+                    </button>
+                    <p id="paper-error" class="hidden text-red-500 text-sm"></p>
                 </div>
             </div>
         </div>
@@ -657,7 +756,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">How long does the paper last?</h4>
-                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">One roll of thermal paper can print about 50-70 average-sized notes. The print itself lasts for years without fading if kept away from direct heat sources.</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">One roll of sticker thermal paper can print about 50-60 photos or 80-100 notes. The print itself lasts for years without fading if kept away from direct heat sources.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">Can I print photos?</h4>
@@ -773,8 +872,50 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <!-- Scripts -->
+    <!-- ===================== THERMAL PAPER ADD-ON POP-UP ===================== -->
+    <div id="paper-addon-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="paper-addon-title" aria-describedby="paper-addon-desc">
+        <div id="paper-addon-backdrop" class="absolute inset-0 bg-black/50"></div>
+        <div class="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl border border-gray-100 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-5 sm:p-6 text-center shadow-2xl">
+            <button id="paper-addon-close" type="button" class="absolute right-3 top-3 text-2xl leading-none text-text-muted-light hover:text-primary dark:text-text-muted-dark" aria-label="Close and keep editing my order">&times;</button>
+            <span class="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-green-700">Printer add-on deal &middot; limit 1 per order</span>
+            <h3 id="paper-addon-title" class="mt-3 text-2xl font-bold">Add 3 rolls of paper for just <span class="text-primary">$4.99</span></h3>
+            <p id="paper-addon-desc" class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Regularly $7.99&ndash;$8.99. Pick a pack and save up to $4.00 when you add it to your printer order. Sticker paper; each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
+            <div class="mt-4 flex flex-wrap justify-center gap-2 sm:gap-3">
+                <div class="w-[7rem] sm:w-[8.5rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 flex flex-col">
+                    <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                    <span class="mt-2 block text-sm font-bold">Classic</span>
+                    <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
+                    <span class="mt-1 block text-xs text-text-muted-light dark:text-text-muted-dark line-through">$7.99</span>
+                    <span class="block text-lg font-bold text-primary">$4.99</span>
+                    <span class="mx-auto mb-2 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">Save $3.00</span>
+                    <button type="button" data-addon-choice="classic" class="mt-auto rounded-full bg-primary px-2 py-2 text-xs font-medium text-white hover:bg-primary-hover transition-colors">Add Classic</button>
+                </div>
+                <div class="w-[7rem] sm:w-[8.5rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 flex flex-col">
+                    <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-sweet.webp" alt="Three rolls of pink, purple, and yellow thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                    <span class="mt-2 block text-sm font-bold">Sweet</span>
+                    <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">Pink, purple, yellow</span>
+                    <span class="mt-1 block text-xs text-text-muted-light dark:text-text-muted-dark line-through">$8.99</span>
+                    <span class="block text-lg font-bold text-primary">$4.99</span>
+                    <span class="mx-auto mb-2 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">Save $4.00</span>
+                    <button type="button" data-addon-choice="sweet" class="mt-auto rounded-full bg-primary px-2 py-2 text-xs font-medium text-white hover:bg-primary-hover transition-colors">Add Sweet</button>
+                </div>
+                <div class="w-[7rem] sm:w-[8.5rem] rounded-xl border-2 border-gray-200 dark:border-gray-700 p-2 flex flex-col">
+                    <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-bright.webp" alt="Three rolls of mint, blue, and orange thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                    <span class="mt-2 block text-sm font-bold">Bright</span>
+                    <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">Mint, blue, orange</span>
+                    <span class="mt-1 block text-xs text-text-muted-light dark:text-text-muted-dark line-through">$8.99</span>
+                    <span class="block text-lg font-bold text-primary">$4.99</span>
+                    <span class="mx-auto mb-2 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">Save $4.00</span>
+                    <button type="button" data-addon-choice="bright" class="mt-auto rounded-full bg-primary px-2 py-2 text-xs font-medium text-white hover:bg-primary-hover transition-colors">Add Bright</button>
+                </div>
+            </div>
+            <button id="paper-addon-skip" type="button" class="mt-4 text-sm font-medium text-text-muted-light hover:text-primary dark:text-text-muted-dark underline">No thanks, continue to checkout</button>
+        </div>
+    </div>
+
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js?v=20260919-color-crop"></script>
+    <script src="/assets/js/preorder.js?v=20261007-paper"></script>
+    <script src="/assets/js/paper.js?v=20261007-paper"></script>
 
     <!-- Carousel Script -->
     <script>
