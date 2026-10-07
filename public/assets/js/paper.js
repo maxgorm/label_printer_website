@@ -47,16 +47,26 @@
 
     qtyDisplay.textContent = quantity;
 
+    const ship = window.SentimoShipping;
+    const international = Boolean(ship?.isInternational());
     if (selected) {
       const subtotal = BUNDLES[selected].price * quantity;
-      const shipping = subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS;
+      const shipping = ship
+        ? ship.quote({ subtotalCents: subtotal, hasPrinter: false })
+        : { cents: subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS, international: false };
       totalDisplay.textContent = formatCents(subtotal);
-      shippingNote.textContent = shipping === 0
-        ? 'Free shipping on this order (orders of $25 or more before tax). Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.'
-        : `Shipping is ${formatCents(shipping)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+      if (international) {
+        shippingNote.textContent = `International shipping for this order: ${shipping.cents === null ? 'calculated' : formatCents(shipping.cents)} (USPS), added at checkout. Import duties, taxes, and customs fees charged by your country are not included. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+      } else {
+        shippingNote.textContent = shipping.cents === 0
+          ? 'Free shipping on this order (orders of $25 or more before tax). Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.'
+          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+      }
     } else {
       totalDisplay.textContent = '';
-      shippingNote.textContent = 'Choose a pack. Shipping is $4.99, or free on orders of $25 or more before tax.';
+      shippingNote.textContent = international
+        ? 'Choose a pack. International shipping is calculated by destination and shown here.'
+        : 'Choose a pack. Shipping is $4.99, or free on orders of $25 or more before tax.';
     }
 
     buyBtn.disabled = !(selected && agree?.checked);
@@ -84,6 +94,7 @@
   });
 
   agree?.addEventListener('change', render);
+  window.SentimoShipping?.onChange(render);
 
   buyBtn.addEventListener('click', async () => {
     if (!selected || !agree?.checked) return;
@@ -100,7 +111,7 @@
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paper: [{ bundle: selected, quantity }] }),
+        body: JSON.stringify({ paper: [{ bundle: selected, quantity }], ship_country: window.SentimoShipping ? window.SentimoShipping.country() : 'US' }),
       });
 
       const contentType = response.headers.get('content-type');

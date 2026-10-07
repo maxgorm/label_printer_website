@@ -7,8 +7,8 @@ import {
   normalizePaperAddon,
   normalizePaperItems,
   rollCountsFor,
-  shippingCentsFor,
 } from './_paper.js';
+import { HOME_COUNTRY, isShippableCountry, shippingCentsFor, shippingLabelFor } from './_shipping.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,7 +19,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe secret key is not configured' });
   }
 
-  const { quantity, product: productKey, colors, paper, paper_addon: paperAddon } = req.body || {};
+  const { quantity, product: productKey, colors, paper, paper_addon: paperAddon, ship_country: shipCountryInput } = req.body || {};
+
+  // Each session is locked to one destination country, so the shipping rate chosen here
+  // always matches the address Stripe collects.
+  const shipCountry = String(shipCountryInput || HOME_COUNTRY).toUpperCase();
+  if (!isShippableCountry(shipCountry)) {
+    return res.status(400).json({ error: 'Sorry, we do not currently ship to that country' });
+  }
 
   const paperResult = normalizePaperItems(paper);
   if (paperResult.error) return res.status(400).json({ error: paperResult.error });
@@ -128,7 +135,8 @@ export default async function handler(req, res) {
     });
   }
 
-  const shippingCents = shippingCentsFor(subtotalCents);
+  const shippingCents = shippingCentsFor({ country: shipCountry, subtotalCents, hasPrinter: !paperOnly });
+  const international = shipCountry !== HOME_COUNTRY;
   const paperMetadata = hasPaper
     ? {
         paper_bundles: JSON.stringify(listedPaper),
@@ -156,6 +164,7 @@ export default async function handler(req, res) {
         expected_ship: PREORDER_CONFIG.expected_ship_label,
         quantity: String(paperOnly ? paperTotalPacks : qty),
         shipping_cents: String(shippingCents),
+        ship_country: shipCountry,
         ...colorMetadata,
         ...paperMetadata,
       },
@@ -167,7 +176,7 @@ export default async function handler(req, res) {
       allow_promotion_codes: PREORDER_CONFIG.allow_promotion_codes,
       custom_text: {
         submit: {
-          message: `This is a pre-order. Shipping is expected to begin in ${PREORDER_CONFIG.expected_ship_label}. ${PREORDER_CONFIG.refund_message}`,
+          message: `This is a pre-order. Shipping is expected to begin in ${PREORDER_CONFIG.expected_ship_label}. ${PREORDER_CONFIG.refund_message}${international ? ' International orders may be subject to import duties, taxes, and customs fees charged by your country, which are not included in this total.' : ''}`,
         },
       },
     };
@@ -175,12 +184,12 @@ export default async function handler(req, res) {
     // Collect shipping address if enabled
     if (PREORDER_CONFIG.collect_shipping) {
       sessionParams.shipping_address_collection = {
-        allowed_countries: PREORDER_CONFIG.shipping_countries,
+        allowed_countries: [shipCountry],
       };
       sessionParams.shipping_options = [{
         shipping_rate_data: {
           type: 'fixed_amount',
-          display_name: shippingCents === 0 ? 'Free shipping' : 'Standard shipping',
+          display_name: shippingLabelFor(shipCountry, shippingCents),
           fixed_amount: { amount: shippingCents, currency: PREORDER_CONFIG.currency },
           tax_behavior: 'exclusive',
           tax_code: PREORDER_CONFIG.shipping_tax_code,

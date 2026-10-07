@@ -111,6 +111,11 @@ async function handleCheckoutCompleted(stripe, session) {
   }
   const paperSummary = describePaper(paper);
   const shippingAmount = fullSession.total_details?.amount_shipping ?? null;
+  const intendedCountry = metadata.ship_country || 'US';
+  const enteredCountry = shipping.country || intendedCountry;
+  if (enteredCountry !== intendedCountry) {
+    console.error(`Shipping country mismatch on ${fullSession.id}: charged for ${intendedCountry}, entered ${enteredCountry}`);
+  }
   const totalAmount = fullSession.amount_total;
 
   // Stripe retries events. Read first so routine retries do not consume an order number.
@@ -152,6 +157,7 @@ async function handleCheckoutCompleted(stripe, session) {
       shipping_postal_code: shipping.postal_code || null,
       shipping_country: shipping.country || null,
       notes: [
+        enteredCountry !== intendedCountry ? `CHECK SHIPPING: charged for ${intendedCountry}, address is ${enteredCountry}` : '',
         printerColors ? `Printer colors: ${printerColors}` : '',
         paperSummary ? `Thermal paper: ${paperSummary}` : '',
       ].filter(Boolean).join(' | ') || null,
@@ -181,6 +187,7 @@ async function handleCheckoutCompleted(stripe, session) {
           productName,
           printerColors,
           paperSummary,
+          international: enteredCountry !== 'US',
           shippingAmount: shippingAmount === null ? '' : (shippingAmount === 0 ? 'Free' : formatCurrency(shippingAmount, fullSession.currency)),
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
@@ -274,7 +281,7 @@ function formatPrinterColors(value) {
     .join(', ');
 }
 
-function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, quantity, amount }) {
+function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, international, quantity, amount }) {
   return `
     <div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1F2937;">
       <div style="text-align: center; margin-bottom: 32px;">
@@ -295,6 +302,7 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
         ${shippingAmount ? `<p style="margin: 4px 0;"><strong>Shipping:</strong> ${escapeHtml(shippingAmount)}</p>` : ''}
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>
       </div>
+      ${international ? '<p>International orders may be subject to import duties, taxes, or customs fees charged by your country. These are not included in your total and are the buyer\'s responsibility.</p>' : ''}
       <p>If you have any questions, contact us at <a href="mailto:${PREORDER_CONFIG.support_email}" style="color: #F53F7B;">${PREORDER_CONFIG.support_email}</a>.</p>
       <p>Thank you,<br />Sentimo</p>
       <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 32px 0;" />

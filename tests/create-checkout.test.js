@@ -167,3 +167,44 @@ test('the add-on price needs a printer and a real bundle', async () => {
     assert.equal(requests.length, 0);
   }
 });
+
+// ---- International shipping ----
+
+const shipRate = (params) => params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]');
+
+test('US destination keeps the flat and free rates and is locked to the US', async () => {
+  const { requests } = await invoke({ paper: [{ bundle: 'classic', quantity: 2 }], ship_country: 'US' });
+  const { params } = requests[0];
+  assert.equal(shipRate(params), '499');
+  assert.equal(params.get('shipping_address_collection[allowed_countries][0]'), 'US');
+  assert.equal(params.has('shipping_address_collection[allowed_countries][1]'), false);
+  assert.equal(params.get('metadata[ship_country]'), 'US');
+});
+
+test('international orders pay destination rates and are locked to that country', async () => {
+  const cases = [
+    { ship_country: 'CA', body: { paper: [{ bundle: 'classic', quantity: 4 }] }, cents: '1499' }, // $31.96 would be free in the US
+    { ship_country: 'GB', body: { product: 'duo', colors: ['pink', 'white'], quantity: 1 }, cents: '3499' },
+    { ship_country: 'au', body: { product: 'single', colors: ['black'], quantity: 1 }, cents: '3799' },
+    { ship_country: 'BR', body: { paper: [{ bundle: 'sweet', quantity: 1 }] }, cents: '2499' },
+  ];
+  for (const { ship_country, body, cents } of cases) {
+    const { res, requests } = await invoke({ ...body, ship_country });
+    assert.equal(res.statusCode, 200, ship_country);
+    const { params } = requests[0];
+    assert.equal(shipRate(params), cents, ship_country);
+    assert.equal(params.get('shipping_options[0][shipping_rate_data][display_name]'), 'International shipping (USPS)');
+    assert.equal(params.get('shipping_address_collection[allowed_countries][0]'), ship_country.toUpperCase());
+    assert.equal(params.has('shipping_address_collection[allowed_countries][1]'), false);
+    assert.equal(params.get('metadata[ship_country]'), ship_country.toUpperCase());
+    assert.match(params.get('custom_text[submit][message]'), /import duties/);
+  }
+});
+
+test('countries we do not ship to never reach Stripe', async () => {
+  for (const ship_country of ['KP', 'IR', 'CU', 'SY', 'RU', 'XX', 'USA']) {
+    const { res, requests } = await invoke({ product: 'single', colors: ['pink'], quantity: 1, ship_country });
+    assert.equal(res.statusCode, 400, ship_country);
+    assert.equal(requests.length, 0);
+  }
+});

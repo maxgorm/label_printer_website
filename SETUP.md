@@ -227,3 +227,15 @@ Paper orders ship with the printers (Fall 2026). Each order shows `paper_bundles
 2. Set `SHIPMENT_WEBHOOK_SECRET` in Vercel.
 3. In Supabase go to **Database → Webhooks → Create**: table `preorders`, event **Update**, type HTTP Request, `POST https://<your-domain>/api/shipment-notify`, and add the header `x-webhook-secret` with the same secret.
 4. To ship an order, paste the tracking number into `tracking_number` (optionally set `tracking_carrier` to `usps`, `ups` or `fedex`; it is detected otherwise) and set `fulfillment_status` to `shipped`. The customer gets one email with a tracking link, and stock is deducted by the existing trigger. Any order of the two edits works; the email goes out once both are present.
+
+## International shipping
+
+Customers choose a **Ship to** country on the order form and in the paper section before Stripe. Each Checkout Session is locked to that one country (`shipping_address_collection.allowed_countries`), so the shipping rate always matches the address Stripe collects.
+
+- **United States** (all 50 states, DC, Alaska, Hawaii, territories and military addresses): $4.99, or free at $25+ before tax.
+- **Everywhere else**: a destination rate by zone, never the US flat or free rate, and no free-shipping threshold. Rates, zones and the country list are in `api/_shipping.js` (`ZONES`, `INTERNATIONAL_RATES_CENTS`). **The rates are estimates. Compare them with Pirate Ship (USPS international) for your package weights and edit them before relying on them.** `light` = paper-only order, `standard` = order with a printer.
+- Import duties, taxes and customs fees are charged by the destination country and are not collected at checkout. The checkout message and confirmation email say so.
+- The webhook records the shipping country and writes `CHECK SHIPPING` in the order notes if the address country ever differs from the country the rate was charged for.
+- `GET /api/shipping-options` feeds the country list to the order form.
+- Not served: North Korea, Iran, Cuba, Syria, Russia, Belarus and other embargoed or USPS-suspended destinations. Add or remove countries in `ZONES`; every code must be one Stripe Checkout supports.
+- Pirate Ship needs a customs declaration for each international label. Check that the printer's battery is allowed to ship to each destination with USPS before enabling a country for printers.

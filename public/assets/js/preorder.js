@@ -405,6 +405,7 @@
   async function startCheckout() {
     const colors = selectedColors.slice(0, requiredColorCount());
     const payload = { quantity, product: selectedProduct, colors };
+    if (window.SentimoShipping) payload.ship_country = window.SentimoShipping.country();
     if (paperChoice) payload.paper = [{ bundle: paperChoice, quantity: paperQty }];
     if (addonChoice) payload.paper_addon = addonChoice;
 
