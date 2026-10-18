@@ -167,7 +167,7 @@ export default async function handler(req, res) {
       allow_promotion_codes: PREORDER_CONFIG.allow_promotion_codes,
       custom_text: {
         submit: {
-          message: `This is a pre-order. Shipping is expected to begin in ${PREORDER_CONFIG.expected_ship_label}. ${PREORDER_CONFIG.refund_message}`,
+          message: `Shipping to anywhere in the US takes ${PREORDER_CONFIG.expected_ship_label}. ${PREORDER_CONFIG.refund_message}`,
         },
       },
     };

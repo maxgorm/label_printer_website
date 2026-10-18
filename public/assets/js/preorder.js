@@ -1,6 +1,6 @@
 /**
- * Sentimo Pre-Order Checkout Logic
- * Handles: quantity selection, color selection, optional thermal paper, the $4.99 paper add-on pop-up, checkbox gating, Stripe Checkout redirect, analytics events
+ * Sentimo Order Checkout Logic
+ * Handles: quantity selection, color selection, optional thermal paper, the $4.99 paper add-on pop-up, Stripe Checkout redirect, analytics events
  */
 (function () {
   'use strict';
@@ -8,7 +8,6 @@
   const qtyMinus = document.getElementById('qty-minus');
   const qtyPlus = document.getElementById('qty-plus');
   const qtyDisplay = document.getElementById('quantity-display');
-  const checkbox = document.getElementById('preorder-agree');
   const preorderBtn = document.getElementById('preorder-btn');
   const preorderBtnText = document.getElementById('preorder-btn-text');
   const preorderBtnSpinner = document.getElementById('preorder-btn-spinner');
@@ -60,7 +59,7 @@
       originalPrice: '$49.99',
       subtitle: 'for 1 printer',
       quantityHelp: 'Each single-printer option includes 1 printer and starter materials',
-      buttonLabel: 'Pre-Order Single Printer',
+      buttonLabel: 'Order Single Printer',
       printerCount: 1,
     },
     duo: {
@@ -68,7 +67,7 @@
       originalPrice: '$69.99',
       subtitle: 'for 2 printers',
       quantityHelp: 'Each 2-pack includes 2 printers (choose a color for each; the colors can match)',
-      buttonLabel: 'Pre-Order 2-Pack',
+      buttonLabel: 'Order 2-Pack',
       printerCount: 2,
     },
   };
@@ -159,7 +158,7 @@
     }
 
     if (preorderBtn) {
-      preorderBtn.disabled = !(checkbox?.checked && hasCompleteColorSelection());
+      preorderBtn.disabled = !hasCompleteColorSelection();
     }
   }
 
@@ -238,11 +237,6 @@
     }
   });
 
-  // ===================== CHECKBOX GATING =====================
-  checkbox?.addEventListener('change', () => {
-    updateColorSelection();
-  });
-
   // ===================== OPTIONAL THERMAL PAPER (FULL PRICE) =====================
   function formatCents(cents) {
     return '$' + (cents / 100).toFixed(2);
@@ -304,7 +298,7 @@
     const bundle = PAPER_BUNDLES[addonChoice];
     if (addonAppliedImg) addonAppliedImg.src = `/assets/cutouts/paper-${addonChoice}.webp`;
     if (addonAppliedText) {
-      addonAppliedText.textContent = `1 × ${bundle.label} pack (3 rolls) for ${formatCents(ADDON_PRICE)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Pre-Order'} to continue.`;
+      addonAppliedText.textContent = `1 × ${bundle.label} pack (3 rolls) for ${formatCents(ADDON_PRICE)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Order'} to continue.`;
     }
   }
 
@@ -380,7 +374,7 @@
 
   // ===================== PRE-ORDER BUTTON =====================
   preorderBtn?.addEventListener('click', () => {
-    if (!checkbox?.checked || !hasCompleteColorSelection()) {
+    if (!hasCompleteColorSelection()) {
       updateColorSelection();
       return;
     }
@@ -442,8 +436,8 @@
       }
 
       // Reset button
-      preorderBtn.disabled = !(checkbox.checked && hasCompleteColorSelection());
-      if (preorderBtnText) preorderBtnText.textContent = PRODUCTS[selectedProduct]?.buttonLabel || 'Pre-Order Now';
+      preorderBtn.disabled = !hasCompleteColorSelection();
+      if (preorderBtnText) preorderBtnText.textContent = PRODUCTS[selectedProduct]?.buttonLabel || 'Order Now';
       if (preorderBtnSpinner) preorderBtnSpinner.classList.add('hidden');
     }
   }

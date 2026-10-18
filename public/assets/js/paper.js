@@ -9,7 +9,6 @@
   const cards = document.querySelectorAll('[data-standalone-card]');
   const totalDisplay = document.getElementById('paper-total');
   const shippingNote = document.getElementById('paper-shipping-note');
-  const agree = document.getElementById('paper-agree');
   const buyBtn = document.getElementById('paper-buy-btn');
   const buyText = document.getElementById('paper-buy-text');
   const errorEl = document.getElementById('paper-error');
@@ -67,11 +66,11 @@
         ? ship.quote({ subtotalCents: subtotal, hasPrinter: false })
         : { cents: subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS, international: false };
       if (international) {
-        shippingNote.textContent = `International shipping for this order: ${shipping.cents === null ? 'calculated' : formatCents(shipping.cents)} (USPS), added at checkout. Import duties, taxes, and customs fees charged by your country are not included. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+        shippingNote.textContent = `International shipping for this order: ${shipping.cents === null ? 'calculated' : formatCents(shipping.cents)} (USPS), added at checkout. Import duties, taxes, and customs fees charged by your country are not included. Orders ship within the US in 2-5 days.`;
       } else {
         shippingNote.textContent = shipping.cents === 0
-          ? 'Free shipping on this order (orders of $25 or more before tax). Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.'
-          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Paper-only orders ship when Sentimo printers begin shipping in Fall 2026.`;
+          ? 'Free shipping on this order (orders of $25 or more before tax). Orders ship within the US in 2-5 days.'
+          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Orders ship within the US in 2-5 days.`;
       }
     } else {
       totalDisplay.textContent = '';
@@ -80,7 +79,7 @@
         : 'Choose your packs. Shipping is $4.99, or free on orders of $25 or more before tax.';
     }
 
-    buyBtn.disabled = !(packs > 0 && agree?.checked);
+    buyBtn.disabled = !(packs > 0);
   }
 
   function change(key, delta) {
@@ -94,13 +93,11 @@
     card.querySelector('[data-standalone-plus]').addEventListener('click', () => change(key, 1));
     card.querySelector('[data-standalone-minus]').addEventListener('click', () => change(key, -1));
   });
-
-  agree?.addEventListener('change', render);
   window.SentimoShipping?.onChange(render);
 
   buyBtn.addEventListener('click', async () => {
     const { lines, packs } = totals();
-    if (!packs || !agree?.checked) return;
+    if (!packs) return;
 
     buyBtn.disabled = true;
     buyText.textContent = 'Processing...';

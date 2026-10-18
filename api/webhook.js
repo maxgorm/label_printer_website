@@ -174,7 +174,7 @@ async function handleCheckoutCompleted(stripe, session) {
     const { error: emailError } = await resend.emails.send({
         from: PREORDER_CONFIG.confirmation_from,
         to: customerEmail,
-        subject: 'Your Sentimo pre-order is confirmed',
+        subject: 'Your Sentimo order is confirmed',
         html: buildConfirmationEmail({
           name: customerName || 'there',
           orderNumber: savedOrder.order_number,
@@ -280,11 +280,11 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
       <div style="text-align: center; margin-bottom: 32px;">
         <h1 style="color: #F53F7B; font-size: 24px; margin: 0;">Sentimo</h1>
       </div>
-      <h2 style="font-size: 20px; margin-bottom: 16px;">Your pre-order is confirmed</h2>
+      <h2 style="font-size: 20px; margin-bottom: 16px;">Your order is confirmed</h2>
       <p>Hi ${escapeHtml(name)},</p>
-      <p>Thank you for reserving Sentimo.</p>
-      <p>Your pre-order has been received and confirmed. Sentimo is expected to begin shipping in ${PREORDER_CONFIG.expected_ship_label}.</p>
-      <p>We'll send you updates as production progresses. If we are unable to fulfill your order, you will receive a full refund.</p>
+      <p>Thank you for ordering Sentimo.</p>
+      <p>Your order has been received and confirmed. Orders ship anywhere in the US and typically arrive in ${PREORDER_CONFIG.expected_ship_label}.</p>
+      <p>We'll email you tracking details once your order ships. If we are unable to fulfill your order, you will receive a full refund.</p>
       <div style="background: #FFF9F5; border: 1px solid #FFE8F0; border-radius: 12px; padding: 20px; margin: 24px 0;">
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">Order summary</h3>
         <p style="margin: 4px 0;"><strong>Order number:</strong> ${escapeHtml(orderNumber)}</p>

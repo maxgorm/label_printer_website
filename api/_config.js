@@ -11,7 +11,7 @@ const PREORDER_CONFIG = {
     single: {
       name: 'Sentimo Single Printer',
       slug: 'sentimo-single',
-      description: 'Sentimo Pre-Order — 1 Printer + Starter Kit. Expected to ship Fall 2026.',
+      description: 'Sentimo — 1 Printer + Starter Kit.',
       unit_price_cents: 2999,
       display_price: '$29.99',
       original_price: '$49.99',
@@ -20,7 +20,7 @@ const PREORDER_CONFIG = {
     duo: {
       name: 'Sentimo 2-Pack',
       slug: 'sentimo-2-pack',
-      description: 'Sentimo Pre-Order — 2 Printers + Starter Kit. Expected to ship Fall 2026.',
+      description: 'Sentimo — 2 Printers + Starter Kit.',
       unit_price_cents: 4999,
       display_price: '$49.99',
       original_price: '$69.99',
@@ -84,7 +84,7 @@ const PREORDER_CONFIG = {
   product_tax_code: 'txcd_34020027',
 
   // Shipping timeline
-  expected_ship_label: 'Fall 2026',
+  expected_ship_label: '2-5 days',
 
   // Order type
   order_type: 'preorder',

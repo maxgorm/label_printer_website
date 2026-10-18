@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  * POST /api/send-delay-update
  * Body: { updated_timeline: "October 2026" }
  *
- * Admin-only endpoint to send delay update emails to all paid pre-orders.
+ * Admin-only endpoint to send delay update emails to all paid orders.
  * Protect with ADMIN_API_KEY header in production.
  */
 export default async function handler(req, res) {
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         await resend.emails.send({
           from: `Sentimo <orders@sentimonotes.com>`,
           to: order.email,
-          subject: 'Update on your Sentimo pre-order',
+          subject: 'Update on your Sentimo order',
           html: buildDelayEmail({
             name: order.full_name || 'there',
             updated_timeline,
@@ -86,9 +86,9 @@ function buildDelayEmail({ name, updated_timeline }) {
       <div style="text-align: center; margin-bottom: 32px;">
         <h1 style="color: #F53F7B; font-size: 24px; margin: 0;">Sentimo</h1>
       </div>
-      <h2 style="font-size: 20px; margin-bottom: 16px;">Update on your Sentimo pre-order</h2>
+      <h2 style="font-size: 20px; margin-bottom: 16px;">Update on your Sentimo order</h2>
       <p>Hi ${escapeHtml(name)},</p>
-      <p>We wanted to share an update on your Sentimo pre-order.</p>
+      <p>We wanted to share an update on your Sentimo order.</p>
       <p>Our shipping timeline has changed, and we now expect orders to begin shipping on or around <strong>${escapeHtml(updated_timeline)}</strong>.</p>
       <p>If you would prefer not to wait, you may request a full refund before your order ships by contacting us at <a href="mailto:${PREORDER_CONFIG.support_email}" style="color: #F53F7B;">${PREORDER_CONFIG.support_email}</a>.</p>
       <p>Thank you for your patience and support,<br />Sentimo</p>
