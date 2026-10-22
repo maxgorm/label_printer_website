@@ -1,6 +1,6 @@
 /**
  * Sentimo Order Checkout Logic
- * Handles: quantity selection, color selection, optional thermal paper, the $4.99 paper add-on pop-up, Stripe Checkout redirect, analytics events
+ * Handles: quantity selection, color selection, optional thermal paper, the $4.99 paper add-on pop-up, shipping destination note, Stripe Checkout redirect, analytics events
  */
 (function () {
   'use strict';
@@ -37,6 +37,7 @@
   const addonAppliedImg = document.getElementById('paper-addon-applied-img');
   const addonAppliedText = document.getElementById('paper-addon-applied-text');
   const addonRemove = document.getElementById('paper-addon-remove');
+  const orderShippingNote = document.getElementById('order-shipping-note');
 
   let quantity = 1;
   let selectedProduct = 'duo';
@@ -289,6 +290,19 @@
 
   updatePaperSelection();
 
+  // ===================== SHIPPING DESTINATION =====================
+  // Printer orders always clear the US free-shipping threshold.
+  function updateShippingNote() {
+    const ship = window.SentimoShipping;
+    if (!orderShippingNote || !ship) return;
+    orderShippingNote.textContent = ship.isInternational()
+      ? `Shipping to ${ship.countryName()} is ${formatCents(ship.quote({ subtotalCents: 0 }).cents)} per order. Delivery takes 5-14 days. Duties and taxes are the buyer’s responsibility.`
+      : 'Free shipping anywhere in the US. Delivery takes 2-5 days.';
+  }
+
+  window.SentimoShipping?.onChange(updateShippingNote);
+  updateShippingNote();
+
   // The $4.99 add-on stays visible in the form once the shopper accepts it.
   function renderAddonApplied() {
     if (!addonApplied) return;
@@ -390,7 +404,8 @@
 
   async function startCheckout() {
     const colors = selectedColors.slice(0, requiredColorCount());
-    const payload = { quantity, product: selectedProduct, colors };
+    const country = window.SentimoShipping?.country() || 'US';
+    const payload = { quantity, product: selectedProduct, colors, country };
     const paper = Object.entries(paperQtys)
       .filter(([, count]) => count > 0)
       .map(([bundle, count]) => ({ bundle, quantity: count }));
@@ -398,7 +413,7 @@
     if (addonChoice) payload.paper_addon = addonChoice;
 
     // Track CTA click
-    trackEvent('checkout_started', { quantity, product: selectedProduct, colors, paper: paper.length ? paper : null, paper_addon: addonChoice });
+    trackEvent('checkout_started', { quantity, product: selectedProduct, colors, country, paper: paper.length ? paper : null, paper_addon: addonChoice });
 
     // Set loading state
     preorderBtn.disabled = true;

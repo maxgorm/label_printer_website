@@ -168,6 +168,56 @@ test('the add-on price needs a printer and a real bundle', async () => {
   }
 });
 
+// ---- International shipping ----
+
+test('US is the default destination, with no phone collection or duties notice', async () => {
+  const { requests } = await invoke({ product: 'duo', colors: ['pink', 'white'], quantity: 1 });
+  const { params } = requests[0];
+  assert.equal(params.get('shipping_address_collection[allowed_countries][0]'), 'US');
+  assert.equal(params.has('shipping_address_collection[allowed_countries][1]'), false);
+  assert.equal(params.has('phone_number_collection[enabled]'), false);
+  assert.equal(params.has('custom_text[shipping_address][message]'), false);
+  assert.equal(params.get('metadata[shipping_country]'), 'US');
+  assert.equal(params.get('metadata[expected_ship]'), config.expected_ship_label);
+});
+
+test('each listed country is charged its flat rate, even on printer orders', async () => {
+  const expected = {
+    CA: 1499, GB: 1999, DE: 1999, FR: 1999, NL: 1999, BE: 1999, IE: 1999, MX: 1999,
+    IT: 2499, ES: 2499, SE: 2499, DK: 2499, AU: 2499, NZ: 2499, JP: 2499, KR: 2499, SG: 2499,
+  };
+  assert.deepEqual(config.international_shipping_cents, expected);
+  for (const [country, cents] of Object.entries(expected)) {
+    const { res, requests } = await invoke({ product: 'duo', colors: ['pink', 'white'], quantity: 2, country });
+    assert.equal(res.statusCode, 200, country);
+    const { params } = requests[0];
+    assert.equal(params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), String(cents), country);
+    assert.equal(params.get('shipping_options[0][shipping_rate_data][display_name]'), 'International shipping');
+    assert.equal(params.get('shipping_address_collection[allowed_countries][0]'), country);
+    assert.equal(params.has('shipping_address_collection[allowed_countries][1]'), false);
+    assert.equal(params.get('phone_number_collection[enabled]'), 'true');
+    assert.equal(params.get('custom_text[shipping_address][message]'), config.duties_message);
+    assert.match(params.get('custom_text[submit][message]'), /5-14 days\. Duties and taxes are the buyer’s responsibility\./);
+    assert.equal(params.get('metadata[shipping_country]'), country);
+    assert.equal(params.get('metadata[expected_ship]'), '5-14 days');
+  }
+});
+
+test('international paper orders are never free and country codes are case-insensitive', async () => {
+  const { res, requests } = await invoke({ paper: [{ bundle: 'classic', quantity: 4 }], country: 'ca' }); // $31.96
+  assert.equal(res.statusCode, 200);
+  assert.equal(requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '1499');
+  assert.equal(requests[0].params.get('shipping_address_collection[allowed_countries][0]'), 'CA');
+});
+
+test('unlisted countries never reach Stripe', async () => {
+  for (const country of ['BR', 'CN', 'PR', 'XX', 'usa', 42]) {
+    const { res, requests } = await invoke({ product: 'duo', colors: ['pink', 'white'], country });
+    assert.equal(res.statusCode, 400, String(country));
+    assert.equal(requests.length, 0);
+  }
+});
+
 // ---- Mixed thermal paper bundles ----
 
 test('several paper bundles become one Stripe line item each, with their own quantities', async () => {

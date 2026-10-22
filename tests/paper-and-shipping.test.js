@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { parsePaperMetadata, rollCountsFor, mergeBundles, shippingCentsFor, describePaper } from '../api/_paper.js';
+import { parsePaperMetadata, rollCountsFor, mergeBundles, shippingCentsFor, normalizeShippingCountry, describePaper } from '../api/_paper.js';
 import { buildTrackingUrl, detectCarrier } from '../api/shipment-notify.js';
+import geoHandler from '../api/geo.js';
 
 test('bundles expand into individual rolls per color', () => {
   assert.deepEqual(rollCountsFor({ classic: 2 }), { white: 6 });
@@ -37,6 +38,35 @@ test('shipping is $4.99 under $25 and free at $25 or more', () => {
   assert.equal(shippingCentsFor(2499), 499);
   assert.equal(shippingCentsFor(2500), 0);
   assert.equal(shippingCentsFor(2999), 0);
+  assert.equal(shippingCentsFor(2999, 'US'), 0);
+});
+
+test('international shipping is a flat fee per country, never free', () => {
+  assert.equal(shippingCentsFor(500, 'CA'), 1499);
+  assert.equal(shippingCentsFor(9999, 'CA'), 1499);
+  assert.equal(shippingCentsFor(9999, 'GB'), 1999);
+  assert.equal(shippingCentsFor(9999, 'MX'), 1999);
+  assert.equal(shippingCentsFor(9999, 'SG'), 2499);
+  assert.equal(normalizeShippingCountry(undefined), 'US');
+  assert.equal(normalizeShippingCountry(' jp '), 'JP');
+  assert.equal(normalizeShippingCountry('BR'), null);
+});
+
+test('geo endpoint returns the Vercel IP country or null', () => {
+  const call = (headers) => {
+    const res = {
+      headers: {},
+      setHeader(key, value) { this.headers[key] = value; },
+      status(code) { this.statusCode = code; return this; },
+      json(value) { this.body = value; return this; },
+    };
+    geoHandler({ headers }, res);
+    return res;
+  };
+  assert.deepEqual(call({ 'x-vercel-ip-country': 'gb' }).body, { country: 'GB' });
+  assert.deepEqual(call({}).body, { country: null });
+  assert.deepEqual(call({ 'x-vercel-ip-country': 'not-a-country' }).body, { country: null });
+  assert.equal(call({}).headers['Cache-Control'], 'private, no-store');
 });
 
 test('tracking links and carrier detection', () => {

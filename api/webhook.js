@@ -96,6 +96,11 @@ async function handleCheckoutCompleted(stripe, session) {
   const shipping = fullSession.shipping_details?.address || {};
   const customerEmail = fullSession.customer_details?.email;
   const customerName = fullSession.customer_details?.name || fullSession.shipping_details?.name || '';
+  // Collected only for international orders, for customs forms.
+  const customerPhone = fullSession.customer_details?.phone || '';
+  const international = Boolean(shipping.country) && shipping.country !== 'US';
+  const shipLabel = metadata.expected_ship ||
+    (international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label);
   const quantity = parseInt(metadata.quantity, 10) || 1;
   const paperOnly = metadata.product_key === 'paper';
   const product = paperOnly ? null : (PREORDER_CONFIG.products[metadata.product_key] ||
@@ -139,7 +144,7 @@ async function handleCheckoutCompleted(stripe, session) {
       total_amount: totalAmount,
       currency: fullSession.currency || PREORDER_CONFIG.currency,
       order_type: metadata.order_type || PREORDER_CONFIG.order_type,
-      expected_ship_label: metadata.expected_ship || PREORDER_CONFIG.expected_ship_label,
+      expected_ship_label: shipLabel,
       order_status: 'paid',
       fulfillment_status: 'pending',
       refund_status: null,
@@ -154,6 +159,7 @@ async function handleCheckoutCompleted(stripe, session) {
       notes: [
         printerColors ? `Printer colors: ${printerColors}` : '',
         paperSummary ? `Thermal paper: ${paperSummary}` : '',
+        customerPhone ? `Phone: ${customerPhone}` : '',
       ].filter(Boolean).join(' | ') || null,
     });
 
@@ -184,6 +190,8 @@ async function handleCheckoutCompleted(stripe, session) {
           shippingAmount: shippingAmount === null ? '' : (shippingAmount === 0 ? 'Free' : formatCurrency(shippingAmount, fullSession.currency)),
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
+          international,
+          shipLabel,
         }),
       }, { idempotencyKey: `sentimo-confirmation/${fullSession.id}` });
     if (emailError) throw emailError;
@@ -274,7 +282,10 @@ function formatPrinterColors(value) {
     .join(', ');
 }
 
-function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, quantity, amount }) {
+function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, quantity, amount, international, shipLabel }) {
+  const shippingLine = international
+    ? `Your order has been received and confirmed. International orders typically arrive in ${escapeHtml(shipLabel)}. ${PREORDER_CONFIG.duties_message}`
+    : `Your order has been received and confirmed. Orders ship anywhere in the US and typically arrive in ${escapeHtml(shipLabel)}.`;
   return `
     <div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1F2937;">
       <div style="text-align: center; margin-bottom: 32px;">
@@ -283,7 +294,7 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
       <h2 style="font-size: 20px; margin-bottom: 16px;">Your order is confirmed</h2>
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thank you for ordering Sentimo.</p>
-      <p>Your order has been received and confirmed. Orders ship anywhere in the US and typically arrive in ${PREORDER_CONFIG.expected_ship_label}.</p>
+      <p>${shippingLine}</p>
       <p>We'll email you tracking details once your order ships. If we are unable to fulfill your order, you will receive a full refund.</p>
       <div style="background: #FFF9F5; border: 1px solid #FFE8F0; border-radius: 12px; padding: 20px; margin: 24px 0;">
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">Order summary</h3>

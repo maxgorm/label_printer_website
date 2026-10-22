@@ -136,10 +136,12 @@ See `INVENTORY.md` for stock and fulfillment handling.
 
 ```bash
 npm install
-npx serve public
+npm run dev
 ```
 
-Note: The API endpoints require Vercel's serverless runtime. For local testing of the full flow, use `vercel dev`.
+`npm run dev` serves `public/` and runs the `api/` endpoints on http://localhost:3000, reading
+secrets from `.env.local` (git-ignored). Use a Stripe test key (`sk_test_...`); the dev server
+refuses to start with a live key. `vercel dev` also works if you have the Vercel CLI linked.
 
 For Stripe webhook testing locally, use the Stripe CLI:
 ```bash

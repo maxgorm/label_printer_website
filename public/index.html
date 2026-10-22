@@ -18,7 +18,7 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Sentimo - Send a message. They feel it." />
-    <meta property="og:description" content="Connect with someone you love through little notes, doodles, and memories that print in their space. Now shipping across the US." />
+    <meta property="og:description" content="Connect with someone you love through little notes, doodles, and memories that print in their space. Now shipping to the US and internationally." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sentimonotes.com" />
     <meta property="og:image" content="/assets/IMG_4321.JPG" />
@@ -185,7 +185,7 @@
 
                     <div class="pt-2 space-y-1">
                         <p class="text-sm text-text-muted-light dark:text-text-muted-dark">
-                            <strong>Now shipping.</strong> We currently ship anywhere in the US, and delivery typically takes 2-5 days.
+                            <strong>Now shipping.</strong> Free shipping anywhere in the US (2-5 days), plus flat-rate shipping to Canada, the UK, Europe, Australia, Japan, and more.
                         </p>
                     </div>
                 </div>
@@ -364,7 +364,7 @@
                     </div>
 
                     <p class="text-sm sm:text-base text-text-muted-light dark:text-text-muted-dark mb-6">
-                        Now shipping to anywhere in the US. Delivery takes 2-5 days.
+                        Now shipping to the US and 17 other countries. Choose where it&rsquo;s going below.
                     </p>
 
                     <!-- Product Selection -->
@@ -525,6 +525,13 @@
                         </div>
                     </fieldset>
 
+                    <!-- Shipping Destination -->
+                    <div class="mb-5 text-left">
+                        <label for="order-ship-country" class="block font-medium text-sm mb-2">Ship to:</label>
+                        <select id="order-ship-country" data-ship-country class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-3 py-2 text-sm focus:border-primary focus:ring-primary" aria-describedby="order-shipping-note"></select>
+                        <p id="order-shipping-note" class="mt-2 text-xs text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Free shipping anywhere in the US. Delivery takes 2-5 days.</p>
+                    </div>
+
                     <!-- CTA Button -->
                     <button id="preorder-btn" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-base sm:text-lg w-full" data-track="click_preorder_cta">
                         <span id="preorder-btn-text">Order Now</span>
@@ -595,6 +602,10 @@
                     </div>
                 </div>
                 <div class="mt-4 flex flex-col items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <label for="paper-ship-country" class="text-sm font-medium">Ship to:</label>
+                        <select id="paper-ship-country" data-ship-country class="rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-3 py-1.5 text-sm focus:border-primary focus:ring-primary"></select>
+                    </div>
                     <p id="paper-total" class="text-sm font-bold text-primary" aria-live="polite"></p>
                     <p id="paper-shipping-note" class="text-xs text-center text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Shipping is $4.99, or free on orders of $25 or more before tax.</p>
                     <button id="paper-buy-btn" type="button" disabled class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-md shadow-primary/30 text-sm">
@@ -700,11 +711,11 @@
                         <div class="px-6 pb-6 pt-0 space-y-5">
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">Where do you ship?</h4>
-                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">We currently ship anywhere in the US.</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">We ship anywhere in the US, plus Canada, Mexico, the United Kingdom, Ireland, Germany, France, the Netherlands, Belgium, Italy, Spain, Sweden, Denmark, Australia, New Zealand, Japan, South Korea, and Singapore. US shipping is free on orders of $25 or more before tax. International orders pay a flat shipping fee from $14.99 to $24.99 depending on the country, and duties and taxes are the buyer&rsquo;s responsibility.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">When will orders ship?</h4>
-                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Orders are shipping now, and shipping takes 2-5 days. We will email you tracking details once your order ships.</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Orders are shipping now. US delivery takes 2-5 days, and international delivery takes 5-14 days. We will email you tracking details once your order ships.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-sm mb-1">What if there is a delay?</h4>
@@ -899,8 +910,9 @@
     </div>
 
     <script src="/assets/js/main.js?v=20260818"></script>
-    <script src="/assets/js/preorder.js?v=20261018-orders"></script>
-    <script src="/assets/js/paper.js?v=20261018-orders"></script>
+    <script src="/assets/js/shipping.js?v=20261022-intl2"></script>
+    <script src="/assets/js/preorder.js?v=20261022-intl2"></script>
+    <script src="/assets/js/paper.js?v=20261022-intl2"></script>
 
     <!-- Carousel Script -->
     <script>

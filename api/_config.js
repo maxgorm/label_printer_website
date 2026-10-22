@@ -73,10 +73,34 @@ const PREORDER_CONFIG = {
   // Tax category for paper packs (general tangible goods).
   paper_tax_code: 'txcd_99999999',
 
-  // Shipping: flat fee below the threshold (pre-tax subtotal), free at or above it.
+  // US shipping: flat fee below the threshold (pre-tax subtotal), free at or above it.
   shipping_flat_cents: 499,
   free_shipping_threshold_cents: 2500,
   shipping_tax_code: 'txcd_92010001',
+
+  // International shipping: one flat fee per order, never free. Countries not
+  // listed here (or US) cannot check out. Keep in sync with public/assets/js/shipping.js.
+  international_shipping_cents: {
+    CA: 1499,
+    GB: 1999,
+    DE: 1999,
+    FR: 1999,
+    NL: 1999,
+    BE: 1999,
+    IE: 1999,
+    MX: 1999,
+    IT: 2499,
+    ES: 2499,
+    SE: 2499,
+    DK: 2499,
+    AU: 2499,
+    NZ: 2499,
+    JP: 2499,
+    KR: 2499,
+    SG: 2499,
+  },
+  international_ship_label: '5-14 days',
+  duties_message: 'Duties and taxes are the buyer’s responsibility.',
 
   currency: 'usd',
   // Stripe Tax: Consumer Electronics (physical devices for personal use).
@@ -106,8 +130,9 @@ const PREORDER_CONFIG = {
   // Collect shipping address in Stripe Checkout
   collect_shipping: true,
 
-  // Shipping countries (ISO 3166-1 alpha-2)
-  shipping_countries: ['US'],
 };
+
+// Shipping countries (ISO 3166-1 alpha-2)
+PREORDER_CONFIG.shipping_countries = ['US', ...Object.keys(PREORDER_CONFIG.international_shipping_cents)];
 
 export default PREORDER_CONFIG;

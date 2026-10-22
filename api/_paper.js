@@ -53,7 +53,15 @@ export function rollCountsFor(bundles) {
   return rolls;
 }
 
-export function shippingCentsFor(subtotalCents) {
+/** Upper-cased country code we ship to, 'US' when none is given, or null. */
+export function normalizeShippingCountry(input) {
+  if (input === undefined || input === null || input === '') return 'US';
+  const country = String(input).trim().toUpperCase();
+  return PREORDER_CONFIG.shipping_countries.includes(country) ? country : null;
+}
+
+export function shippingCentsFor(subtotalCents, country = 'US') {
+  if (country !== 'US') return PREORDER_CONFIG.international_shipping_cents[country];
   return subtotalCents >= PREORDER_CONFIG.free_shipping_threshold_cents
     ? 0
     : PREORDER_CONFIG.shipping_flat_cents;

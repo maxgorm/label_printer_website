@@ -5,12 +5,14 @@ Print love notes, instantly. 💌
 ## Development
 
 ```bash
-# Install dependencies (optional, for local dev server)
 npm install
 
-# Run local dev server
-npx serve public
+# Run the site and the /api endpoints locally
+npm run dev
 ```
+
+Checkout needs a Stripe **test** key in `.env.local` (git-ignored), for example
+`STRIPE_SECRET_KEY=sk_test_...`. The dev server refuses to start with a live key.
 
 Then open [http://localhost:3000](http://localhost:3000)
 

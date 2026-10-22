@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "dev": "npx serve public",
+    "dev": "node --env-file-if-exists=.env.local scripts/dev-server.js",
     "build": "echo 'Static site, no build needed'"
   },
   "main": "index.js",

@@ -66,16 +66,16 @@
         ? ship.quote({ subtotalCents: subtotal, hasPrinter: false })
         : { cents: subtotal >= FREE_SHIPPING_CENTS ? 0 : SHIPPING_CENTS, international: false };
       if (international) {
-        shippingNote.textContent = `International shipping for this order: ${shipping.cents === null ? 'calculated' : formatCents(shipping.cents)} (USPS), added at checkout. Import duties, taxes, and customs fees charged by your country are not included. Orders ship within the US in 2-5 days.`;
+        shippingNote.textContent = `Shipping to ${ship.countryName()} is ${formatCents(shipping.cents)}, added at checkout. Delivery takes 5-14 days. Duties and taxes are the buyer’s responsibility.`;
       } else {
         shippingNote.textContent = shipping.cents === 0
           ? 'Free shipping on this order (orders of $25 or more before tax). Orders ship within the US in 2-5 days.'
-          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on orders of $25 or more before tax, or when you buy a printer. Orders ship within the US in 2-5 days.`;
+          : `Shipping is ${formatCents(shipping.cents)} on this order. It is free on US orders of $25 or more before tax, or when you buy a printer. Orders ship within the US in 2-5 days.`;
       }
     } else {
       totalDisplay.textContent = '';
       shippingNote.textContent = international
-        ? 'Choose your packs. International shipping is calculated by destination and shown here.'
+        ? `Choose your packs. Shipping to ${ship.countryName()} is ${formatCents(ship.quote({ subtotalCents: 0 }).cents)} per order. Duties and taxes are the buyer’s responsibility.`
         : 'Choose your packs. Shipping is $4.99, or free on orders of $25 or more before tax.';
     }
 
@@ -111,7 +111,10 @@
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paper: lines.map(([bundle, quantity]) => ({ bundle, quantity })) }),
+        body: JSON.stringify({
+          paper: lines.map(([bundle, quantity]) => ({ bundle, quantity })),
+          country: window.SentimoShipping?.country() || 'US',
+        }),
       });
 
       const contentType = response.headers.get('content-type');

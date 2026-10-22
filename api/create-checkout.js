@@ -6,6 +6,7 @@ import {
   mergeBundles,
   normalizePaperAddon,
   normalizePaperItems,
+  normalizeShippingCountry,
   rollCountsFor,
   shippingCentsFor,
 } from './_paper.js';
@@ -19,7 +20,13 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe secret key is not configured' });
   }
 
-  const { quantity, product: productKey, colors, paper, paper_addon: paperAddon } = req.body || {};
+  const { quantity, product: productKey, colors, paper, paper_addon: paperAddon, country: countryInput } = req.body || {};
+
+  // Older cached pages send no country; those orders stay US-only.
+  const country = normalizeShippingCountry(countryInput);
+  if (!country) return res.status(400).json({ error: 'Sorry, we do not ship to that country yet' });
+  const international = country !== 'US';
+  const shipLabel = international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label;
 
   const paperResult = normalizePaperItems(paper);
   if (paperResult.error) return res.status(400).json({ error: paperResult.error });
@@ -128,7 +135,7 @@ export default async function handler(req, res) {
     });
   }
 
-  const shippingCents = shippingCentsFor(subtotalCents);
+  const shippingCents = shippingCentsFor(subtotalCents, country);
   const paperMetadata = hasPaper
     ? {
         paper_bundles: JSON.stringify(listedPaper),
@@ -153,9 +160,10 @@ export default async function handler(req, res) {
         unit_price_cents: paperOnly ? '0' : String(selectedProduct.unit_price_cents),
         printer_count: paperOnly ? '0' : String(selectedProduct.printer_count),
         order_type: PREORDER_CONFIG.order_type,
-        expected_ship: PREORDER_CONFIG.expected_ship_label,
+        expected_ship: shipLabel,
         quantity: String(paperOnly ? paperTotalPacks : qty),
         shipping_cents: String(shippingCents),
+        shipping_country: country,
         ...colorMetadata,
         ...paperMetadata,
       },
@@ -167,23 +175,38 @@ export default async function handler(req, res) {
       allow_promotion_codes: PREORDER_CONFIG.allow_promotion_codes,
       custom_text: {
         submit: {
-          message: `Shipping to anywhere in the US takes ${PREORDER_CONFIG.expected_ship_label}. ${PREORDER_CONFIG.refund_message}`,
+          message: international
+            ? `International shipping takes ${shipLabel}. ${PREORDER_CONFIG.duties_message} ${PREORDER_CONFIG.refund_message}`
+            : `Shipping to anywhere in the US takes ${shipLabel}. ${PREORDER_CONFIG.refund_message}`,
         },
+        ...(international ? { shipping_address: { message: PREORDER_CONFIG.duties_message } } : {}),
       },
     };
 
-    // Collect shipping address if enabled
+    // Carriers need a phone number for international customs forms.
+    if (international) {
+      sessionParams.phone_number_collection = { enabled: true };
+    }
+
+    // Collect shipping address if enabled. The address must be in the country
+    // chosen on the site, since that country set the shipping price.
     if (PREORDER_CONFIG.collect_shipping) {
       sessionParams.shipping_address_collection = {
-        allowed_countries: PREORDER_CONFIG.shipping_countries,
+        allowed_countries: [country],
       };
       sessionParams.shipping_options = [{
         shipping_rate_data: {
           type: 'fixed_amount',
-          display_name: shippingCents === 0 ? 'Free shipping' : 'Standard shipping',
+          display_name: international ? 'International shipping' : (shippingCents === 0 ? 'Free shipping' : 'Standard shipping'),
           fixed_amount: { amount: shippingCents, currency: PREORDER_CONFIG.currency },
           tax_behavior: 'exclusive',
           tax_code: PREORDER_CONFIG.shipping_tax_code,
+          ...(international ? {
+            delivery_estimate: {
+              minimum: { unit: 'day', value: 5 },
+              maximum: { unit: 'day', value: 14 },
+            },
+          } : {}),
         },
       }];
     }

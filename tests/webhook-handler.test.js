@@ -191,3 +191,46 @@ test('a mixed paper order records every bundle and the right rolls per color', a
   assert.match(emails[0].html, /2 × Classic/);
   assert.match(emails[0].html, /1 × Bright/);
 });
+
+test('an international order stores the country and phone, and the email mentions duties', async () => {
+  const { res, inserts, emails } = await runWebhook({
+    ...baseSession,
+    id: 'cs_test_5',
+    amount_total: 4999 + 1499,
+    total_details: { amount_shipping: 1499 },
+    customer_details: { email: 'buyer@example.ca', name: 'Test Buyer', phone: '+14165550123' },
+    shipping_details: { name: 'Test Buyer', address: { line1: '1 Queen St W', city: 'Toronto', state: 'ON', postal_code: 'M5H 2N2', country: 'CA' } },
+    metadata: {
+      product_key: 'duo', product_slug: 'sentimo-2-pack', product_name: 'Sentimo 2-Pack',
+      unit_price_cents: '4999', printer_count: '2', order_type: 'preorder', expected_ship: '5-14 days',
+      quantity: '1', printer_colors: 'Pink, White', printer_color_1: 'Pink', printer_color_2: 'White',
+      shipping_cents: '1499', shipping_country: 'CA',
+    },
+  });
+  assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+  const row = inserts[0];
+  assert.equal(row.shipping_country, 'CA');
+  assert.equal(row.shipping_amount, 1499);
+  assert.equal(row.expected_ship_label, '5-14 days');
+  assert.match(row.notes, /Phone: \+14165550123/);
+  assert.match(emails[0].html, /International orders typically arrive in 5-14 days/);
+  assert.match(emails[0].html, /Duties and taxes are the buyer’s responsibility/);
+  assert.match(emails[0].html, /\$14\.99/);
+});
+
+test('a US order email keeps the US wording and no phone note', async () => {
+  const { inserts, emails } = await runWebhook({
+    ...baseSession,
+    id: 'cs_test_6',
+    amount_total: 4999,
+    total_details: { amount_shipping: 0 },
+    metadata: {
+      product_key: 'duo', product_slug: 'sentimo-2-pack', product_name: 'Sentimo 2-Pack',
+      unit_price_cents: '4999', printer_count: '2', expected_ship: '2-5 days', quantity: '1',
+      printer_colors: 'Pink, White', printer_color_1: 'Pink', printer_color_2: 'White',
+    },
+  });
+  assert.doesNotMatch(inserts[0].notes, /Phone/);
+  assert.match(emails[0].html, /Orders ship anywhere in the US and typically arrive in 2-5 days/);
+  assert.doesNotMatch(emails[0].html, /Duties/);
+});

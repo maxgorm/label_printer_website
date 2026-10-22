@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     const supabase = createClient(process.env.SUPABASE_URL.trim(), process.env.SUPABASE_SERVICE_ROLE_KEY.trim());
     const { data: order, error } = await supabase
       .from('preorders')
-      .select('id, email, full_name, order_number, order_status, fulfillment_status, tracking_carrier, tracking_number, shipping_email_sent_at, shipping_name, shipping_line1, shipping_line2, shipping_city, shipping_state, shipping_postal_code, notes')
+      .select('id, email, full_name, order_number, order_status, fulfillment_status, tracking_carrier, tracking_number, shipping_email_sent_at, shipping_name, shipping_line1, shipping_line2, shipping_city, shipping_state, shipping_postal_code, shipping_country, notes')
       .eq('id', orderId)
       .single();
     if (error || !order) throw error || new Error('Order not found');
@@ -106,7 +106,8 @@ export function buildTrackingUrl(carrier, trackingNumber) {
 
 function formatAddress(order) {
   const cityLine = [order.shipping_city, order.shipping_state, order.shipping_postal_code].filter(Boolean).join(' ');
-  return [order.shipping_name || order.full_name, order.shipping_line1, order.shipping_line2, cityLine]
+  const country = order.shipping_country && order.shipping_country !== 'US' ? order.shipping_country : null;
+  return [order.shipping_name || order.full_name, order.shipping_line1, order.shipping_line2, cityLine, country]
     .filter(Boolean)
     .join(', ');
 }
