@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Bring Instagram-tagged landing visits to the order section, while
+        // respecting links that already point to a specific section.
+        if (new URLSearchParams(window.location.search).get('utm_source') === 'ig' && !window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search + '#reserve');
+            window.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('reserve')?.scrollIntoView({ behavior: 'instant' });
+            });
+        }
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XF7KSGXZVW"></script>
     <script>
