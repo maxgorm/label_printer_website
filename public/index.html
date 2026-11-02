@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <script>
-        // Bring Instagram-tagged landing visits to the order section, while
+        // Bring Instagram- and Facebook-tagged landing visits to the order section, while
         // respecting links that already point to a specific section.
-        if (new URLSearchParams(window.location.search).get('utm_source') === 'ig' && !window.location.hash) {
+        if (['ig', 'facebook', 'fb'].includes(new URLSearchParams(window.location.search).get('utm_source')) && !window.location.hash) {
             history.replaceState(null, '', window.location.pathname + window.location.search + '#reserve');
             window.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('reserve')?.scrollIntoView({ behavior: 'instant' });
