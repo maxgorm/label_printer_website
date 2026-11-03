@@ -28,14 +28,11 @@
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="preload" href="/assets/fonts-material-icons-round-subset.woff2" as="font" type="font/woff2" crossorigin />
 
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261102b" />
     <!-- Tailwind (built by npm run build:css) -->
     <link rel="stylesheet" href="/assets/css/tailwind-alt.css?v=20261102" />
     <link rel="canonical" href="https://www.sentimonotes.com/support" />
@@ -46,7 +43,7 @@
     <nav id="navbar" class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="/" class="flex items-center">
-                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" width="728" height="168" class="h-8 md:h-10 w-auto" />
+                <img src="/assets/opt/SentimoLogo-84.webp" alt="Sentimo Logo" width="364" height="84" class="h-8 md:h-10 w-auto" />
             </a>
             <div class="flex items-center space-x-4">
                 <a class="nav-link hover:text-primary transition-colors text-sm font-medium text-text-muted-light dark:text-text-muted-dark" href="/">Back to Home</a>
@@ -110,15 +107,15 @@
                         <div class="faq-content">
                             <div class="px-6 pb-6 pt-0 space-y-5">
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Where do you ship?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Where do you ship?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">We ship anywhere in the US, plus Canada, Mexico, the United Kingdom, Ireland, Germany, France, the Netherlands, Belgium, Italy, Spain, Sweden, Denmark, Australia, New Zealand, Japan, South Korea, and Singapore. US delivery takes 2-5 days and international delivery takes 5-14 days. International orders pay a flat shipping fee from $14.99 to $24.99 depending on the country, and duties and taxes are the buyer&rsquo;s responsibility.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">When will orders ship?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">When will orders ship?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Orders are shipping now, and shipping takes 2-5 days. We will email you tracking details once your order ships.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">What happens if timelines change?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">What happens if timelines change?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">If manufacturing or logistics timelines change, we will email customers with updates. If we cannot fulfill your order, you will receive a full refund.</p>
                                 </div>
                             </div>
@@ -139,23 +136,23 @@
                         <div class="faq-content">
                             <div class="px-6 pb-6 pt-0 space-y-5">
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">What comes in the box?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">What comes in the box?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Choose a single printer or a 2-pack. Each option includes the printer(s), starter paper, charging cables, and quick setup materials so you can begin sending notes right away.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes! The Sentimo app is available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Do I need ink?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Do I need ink?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Never! Sentimo uses thermal printing technology, meaning no ink, ever. You just need to refill the paper rolls when they run out.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">How long does the paper last?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">How long does the paper last?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">One roll of sticker thermal paper can print about 50-60 photos or 80-100 notes. The print itself lasts for years without fading if kept away from direct heat sources.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Can I print photos?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Can I print photos?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Absolutely. The app converts any photo from your gallery into a high-contrast black and white dithered image optimized for thermal printing.</p>
                                 </div>
                             </div>
@@ -176,15 +173,15 @@
                         <div class="faq-content">
                             <div class="px-6 pb-6 pt-0 space-y-5">
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Do I pay now or later?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Do I pay now or later?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Payment is completed at checkout.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Can I cancel before it ships?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Can I cancel before it ships?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes. Orders are fully refundable any time before shipment.</p>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-sm mb-1">Is there a monthly subscription?</h4>
+                                    <h3 class="font-semibold text-sm mb-1">Is there a monthly subscription?</h3>
                                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">The core features of sending and receiving notes are completely free forever. We may offer optional premium features in the future, but the essentials will always be free.</p>
                                 </div>
                             </div>

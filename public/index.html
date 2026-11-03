@@ -45,14 +45,11 @@
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="preload" href="/assets/fonts-material-icons-round-subset.woff2" as="font" type="font/woff2" crossorigin />
 
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css?v=20260919-color-crop" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261102b" />
     <!-- Tailwind (built by npm run build:css) -->
     <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261102" />
     <link rel="canonical" href="https://www.sentimonotes.com/" />
@@ -160,7 +157,7 @@
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <!-- Logo -->
             <a href="/" class="flex items-center">
-                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" width="728" height="168" class="h-8 md:h-10 w-auto" />
+                <img src="/assets/opt/SentimoLogo-84.webp" alt="Sentimo Logo" width="364" height="84" class="h-8 md:h-10 w-auto" />
             </a>
 
             <!-- Desktop Navigation -->
@@ -269,7 +266,7 @@
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-accent-pink dark:bg-primary/10 rounded-full blur-3xl opacity-60"></div>
                     <div id="hero-card" class="relative z-10 w-full max-w-sm sm:max-w-lg mx-auto hover:scale-105 transition-transform duration-500">
                         <div class="bg-surface-light dark:bg-surface-dark rounded-2xl sm:rounded-[2rem] shadow-2xl p-1.5 sm:p-2.5 border border-primary/10 dark:border-gray-800 relative hover:shadow-soft transition-shadow duration-500">
-                            <video id="hero-video" class="rounded-2xl w-full h-auto object-cover" controls loop muted playsinline preload="metadata" poster="/assets/opt/printer-notes.webp" width="1280" height="720" aria-label="Sentimo printer product video">
+                            <video id="hero-video" class="rounded-2xl w-full h-auto object-cover" controls loop muted playsinline preload="none" poster="/assets/opt/printer-notes.webp" width="1280" height="720" aria-label="Sentimo printer product video">
                                 <source src="/assets/opt/SentimoProductVid-720p.mp4" type="video/mp4" />
                                 Your browser does not support the product video.
                             </video>
@@ -388,31 +385,31 @@
                 <div class="relative w-full min-w-0 lg:max-w-[32rem] lg:justify-self-center">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div class="aspect-square relative overflow-hidden">
-                            <img id="carousel-img" src="/assets/opt/Hero.webp" alt="Sentimo printers with love notes" class="w-full h-full object-cover transition-opacity duration-300" />
+                            <img id="carousel-img" src="/assets/opt/Hero.webp" srcset="/assets/opt/Hero-400.webp 400w, /assets/opt/Hero-800.webp 800w, /assets/opt/Hero.webp 1254w" sizes="(min-width: 1024px) 510px, 94vw" width="1254" height="1254" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover transition-opacity duration-300" />
                         </div>
                     </div>
                     <!-- Thumbnails -->
                     <div class="flex gap-2 sm:gap-3 mt-3 overflow-x-auto pb-2">
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="0">
-                            <img src="/assets/opt/Hero.webp" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/Hero-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="1">
-                            <img src="/assets/opt/3-w-printer.webp" loading="lazy" alt="Sentimo printer with a handwritten note" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/3-w-printer-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printer with a handwritten note" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="2">
-                            <img src="/assets/opt/4.webp" loading="lazy" alt="Sentimo printing a handwritten note" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/4-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printing a handwritten note" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="3">
-                            <img src="/assets/opt/5-no-logo.webp" loading="lazy" alt="Sentimo printer being used at a table" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/5-no-logo-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printer being used at a table" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="4">
-                            <img src="/assets/opt/6.webp" loading="lazy" alt="Pink and white Sentimo printers" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/6-160.webp" width="160" height="160" loading="lazy" alt="Pink and white Sentimo printers" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="5">
-                            <img src="/assets/opt/7.webp" loading="lazy" alt="Sentimo printers and included accessories" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/7-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printers and included accessories" class="w-full h-full object-cover" />
                         </button>
                         <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="6">
-                            <img src="/assets/opt/8.webp" loading="lazy" alt="Pink, white, and black Sentimo printers" class="w-full h-full object-cover" />
+                            <img src="/assets/opt/8-160.webp" width="160" height="160" loading="lazy" alt="Pink, white, and black Sentimo printers" class="w-full h-full object-cover" />
                         </button>
                     </div>
                     <!-- Prev/Next buttons -->
@@ -784,15 +781,15 @@
                     <div class="faq-content">
                         <div class="px-6 pb-6 pt-0 space-y-5">
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Where do you ship?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Where do you ship?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">We ship anywhere in the US, plus Canada, Mexico, the United Kingdom, Ireland, Germany, France, the Netherlands, Belgium, Italy, Spain, Sweden, Denmark, Australia, New Zealand, Japan, South Korea, and Singapore. US shipping is free on orders of $25 or more before tax. International orders pay a flat shipping fee from $14.99 to $24.99 depending on the country, and duties and taxes are the buyer&rsquo;s responsibility.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">When will orders ship?</h4>
+                                <h3 class="font-semibold text-sm mb-1">When will orders ship?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Orders are shipping now. US delivery takes 2-5 days, and international delivery takes 5-14 days. We will email you tracking details once your order ships.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">What if there is a delay?</h4>
+                                <h3 class="font-semibold text-sm mb-1">What if there is a delay?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">If anything delays your order, we will email you with an update. If we cannot fulfill your order, you will receive a full refund.</p>
                             </div>
                         </div>
@@ -813,23 +810,23 @@
                     <div class="faq-content">
                         <div class="px-6 pb-6 pt-0 space-y-5">
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">What comes in the box?</h4>
+                                <h3 class="font-semibold text-sm mb-1">What comes in the box?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Choose a single printer or a 2-pack. Each option includes the printer(s), starter paper, charging cables, and quick setup materials so you can begin sending notes right away.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Does it work with both iOS and Android?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes! The Sentimo app is available on both the App Store and Google Play Store. You can pair devices across different operating systems seamlessly.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Do I need ink?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Do I need ink?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Never! Sentimo uses thermal printing technology, meaning no ink, ever. You just need to refill the paper rolls when they run out.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">How long does the paper last?</h4>
+                                <h3 class="font-semibold text-sm mb-1">How long does the paper last?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">One roll of sticker thermal paper can print about 50-60 photos or 80-100 notes. The print itself lasts for years without fading if kept away from direct heat sources.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Can I print photos?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Can I print photos?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Absolutely. The app converts any photo from your gallery into a high-contrast black and white dithered image optimized for thermal printing.</p>
                             </div>
                         </div>
@@ -850,15 +847,15 @@
                     <div class="faq-content">
                         <div class="px-6 pb-6 pt-0 space-y-5">
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Do I pay now or later?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Do I pay now or later?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Payment is completed at checkout.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Can I cancel before it ships?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Can I cancel before it ships?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">Yes. Orders are fully refundable any time before shipment.</p>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-sm mb-1">Is there a monthly subscription?</h4>
+                                <h3 class="font-semibold text-sm mb-1">Is there a monthly subscription?</h3>
                                 <p class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">The core features of sending and receiving notes are completely free forever. We may offer optional premium features in the future, but the essentials will always be free.</p>
                             </div>
                         </div>
@@ -875,7 +872,7 @@
                 <!-- Brand -->
                 <div class="col-span-1 sm:col-span-2">
                     <div class="flex items-center justify-center sm:justify-start mb-4">
-                        <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" width="728" height="168" class="h-8 w-auto" loading="lazy" />
+                        <img src="/assets/opt/SentimoLogo-84.webp" alt="Sentimo Logo" width="364" height="84" class="h-8 w-auto" loading="lazy" />
                     </div>
                     <p class="text-text-muted-light dark:text-text-muted-dark text-sm max-w-xs mx-auto sm:mx-0 leading-relaxed mb-6">
                         Bringing back the charm of physical notes in a digital world. Designed with ❤️ in Ann Arbor, Michigan.
@@ -892,7 +889,7 @@
 
                 <!-- Links -->
                 <div>
-                    <h4 class="font-bold mb-4">Product</h4>
+                    <h3 class="font-bold mb-4">Product</h3>
                     <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
                         <li><a class="hover:text-primary transition-colors" href="#how-it-works">How It Works</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#whats-included">What's Included</a></li>
@@ -903,7 +900,7 @@
 
                 <!-- Company Links -->
                 <div>
-                    <h4 class="font-bold mb-4">Company</h4>
+                    <h3 class="font-bold mb-4">Company</h3>
                     <ul class="space-y-3 text-sm text-text-muted-light dark:text-text-muted-dark">
                         <li><a class="hover:text-primary transition-colors" href="/terms.html">Terms</a></li>
                         <li><a class="hover:text-primary transition-colors" href="/order-policy.html">Order Policy</a></li>
@@ -938,8 +935,6 @@
         </div>
     </div>
 
-    <!-- Stripe.js -->
-    <script src="https://js.stripe.com/v3/"></script>
 
     <!-- Scripts -->
     <!-- ===================== THERMAL PAPER ADD-ON POP-UP ===================== -->
@@ -985,7 +980,7 @@
 
     <script src="/assets/js/main.js?v=20260818"></script>
     <script src="/assets/js/shipping.js?v=20261022-intl2"></script>
-    <script src="/assets/js/preorder.js?v=20261022-intl2"></script>
+    <script src="/assets/js/preorder.js?v=20261102b"></script>
     <script src="/assets/js/paper.js?v=20261022-intl2"></script>
 
     <!-- Carousel Script -->
@@ -1012,6 +1007,8 @@
             if (mainImg) {
                 mainImg.style.opacity = '0';
                 setTimeout(function() {
+                    var base = slides[currentIndex].replace(/\.webp$/, '');
+                    mainImg.srcset = base + '-400.webp 400w, ' + base + '-800.webp 800w, ' + slides[currentIndex] + ' 1254w';
                     mainImg.src = slides[currentIndex];
                     mainImg.style.opacity = '1';
                 }, 150);

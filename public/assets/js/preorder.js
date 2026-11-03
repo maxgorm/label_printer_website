@@ -112,7 +112,6 @@
       option.classList.toggle('bg-primary/5', isSelected);
       option.classList.toggle('border-gray-200', !isSelected);
       option.classList.toggle('dark:border-gray-700', !isSelected);
-      option.setAttribute('aria-checked', String(isSelected));
     });
 
     updateColorSelection();
@@ -144,7 +143,6 @@
       option.classList.toggle('bg-primary/5', isSelected);
       option.classList.toggle('border-gray-200', !isSelected);
       option.classList.toggle('dark:border-gray-700', !isSelected);
-      option.setAttribute('aria-checked', String(isSelected));
     });
 
     if (colorSelectionHelp) {
