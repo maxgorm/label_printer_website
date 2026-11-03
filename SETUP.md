@@ -169,7 +169,7 @@ The checkout defaults to the 2-pack and accepts `product: 'single'` or `product:
 
 After updating `_config.js`, also update the corresponding copy in:
 - `public/index.html` — hero microcopy, trust block, reserve section, FAQ
-- `public/preorder-policy.html` — policy page copy
+- `public/order-policy.html` — policy page copy
 - `public/order-confirmed.html` — confirmation page
 
 ---
@@ -203,7 +203,7 @@ Look for `<!-- TODO: Replace with` comments in `index.html`.
 - [ ] Webhook creates a row in the `preorders` Supabase table
 - [ ] Confirmation email is sent via Resend
 - [ ] Refunding via Stripe dashboard triggers webhook → updates DB row → sends refund email
-- [ ] Pre-Order Policy page renders correctly at `/preorder-policy.html`
+- [ ] Order Policy page renders correctly at `/order-policy.html`
 - [ ] Terms of Service page references pre-order policy
 - [ ] FAQ accordion opens/closes properly
 - [ ] Mobile responsiveness on all pages

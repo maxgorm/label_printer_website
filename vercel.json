@@ -1,5 +1,8 @@
 {
   "outputDirectory": "public",
+  "redirects": [
+    { "source": "/preorder-policy.html", "destination": "/order-policy.html", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/support", "destination": "/support.html" },
     { "source": "/download", "destination": "/download.html" },
