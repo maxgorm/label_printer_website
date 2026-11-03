@@ -220,7 +220,9 @@
             const progress = Math.min(elapsed / duration, 1);
             const eased = easeInOutCubic(progress);
 
-            window.scrollTo(0, startY + diff * eased);
+            // "instant" so the page's CSS scroll-behavior: smooth doesn't animate
+            // each frame on top of this animation, which made it crawl.
+            window.scrollTo({ top: startY + diff * eased, behavior: "instant" });
 
             if (progress < 1) {
                 requestAnimationFrame(step);
