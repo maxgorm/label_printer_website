@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --test",
     "dev": "node --env-file-if-exists=.env.local scripts/dev-server.js",
-    "build": "echo 'Static site, no build needed'"
+    "build": "echo 'Static site, no build needed'",
+    "build:css": "tailwindcss -c tailwind/main.config.cjs -i tailwind/input.css -o public/assets/css/tailwind-main.css --minify && tailwindcss -c tailwind/alt.config.cjs -i tailwind/input.css -o public/assets/css/tailwind-alt.css --minify"
   },
   "main": "index.js",
   "keywords": [],
@@ -18,5 +19,10 @@
     "@vercel/edge": "^1.2.2",
     "resend": "^6.9.4",
     "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "tailwindcss": "^3.4.17"
   }
 }

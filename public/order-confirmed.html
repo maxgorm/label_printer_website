@@ -25,46 +25,11 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#F53F7B",
-                        "primary-hover": "#D92E66",
-                        "accent-pink": "#FFE8F0",
-                        "background-light": "#FFF9F5",
-                        "background-dark": "#18181B",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#27272A",
-                        "text-main-light": "#1F2937",
-                        "text-main-dark": "#F3F4F6",
-                        "text-muted-light": "#6B7280",
-                        "text-muted-dark": "#9CA3AF",
-                    },
-                    fontFamily: {
-                        sans: ["DM Sans", "sans-serif"],
-                        serif: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "1rem",
-                        xl: "1.5rem",
-                        "2xl": "2rem",
-                    },
-                    boxShadow: {
-                        soft: "0 20px 40px -15px rgba(245, 63, 123, 0.15)",
-                        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-                    },
-                },
-            },
-        };
-    </script>
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <!-- Tailwind (built by npm run build:css) -->
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261102" />
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex flex-col min-h-screen">
 
@@ -72,7 +37,7 @@
     <nav class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="/" class="flex items-center">
-                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" class="h-8 md:h-10 w-auto" />
+                <img src="/assets/SentimoLogoNoBG.png" alt="Sentimo Logo" width="728" height="168" class="h-8 md:h-10 w-auto" />
             </a>
         </div>
     </nav>

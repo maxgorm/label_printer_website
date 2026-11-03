@@ -29,46 +29,11 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#F53F7B",
-                        "primary-hover": "#D92E66",
-                        "accent-pink": "#FFE8F0",
-                        "background-light": "#FFF9F5",
-                        "background-dark": "#18181B",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#27272A",
-                        "text-main-light": "#1F2937",
-                        "text-main-dark": "#F3F4F6",
-                        "text-muted-light": "#6B7280",
-                        "text-muted-dark": "#9CA3AF",
-                    },
-                    fontFamily: {
-                        sans: ["DM Sans", "sans-serif"],
-                        serif: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "1rem",
-                        xl: "1.5rem",
-                        "2xl": "2rem",
-                    },
-                    boxShadow: {
-                        soft: "0 20px 40px -15px rgba(245, 63, 123, 0.15)",
-                        card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-                    },
-                },
-            },
-        };
-    </script>
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="/assets/css/styles.css" />
+    <!-- Tailwind (built by npm run build:css) -->
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261102" />
     <link rel="canonical" href="https://www.sentimonotes.com/terms.html" />
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased">
@@ -345,9 +310,9 @@
                     &copy; 2026 Sentimo Inc. All rights reserved.
                 </p>
                 <div class="flex items-center space-x-6">
-                    <img alt="PayPal" class="h-4 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE8RhaaYZatFIi6wHxl-Kb7Z4ogUyuF9i4z-6DbLPTf4SZ41Ps2OrYX2J6mtASFxJxo9-8zGwZGyOs0s5EOI7kbzJG1bRy05ajReKzCkkpn68ZOdDky0G5QunDieDTtGIEcZoRirlTZ7b-rpm1YJi0eTzQNTij45kNAugOdeeO0_CcCvhjmaSgoR-h3XoehoWAUkFlcdknaFDKcPTYh3UCaphogpfLL9qN710NDaISftrW1KcQEgWwVpkxMVxd8y5s1oXpGHzzIvmy" />
-                    <img alt="Visa" class="h-3 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW8My3BowgHtvD8aQD47yRw2vfbpstGXN2P-xbrs0-7BGRRvGvwx79AyNBq3Sqq7Q_VuYoKIAUmWOMBiFSs5invuWRv3NyHpvYr6mPLxtmeNHepgOJ_JG0X2j85ytOwyY30BP256F9zjdKltQtpmitH0NDj8yCwH0o082MRGb0LiX8_XhBdj7KFytpE6Ic1mlS3ETUDudx1Yy4mEEeqtR1iCZnkwb4qhP-7tUMtGnCQHzkIu1xum3KH5xbZaYFMOyjI0nOEW1VMlLC" />
-                    <img alt="Mastercard" class="h-6 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Oxrx_AT6xQ1VNBin-4onHINmz7i1afLfEWvj16xjl2tPVjPyJtFAUmEMqjgQFPalZhSzlDQKYsIHZRh7g0HoKRdRx-hNfXfGvW6QUyzvh72kJz8lciHuJPT-VV6eDJn3_O1knCzhujyxdkRlddw8qO7gdDAg2xRBHl34c-3mVWDKi3tn3dFk5JqAjCUndG2IRG8hcJQ6buRKYt4k-BmE552ez9p2d3pXaIhbr83o4zkrcrf71WmNRtdWlFoeUmZZ5IzzXx0wiexr" />
+                    <img alt="PayPal" loading="lazy" class="h-4 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE8RhaaYZatFIi6wHxl-Kb7Z4ogUyuF9i4z-6DbLPTf4SZ41Ps2OrYX2J6mtASFxJxo9-8zGwZGyOs0s5EOI7kbzJG1bRy05ajReKzCkkpn68ZOdDky0G5QunDieDTtGIEcZoRirlTZ7b-rpm1YJi0eTzQNTij45kNAugOdeeO0_CcCvhjmaSgoR-h3XoehoWAUkFlcdknaFDKcPTYh3UCaphogpfLL9qN710NDaISftrW1KcQEgWwVpkxMVxd8y5s1oXpGHzzIvmy" />
+                    <img alt="Visa" loading="lazy" class="h-3 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW8My3BowgHtvD8aQD47yRw2vfbpstGXN2P-xbrs0-7BGRRvGvwx79AyNBq3Sqq7Q_VuYoKIAUmWOMBiFSs5invuWRv3NyHpvYr6mPLxtmeNHepgOJ_JG0X2j85ytOwyY30BP256F9zjdKltQtpmitH0NDj8yCwH0o082MRGb0LiX8_XhBdj7KFytpE6Ic1mlS3ETUDudx1Yy4mEEeqtR1iCZnkwb4qhP-7tUMtGnCQHzkIu1xum3KH5xbZaYFMOyjI0nOEW1VMlLC" />
+                    <img alt="Mastercard" loading="lazy" class="h-6 opacity-50 grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Oxrx_AT6xQ1VNBin-4onHINmz7i1afLfEWvj16xjl2tPVjPyJtFAUmEMqjgQFPalZhSzlDQKYsIHZRh7g0HoKRdRx-hNfXfGvW6QUyzvh72kJz8lciHuJPT-VV6eDJn3_O1knCzhujyxdkRlddw8qO7gdDAg2xRBHl34c-3mVWDKi3tn3dFk5JqAjCUndG2IRG8hcJQ6buRKYt4k-BmE552ez9p2d3pXaIhbr83o4zkrcrf71WmNRtdWlFoeUmZZ5IzzXx0wiexr" />
                 </div>
             </div>
         </div>
