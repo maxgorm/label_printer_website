@@ -1,12 +1,14 @@
 {
   "outputDirectory": "public",
   "redirects": [
-    { "source": "/preorder-policy.html", "destination": "/order-policy.html", "permanent": true }
+    { "source": "/preorder-policy.html", "destination": "/order-policy.html", "permanent": true },
+    { "source": "/gifts/long-distance-relationship-gifts.html", "destination": "/gifts/long-distance-relationship-gifts", "permanent": true }
   ],
   "rewrites": [
     { "source": "/support", "destination": "/support.html" },
     { "source": "/download", "destination": "/download.html" },
     { "source": "/auth/action", "destination": "/auth-action.html" },
+    { "source": "/gifts/long-distance-relationship-gifts", "destination": "/gifts/long-distance-relationship-gifts.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "headers": [
