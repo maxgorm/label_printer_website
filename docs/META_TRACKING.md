@@ -45,7 +45,7 @@ Stripe -> POST /api/webhook (signature verified) -> order saved -> CAPI Purchase
 6. Stripe webhook endpoint: add `checkout.session.async_payment_succeeded` (optional while checkout is card-only).
 7. Meta Business Settings > Brand Safety > Domains: verify `sentimonotes.com` (DNS TXT or meta tag).
 8. Connect the dataset to the ad account (Business Settings > Data sources > Datasets > Assign assets).
-9. In Events Manager > Settings, leave Automatic Advanced Matching off unless privacy review approves.
+9. Automatic Advanced Matching is ON for all fields (owner decision, Nov 8 2026) and is disclosed in privacy.html section 4A. Note `tracking.js` sets `autoConfig` false, which may stop the Pixel from performing automatic matching; remove that line if matching is wanted.
 10. Redeploy, then confirm events in Test events (use a test event code first).
 
 ## Events
