@@ -94,6 +94,27 @@
   // Track page view
   trackEvent('page_view_preorder', { page: 'preorder' });
 
+  // Meta ViewContent: once per page load, when the order section is actually seen.
+  // IDs are the same product slugs the server uses for Stripe orders and Purchase events.
+  const PRODUCT_SLUGS = { single: 'sentimo-single', duo: 'sentimo-2-pack' };
+  const orderSection = document.getElementById('reserve');
+  if (orderSection && 'IntersectionObserver' in window) {
+    const viewObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      viewObserver.disconnect();
+      const product = PRODUCTS[selectedProduct];
+      window.SentimoTrack?.track('ViewContent', {
+        content_ids: [PRODUCT_SLUGS[selectedProduct]],
+        content_name: selectedProduct === 'single' ? 'Sentimo Single Printer' : 'Sentimo 2-Pack',
+        content_type: 'product',
+        contents: [{ id: PRODUCT_SLUGS[selectedProduct], quantity: 1 }],
+        value: parseFloat(product.currentPrice.replace(/[^0-9.]/g, '')),
+        currency: 'USD',
+      });
+    }, { threshold: 0.3 });
+    viewObserver.observe(orderSection);
+  }
+
   // ===================== QUANTITY CONTROLS =====================
   function updateProductDisplay() {
     const product = PRODUCTS[selectedProduct];
@@ -409,6 +430,7 @@
       .map(([bundle, count]) => ({ bundle, quantity: count }));
     if (paper.length) payload.paper = paper;
     if (addonChoice) payload.paper_addon = addonChoice;
+    if (window.SentimoTrack) payload.attribution = window.SentimoTrack.attribution();
 
     // Track CTA click
     trackEvent('checkout_started', { quantity, product: selectedProduct, colors, country, paper: paper.length ? paper : null, paper_addon: addonChoice });
@@ -438,7 +460,17 @@
       }
 
       if (data.url) {
-        window.location.href = data.url;
+        if (window.SentimoTrack) {
+          // Checkout session exists: now it is a real InitiateCheckout.
+          const t = data.tracking;
+          if (t) {
+            const { event_id: eventId, ...custom } = t;
+            window.SentimoTrack.track('InitiateCheckout', custom, eventId);
+          }
+          window.SentimoTrack.navigate(data.url);
+        } else {
+          window.location.href = data.url;
+        }
       } else {
         throw new Error('No checkout URL returned');
       }

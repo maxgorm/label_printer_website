@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import PREORDER_CONFIG from './_config.js';
 import { describePaper, parsePaperMetadata } from './_paper.js';
+import { buildPurchaseEvent, metaConfigured, reportingAttribution, sendCapiEvents } from './_meta.js';
 
 // Disable body parsing so we can read the raw body for signature verification
 export const config = {
@@ -46,6 +47,7 @@ export default async function handler(req, res) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded':
         await handleCheckoutCompleted(stripe, event.data.object);
         break;
 
@@ -200,6 +202,43 @@ async function handleCheckoutCompleted(stripe, session) {
       .eq('id', savedOrder.id);
     if (updateError) throw updateError;
   }
+
+  await reportMetaPurchase(supabase, fullSession, savedOrder);
+}
+
+/**
+ * Report one Purchase per paid order to the Meta Conversions API. The event id is
+ * derived from the Checkout Session id, so webhook retries reuse it and Meta also
+ * deduplicates against the browser event. Skipped without consent or Meta config.
+ * Only transient Meta failures throw, so Stripe retries the (idempotent) webhook.
+ */
+async function reportMetaPurchase(supabase, session, savedOrder) {
+  if (!metaConfigured() || session.metadata?.meta_consent !== '1') return;
+
+  // Durable "already sent" flag (migration_006). If the columns are missing, rely on
+  // Meta's event_id deduplication instead of failing the order.
+  const { data: sentRow, error: sentError } = await supabase.from('preorders')
+    .select('meta_purchase_sent_at')
+    .eq('id', savedOrder.id)
+    .maybeSingle();
+  if (!sentError && sentRow?.meta_purchase_sent_at) return;
+
+  const { event, valueCents } = buildPurchaseEvent(session);
+  if (valueCents <= 0) return;
+
+  const result = await sendCapiEvents([event]);
+  if (!result.ok) {
+    if (result.retryable) throw new Error('Meta CAPI delivery failed; retrying via Stripe');
+    return;
+  }
+
+  const { error: markError } = await supabase.from('preorders').update({
+    meta_purchase_event_id: event.event_id,
+    meta_purchase_sent_at: new Date().toISOString(),
+    meta_purchase_value_cents: valueCents,
+    attribution: reportingAttribution(session.metadata),
+  }).eq('id', savedOrder.id);
+  if (markError) console.error('Could not record Meta purchase status:', markError.message);
 }
 
 async function handleRefund(charge) {
