@@ -1,0 +1,6 @@
+# Unreferenced originals (about 80 MB). Kept in git; excluded from every Vercel deployment
+# to save deployment storage. The site uses the optimized copies in public/assets/opt.
+public/assets/SentimoProductVid.mp4
+public/assets/IMG_4321.JPG
+public/assets/IMG_4360.JPG
+public/assets/IMG_4364.JPG
