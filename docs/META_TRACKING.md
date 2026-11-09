@@ -82,5 +82,5 @@ Verified (automated, `npm test`, 57 passing): hashing/normalization, value math,
 - Pixel ID is a constant in `tracking.js` because the site is static; keep it in sync with the env var.
 - Funnel events are browser-only; ad blockers drop them. Purchase is covered by CAPI.
 - If migration 006 is not applied, "already sent" is not recorded and Meta's event_id dedup is the only duplicate guard.
-- `session_id` is the only credential on `/api/order-purchase`; it returns totals and product IDs only.
+- `session_id` is the only credential on `/api/order-purchase`; it returns totals and product IDs only. The browser Purchase only fires for orders placed within the last 2 hours; the server (CAPI) Purchase is not time-limited.
 - Spend/ROAS are not computed (no Ads API integration); use Ads Manager.

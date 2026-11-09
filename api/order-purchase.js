@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 import { commerceData, contentsFromMetadata, purchaseEventId, purchaseValueCents } from './_meta.js';
 
+export const MAX_ORDER_AGE_SECONDS = 2 * 60 * 60; // only recent orders fire the browser Purchase
+
 /**
  * Verified purchase details for the browser Purchase pixel on the confirmation page.
  * Stripe is asked directly, so a forged or reused URL cannot fabricate a purchase:
@@ -21,7 +23,8 @@ export default async function handler(req, res) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const valueCents = purchaseValueCents(session);
-    if (session.payment_status !== 'paid' || valueCents <= 0) {
+    const ageSeconds = Math.floor(Date.now() / 1000) - (session.created || 0);
+    if (session.payment_status !== 'paid' || valueCents <= 0 || ageSeconds > MAX_ORDER_AGE_SECONDS) {
       return res.status(200).json({ purchase: null });
     }
     return res.status(200).json({
