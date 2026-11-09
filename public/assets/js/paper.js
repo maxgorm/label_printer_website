@@ -114,6 +114,7 @@
         body: JSON.stringify({
           paper: lines.map(([bundle, quantity]) => ({ bundle, quantity })),
           country: window.SentimoShipping?.country() || 'US',
+          ...(window.SentimoTrack ? { attribution: window.SentimoTrack.attribution() } : {}),
         }),
       });
 
@@ -125,7 +126,15 @@
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Something went wrong');
       if (!data.url) throw new Error('No checkout URL returned');
-      window.location.href = data.url;
+      if (window.SentimoTrack) {
+        if (data.tracking) {
+          const { event_id: eventId, ...custom } = data.tracking;
+          window.SentimoTrack.track('InitiateCheckout', custom, eventId);
+        }
+        window.SentimoTrack.navigate(data.url);
+      } else {
+        window.location.href = data.url;
+      }
     } catch (err) {
       if (errorEl) {
         errorEl.textContent = err.message || 'Unable to start checkout. Please try again.';

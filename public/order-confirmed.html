@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/assets/css/styles.css?v=20261102-icons" />
     <!-- Tailwind (built by npm run build:css) -->
     <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261102" />
+    <script defer src="/assets/js/tracking.js?v=20261108-meta"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex flex-col min-h-screen">
 
@@ -106,6 +107,35 @@
                 session_id: params.get('session_id') || '',
             });
         }
+
+        // Meta Purchase (browser side). Details come from Stripe via our backend, and the
+        // event_id matches the server-side event so Meta counts the order once. Each order
+        // fires at most once per browser, so refreshing this page does not repeat it.
+        (function () {
+            var sessionId = new URLSearchParams(window.location.search).get('session_id');
+            if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) return;
+            var flagKey = 'sentimo_purchase_' + sessionId;
+            try { if (localStorage.getItem(flagKey)) return; } catch (e) { return; }
+            fetch('/api/order-purchase?session_id=' + encodeURIComponent(sessionId), { cache: 'no-store' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var p = data && data.purchase;
+                    if (!p || !window.SentimoTrack) return;
+                    var eventId = p.event_id;
+                    delete p.event_id;
+                    // Only mark as sent when the pixel actually fired (consent granted).
+                    var wait = setInterval(function () {
+                        var state = window.SentimoTrack.consentState();
+                        if (state === 'pending') return;
+                        clearInterval(wait);
+                        if (window.SentimoTrack.track('Purchase', p, eventId)) {
+                            try { localStorage.setItem(flagKey, '1'); } catch (e) { /* ignore */ }
+                        }
+                    }, 300);
+                    setTimeout(function () { clearInterval(wait); }, 15000);
+                })
+                .catch(function () { /* tracking must never affect the page */ });
+        })();
     </script>
 </body>
 </html>

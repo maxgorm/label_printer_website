@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import PREORDER_CONFIG from './_config.js';
+import { attributionMetadata, checkoutEventId, commerceData, contentsFromMetadata } from './_meta.js';
 import {
   describePaper,
   findPaperStockShortage,
@@ -166,6 +167,8 @@ export default async function handler(req, res) {
         shipping_country: country,
         ...colorMetadata,
         ...paperMetadata,
+        // Meta/UTM attribution, present only when the visitor consented to advertising measurement.
+        ...attributionMetadata(req.body?.attribution, req),
       },
       payment_intent_data: {
         metadata: { ...colorMetadata, ...(hasPaper ? { paper_summary: paperDescription } : {}) },
@@ -213,7 +216,22 @@ export default async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    return res.status(200).json({ url: session.url });
+    // Tracking payload for the browser's InitiateCheckout event, built from the real order.
+    let tracking;
+    try {
+      tracking = {
+        event_id: checkoutEventId(session.id),
+        ...commerceData({
+          contents: contentsFromMetadata(sessionParams.metadata),
+          valueCents: subtotalCents,
+          currency: PREORDER_CONFIG.currency,
+        }),
+      };
+    } catch (trackingError) {
+      console.error('Checkout tracking payload failed:', trackingError.message);
+    }
+
+    return res.status(200).json({ url: session.url, ...(tracking ? { tracking } : {}) });
   } catch (error) {
     console.error('Stripe checkout session error:', error.message || error);
     return res.status(500).json({ error: 'Failed to create checkout session', detail: error.message });
