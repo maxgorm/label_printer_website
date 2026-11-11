@@ -115,12 +115,29 @@
             var sessionId = new URLSearchParams(window.location.search).get('session_id');
             if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) return;
             var flagKey = 'sentimo_purchase_' + sessionId;
-            try { if (localStorage.getItem(flagKey)) return; } catch (e) { return; }
+            var gaFlagKey = 'sentimo_ga_purchase_' + sessionId;
             fetch('/api/order-purchase?session_id=' + encodeURIComponent(sessionId), { cache: 'no-store' })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     var p = data && data.purchase;
-                    if (!p || !window.SentimoTrack) return;
+                    if (!p) return;
+                    // GA4 uses the verified Stripe session ID to deduplicate transactions.
+                    // Keep this independent of Meta consent and its browser event flag.
+                    var gaSent = false;
+                    try { gaSent = !!localStorage.getItem(gaFlagKey); } catch (e) { /* GA4 deduplicates by transaction ID */ }
+                    if (!gaSent && typeof window.gtag === 'function') {
+                        window.gtag('event', 'purchase', {
+                            transaction_id: sessionId,
+                            value: p.value,
+                            currency: p.currency,
+                            items: (p.contents || []).map(function (item) {
+                                return { item_id: item.id, quantity: item.quantity };
+                            })
+                        });
+                        try { localStorage.setItem(gaFlagKey, '1'); } catch (e) { /* ignore */ }
+                    }
+                    if (!window.SentimoTrack) return;
+                    try { if (localStorage.getItem(flagKey)) return; } catch (e) { return; }
                     var eventId = p.event_id;
                     delete p.event_id;
                     // Only mark as sent when the pixel actually fired (consent granted).
