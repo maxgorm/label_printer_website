@@ -154,6 +154,21 @@ export default async function handler(req, res) {
       automatic_tax: { enabled: true },
       payment_method_types: ['card'],
       line_items: lineItems,
+      custom_fields: [{
+        key: 'discovery',
+        label: { type: 'custom', custom: 'How did you hear about us?' },
+        type: 'dropdown',
+        optional: true,
+        dropdown: { options: [
+          { label: 'Instagram', value: 'instagram' },
+          { label: 'Facebook', value: 'facebook' },
+          { label: 'TikTok', value: 'tiktok' },
+          { label: 'Google or other search', value: 'search' },
+          { label: 'ChatGPT or another AI assistant', value: 'ai' },
+          { label: 'Friend or family', value: 'wordofmouth' },
+          { label: 'Other', value: 'other' },
+        ] },
+      }],
       metadata: {
         product_key: paperOnly ? 'paper' : selectedProductKey,
         product_slug: paperOnly ? 'sentimo-paper' : selectedProduct.slug,
