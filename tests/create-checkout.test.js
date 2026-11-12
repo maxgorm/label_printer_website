@@ -40,6 +40,17 @@ async function invoke(body, method = 'POST') {
   }
 }
 
+test('checkout asks for an optional discovery source', async () => {
+  const { res, requests } = await invoke({ product: 'single', colors: ['pink'], quantity: 1 });
+  assert.equal(res.statusCode, 200);
+  const params = requests[0].params;
+  assert.equal(params.get('custom_fields[0][key]'), 'discovery');
+  assert.equal(params.get('custom_fields[0][optional]'), 'true');
+  assert.equal(params.get('custom_fields[0][type]'), 'dropdown');
+  assert.equal(params.get('custom_fields[0][label][custom]'), 'How did you hear about us?');
+  assert.equal(params.get('custom_fields[0][dropdown][options][0][value]'), 'instagram');
+});
+
 const variants = [
   ...config.available_colors.map(color => ({ product: 'single', colors: [color] })),
   ...config.available_colors.flatMap(first => config.available_colors.map(second => ({
