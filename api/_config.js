@@ -7,12 +7,18 @@
 
 const PREORDER_CONFIG = {
   // Products and pricing (in cents for Stripe). The duo is the default offer.
+  // `unit_price_cents` is the sale price, charged until `sale_ends_at`; from then on
+  // checkout charges `regular_price_cents` (use promotion codes for discounts after that).
+  // Keep the date and prices in sync with public/assets/js/preorder.js.
+  sale_ends_at: '2026-12-01T00:00:00-05:00', // midnight US Eastern, Dec 1
+  sale_ends_label: '12/1',
   products: {
     single: {
       name: 'Sentimo Single Printer',
       slug: 'sentimo-single',
       description: 'Sentimo — 1 Printer + Starter Kit.',
       unit_price_cents: 2999,
+      regular_price_cents: 4999,
       display_price: '$29.99',
       original_price: '$49.99',
       printer_count: 1,
@@ -22,6 +28,7 @@ const PREORDER_CONFIG = {
       slug: 'sentimo-2-pack',
       description: 'Sentimo — 2 Printers + Starter Kit.',
       unit_price_cents: 4999,
+      regular_price_cents: 6999,
       display_price: '$49.99',
       original_price: '$69.99',
       printer_count: 2,
@@ -34,8 +41,10 @@ const PREORDER_CONFIG = {
     white: 'White',
     black: 'Black',
   },
-  // Thermal paper: each bundle is one pack of 3 rolls. `rolls` is the per-color roll
-  // count in one pack and drives paper inventory in Supabase.
+  // Thermal paper packs. `rolls` is the per-color roll count in one pack and drives
+  // paper inventory in Supabase. `addon_price_cents` is the one-per-order discounted
+  // price offered when a printer order has no paper. Retired packs can no longer be
+  // bought, but stay here so checkouts started before they were retired still record.
   paper_bundles: {
     classic: {
       name: 'Sentimo Thermal Paper: Classic',
@@ -43,8 +52,19 @@ const PREORDER_CONFIG = {
       slug: 'paper-classic',
       description: '3 rolls of white thermal sticker paper.',
       roll_summary: '3 white rolls',
-      price_cents: 799,
+      price_cents: 699,
+      addon_price_cents: 499,
       rolls: { white: 3 },
+    },
+    dreamy: {
+      name: 'Sentimo Thermal Paper: Dreamy',
+      label: 'Dreamy',
+      slug: 'paper-dreamy',
+      description: '5 rolls of thermal sticker paper: white, lavender, yellow, pink, and blue.',
+      roll_summary: 'White, lavender, yellow, pink, blue',
+      price_cents: 999,
+      addon_price_cents: 699,
+      rolls: { white: 1, lavender: 1, yellow: 1, pink: 1, blue: 1 },
     },
     sweet: {
       name: 'Sentimo Thermal Paper: Sweet',
@@ -53,7 +73,9 @@ const PREORDER_CONFIG = {
       description: '3 rolls of thermal sticker paper: pink, purple, and yellow.',
       roll_summary: 'Pink + purple + yellow',
       price_cents: 899,
+      addon_price_cents: 499,
       rolls: { pink: 1, purple: 1, yellow: 1 },
+      retired: true,
     },
     bright: {
       name: 'Sentimo Thermal Paper: Bright',
@@ -62,12 +84,13 @@ const PREORDER_CONFIG = {
       description: '3 rolls of thermal sticker paper: mint, blue, and orange.',
       roll_summary: 'Mint + blue + orange',
       price_cents: 899,
+      addon_price_cents: 499,
       rolls: { mint: 1, blue: 1, orange: 1 },
+      retired: true,
     },
   },
-  paper_roll_colors: ['white', 'pink', 'purple', 'yellow', 'mint', 'blue', 'orange'],
+  paper_roll_colors: ['white', 'lavender', 'pink', 'purple', 'yellow', 'mint', 'blue', 'orange'],
   // One discounted add-on pack per order, only when the order includes a printer.
-  paper_addon_price_cents: 499,
   paper_addon_max_per_order: 1,
   paper_max_per_bundle: 10,
   // Tax category for paper packs (general tangible goods).
@@ -134,5 +157,10 @@ const PREORDER_CONFIG = {
 
 // Shipping countries (ISO 3166-1 alpha-2)
 PREORDER_CONFIG.shipping_countries = ['US', ...Object.keys(PREORDER_CONFIG.international_shipping_cents)];
+
+/** Printer price in cents at `now`: the sale price until sale_ends_at, then the regular price. */
+export function printerPriceCents(product, now = new Date()) {
+  return now < new Date(PREORDER_CONFIG.sale_ends_at) ? product.unit_price_cents : product.regular_price_cents;
+}
 
 export default PREORDER_CONFIG;

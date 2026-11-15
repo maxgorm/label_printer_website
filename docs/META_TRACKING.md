@@ -16,7 +16,7 @@ Stripe -> POST /api/webhook (signature verified) -> order saved -> CAPI Purchase
   (`checkout.session.completed` and `checkout.session.async_payment_succeeded`; checkout is card-only today).
 - One order = one event id `purchase_<checkout session id>`, reused by browser, server and every retry.
 - Value = merchandise after discounts, excluding tax and shipping (`amount_subtotal - amount_discount`).
-- Product IDs = slugs: `sentimo-single`, `sentimo-2-pack`, `paper-classic`, `paper-sweet`, `paper-bright`.
+- Product IDs = slugs: `sentimo-single`, `sentimo-2-pack`, `paper-classic`, `paper-dreamy` (older orders may carry the retired `paper-sweet` and `paper-bright`).
 - No cart exists on the site, so there is no AddToCart event. Funnel events are browser-only; only Purchase is dual-channel.
 - Creator commission logic is untouched (none exists in this repo). Referral codes (`?ref=`) are stored separately from Meta data.
 

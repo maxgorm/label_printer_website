@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import PREORDER_CONFIG from './_config.js';
+import PREORDER_CONFIG, { printerPriceCents } from './_config.js';
 import { attributionMetadata, checkoutEventId, commerceData, contentsFromMetadata } from './_meta.js';
 import {
   describePaper,
@@ -77,11 +77,13 @@ export default async function handler(req, res) {
   if (stockError) return res.status(409).json({ error: stockError });
 
   const paperTotalPacks = Object.values(paperAll).reduce((sum, packs) => sum + packs, 0);
+  // Sale price until the sale ends, then the regular price.
+  const unitPriceCents = paperOnly ? 0 : printerPriceCents(selectedProduct);
   const lineItems = [];
   let subtotalCents = 0;
 
   if (!paperOnly) {
-    subtotalCents += selectedProduct.unit_price_cents * qty;
+    subtotalCents += unitPriceCents * qty;
     lineItems.push({
       price_data: {
         currency: PREORDER_CONFIG.currency,
@@ -92,7 +94,7 @@ export default async function handler(req, res) {
           name: selectedProduct.name,
           description: `${selectedProduct.description} Colors: ${colorSummary}.`,
         },
-        unit_amount: selectedProduct.unit_price_cents,
+        unit_amount: unitPriceCents,
       },
       quantity: qty,
     });
@@ -119,7 +121,7 @@ export default async function handler(req, res) {
 
   if (addon) {
     const bundle = bundles[addon];
-    subtotalCents += PREORDER_CONFIG.paper_addon_price_cents;
+    subtotalCents += bundle.addon_price_cents;
     lineItems.push({
       price_data: {
         currency: PREORDER_CONFIG.currency,
@@ -130,7 +132,7 @@ export default async function handler(req, res) {
           description: `${bundle.description} Add-on price with your printer; regular price ${formatDollars(bundle.price_cents)}.`,
           metadata: { paper_bundle: addon, paper_addon: 'true' },
         },
-        unit_amount: PREORDER_CONFIG.paper_addon_price_cents,
+        unit_amount: bundle.addon_price_cents,
       },
       quantity: PREORDER_CONFIG.paper_addon_max_per_order,
     });
@@ -173,7 +175,7 @@ export default async function handler(req, res) {
         product_key: paperOnly ? 'paper' : selectedProductKey,
         product_slug: paperOnly ? 'sentimo-paper' : selectedProduct.slug,
         product_name: paperOnly ? 'Sentimo Thermal Paper' : selectedProduct.name,
-        unit_price_cents: paperOnly ? '0' : String(selectedProduct.unit_price_cents),
+        unit_price_cents: String(unitPriceCents),
         printer_count: paperOnly ? '0' : String(selectedProduct.printer_count),
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: shipLabel,

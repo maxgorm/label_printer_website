@@ -192,6 +192,27 @@ test('a mixed paper order records every bundle and the right rolls per color', a
   assert.match(emails[0].html, /1 × Bright/);
 });
 
+test('a Dreamy order records lavender and the other Dreamy rolls', async () => {
+  const { res, inserts, emails } = await runWebhook({
+    ...baseSession,
+    id: 'cs_test_dreamy',
+    amount_total: 4999 + 699,
+    total_details: { amount_shipping: 0 },
+    metadata: {
+      product_key: 'duo', product_slug: 'sentimo-2-pack', product_name: 'Sentimo 2-Pack',
+      unit_price_cents: '4999', printer_count: '2', quantity: '1', shipping_cents: '0',
+      printer_colors: 'Pink, White', printer_color_1: 'Pink', printer_color_2: 'White',
+      paper_bundles: '{"classic":1}', paper_addon: 'dreamy', paper_packs: '2',
+      paper_summary: '1 × Classic (3 rolls), 1 × Dreamy (5 rolls, add-on price)',
+    },
+  });
+  assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+  const row = inserts[0];
+  assert.deepEqual(row.paper_bundles, { classic: 1, dreamy: 1 });
+  assert.deepEqual(row.roll_counts, { white: 4, lavender: 1, yellow: 1, pink: 1, blue: 1 });
+  assert.match(emails[0].html, /1 × Dreamy \(5 rolls, add-on price\)/);
+});
+
 test('an international order stores the country and phone, and the email mentions duties', async () => {
   const { res, inserts, emails } = await runWebhook({
     ...baseSession,

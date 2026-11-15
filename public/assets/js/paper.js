@@ -16,15 +16,14 @@
   if (!cards.length || !buyBtn) return;
 
   const BUNDLES = {
-    classic: { label: 'Classic', price: 799 },
-    sweet: { label: 'Sweet', price: 899 },
-    bright: { label: 'Bright', price: 899 },
+    classic: { label: 'Classic', price: 699 },
+    dreamy: { label: 'Dreamy', price: 999 },
   };
   const MAX_QTY = 10;
   const FREE_SHIPPING_CENTS = 2500;
   const SHIPPING_CENTS = 499;
 
-  const quantities = { classic: 0, sweet: 0, bright: 0 };
+  const quantities = { classic: 0, dreamy: 0 };
 
   function formatCents(cents) {
     return '$' + (cents / 100).toFixed(2);

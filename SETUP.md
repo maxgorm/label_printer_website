@@ -155,10 +155,13 @@ stripe listen --forward-to localhost:3000/api/webhook
 All configurable values live in **`api/_config.js`**:
 
 ```js
-products.single.unit_price_cents: 2999, // Single printer price (in cents)
-products.duo.unit_price_cents: 4999,    // 2-pack price (in cents)
-paper_bundles.*.price_cents: 799 / 899, // Classic / Sweet and Bright (in cents)
-paper_addon_price_cents: 499,           // $4.99 add-on, 1 per order, printer orders only
+sale_ends_at: '2026-12-01T00:00:00-05:00', // sale prices are charged until this moment
+products.single.unit_price_cents: 2999,    // Single printer sale price (in cents)
+products.single.regular_price_cents: 4999, // Single printer price after the sale
+products.duo.unit_price_cents: 4999,       // 2-pack sale price (in cents)
+products.duo.regular_price_cents: 6999,    // 2-pack price after the sale
+paper_bundles.*.price_cents: 699 / 999,    // Classic / Dreamy (in cents)
+paper_bundles.*.addon_price_cents: 499 / 699, // add-on price, 1 per order, printer orders only
 shipping_flat_cents: 499,               // under the free-shipping threshold
 free_shipping_threshold_cents: 2500,    // pre-tax subtotal for free shipping
 expected_ship_label: 'Fall 2026', // Change ship date
@@ -215,9 +218,11 @@ Look for `<!-- TODO: Replace with` comments in `index.html`.
 
 ## Thermal paper
 
-Paper is sold in packs of 3 rolls: **Classic** (3 white, $7.99), **Sweet** (pink, purple, yellow, $8.99) and **Bright** (mint, blue, orange, $8.99). They can be bought on their own (the `#paper` section) or optionally in the printer order form at full price. A printer order with no paper gets a pop-up offering **one** pack for **$4.99** per order. The server only accepts that price when the order contains a printer.
+Paper comes in two packs: **Classic** (3 white rolls, $6.99) and **Dreamy** (5 rolls: white, lavender, yellow, pink, blue, $9.99). They can be bought on their own (the `#paper` section) or optionally in the printer order form at full price. A printer order with no paper gets a pop-up offering **one** pack per order at the add-on price: Classic for **$4.99** or Dreamy for **$6.99**. The server only accepts that price when the order contains a printer.
 
-Customers can mix any number of Classic, Sweet and Bright packs (up to 10 of each), both in the printer form and in the standalone paper section. In Stripe each paper pack is its own line item (the add-on is labelled "printer add-on price" and has `paper_addon: true` in its product metadata). Session metadata carries `paper_bundles`, `paper_addon`, `paper_packs` and `paper_summary`. Paper-only orders have `product_key: paper`.
+The older Sweet and Bright packs are retired: they stay in `api/_config.js` with `retired: true` so checkouts started before the change still record, but checkout no longer accepts them.
+
+Customers can mix any number of Classic and Dreamy packs (up to 10 of each), both in the printer form and in the standalone paper section. In Stripe each paper pack is its own line item (the add-on is labelled "printer add-on price" and has `paper_addon: true` in its product metadata). Session metadata carries `paper_bundles`, `paper_addon`, `paper_packs` and `paper_summary`. Paper-only orders have `product_key: paper`.
 
 Shipping: $4.99, or free when the pre-tax subtotal is $25 or more (printer orders are always above that). Stripe receives a fixed-amount shipping rate with the shipping tax code; confirm Stripe Tax settings if you want shipping taxed differently.
 
