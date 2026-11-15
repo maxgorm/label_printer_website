@@ -50,8 +50,8 @@
   const MAX_PAPER_QTY = 10;
   // Display only. The server sets the real prices.
   const PAPER_BUNDLES = {
-    classic: { label: 'Classic', price: 699, addonPrice: 499, rolls: 3 },
-    dreamy: { label: 'Dreamy', price: 999, addonPrice: 699, rolls: 5 },
+    classic: { label: 'Classic', price: 699, addonPrice: 499, rolls: 3, image: '/assets/cutouts/paper-classic.webp' },
+    dreamy: { label: 'Dreamy', price: 999, addonPrice: 699, rolls: 5, image: '/assets/cutouts/paper-dreamy-row.webp' },
   };
   // The sale ends at midnight US Eastern on Dec 1 (keep in sync with api/_config.js).
   // After that the page shows regular prices, matching what checkout charges.
@@ -341,7 +341,7 @@
     addonApplied.classList.toggle('flex', Boolean(addonChoice));
     if (!addonChoice) return;
     const bundle = PAPER_BUNDLES[addonChoice];
-    if (addonAppliedImg) addonAppliedImg.src = `/assets/cutouts/paper-${addonChoice}.webp`;
+    if (addonAppliedImg) addonAppliedImg.src = bundle.image;
     if (addonAppliedText) {
       addonAppliedText.textContent = `1 × ${bundle.label} pack (${bundle.rolls} rolls) for ${formatCents(bundle.addonPrice)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Order'} to continue.`;
     }
