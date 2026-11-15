@@ -1,8 +1,13 @@
 import assert from 'node:assert/strict';
-import { mock, test } from 'node:test';
+import { after, before, mock, test } from 'node:test';
 import Stripe from 'stripe';
 import handler from '../api/create-checkout.js';
 import config from '../api/_config.js';
+
+// Pin the clock inside the sale so printer prices do not depend on today's date.
+const DURING_SALE = new Date('2026-11-20T12:00:00-05:00').getTime();
+before(() => mock.timers.enable({ apis: ['Date'], now: DURING_SALE }));
+after(() => mock.timers.reset());
 
 // Capture the real Stripe SDK's serialized HTTP request without networking,
 // credentials, charges, or changes to the production handler's dependencies.
@@ -118,7 +123,7 @@ test('paper-only order charges flat shipping below $25', async () => {
   const { res, requests } = await invoke({ paper: [{ bundle: 'classic', quantity: 3 }] });
   assert.equal(res.statusCode, 200);
   const { params } = requests[0];
-  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '799');
+  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '699');
   assert.equal(params.get('line_items[0][quantity]'), '3');
   assert.equal(params.get('line_items[0][price_data][product_data][tax_code]'), config.paper_tax_code);
   assert.equal(params.get('line_items[1][price_data][unit_amount]'), null);
@@ -129,39 +134,86 @@ test('paper-only order charges flat shipping below $25', async () => {
 });
 
 test('paper-only order ships free at $25 before tax', async () => {
-  const four = await invoke({ paper: [{ bundle: 'classic', quantity: 4 }] }); // $31.96
+  const four = await invoke({ paper: [{ bundle: 'classic', quantity: 4 }] }); // $27.96
   assert.equal(four.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
-  const three = await invoke({ paper: [{ bundle: 'sweet', quantity: 3 }] }); // $26.97
+  const three = await invoke({ paper: [{ bundle: 'dreamy', quantity: 3 }] }); // $29.97
   assert.equal(three.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
-  const two = await invoke({ paper: [{ bundle: 'sweet', quantity: 2 }] }); // $17.98
+  const two = await invoke({ paper: [{ bundle: 'dreamy', quantity: 2 }] }); // $19.98
   assert.equal(two.requests[0].params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '499');
 });
 
 test('full-price paper in the printer form is a separate line item', async () => {
   const { res, requests } = await invoke({
-    product: 'single', colors: ['black'], quantity: 1, paper: [{ bundle: 'bright', quantity: 2 }],
+    product: 'single', colors: ['black'], quantity: 1, paper: [{ bundle: 'dreamy', quantity: 2 }],
   });
   assert.equal(res.statusCode, 200);
   const { params } = requests[0];
   assert.equal(params.get('line_items[0][price_data][unit_amount]'), '2999');
-  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '899');
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '999');
   assert.equal(params.get('line_items[1][quantity]'), '2');
-  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_bundle]'), 'bright');
+  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_bundle]'), 'dreamy');
   assert.equal(params.get('metadata[paper_addon]'), '');
 });
 
-test('the $4.99 add-on is one discounted pack with a printer', async () => {
+test('the Dreamy add-on is one $6.99 pack with a printer', async () => {
   const { res, requests } = await invoke({
-    product: 'duo', colors: ['pink', 'pink'], quantity: 3, paper_addon: 'sweet',
+    product: 'duo', colors: ['pink', 'pink'], quantity: 3, paper_addon: 'dreamy',
+  });
+  assert.equal(res.statusCode, 200);
+  const { params } = requests[0];
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '699');
+  assert.equal(params.get('line_items[1][quantity]'), '1');
+  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_addon]'), 'true');
+  assert.match(params.get('line_items[1][price_data][product_data][description]'), /\$9\.99/);
+  assert.equal(params.get('metadata[paper_addon]'), 'dreamy');
+  assert.equal(params.get('metadata[paper_packs]'), '1');
+  assert.match(params.get('metadata[paper_summary]'), /1 × Dreamy \(5 rolls, add-on price\)/);
+});
+
+test('the Classic add-on is one $4.99 pack with a printer', async () => {
+  const { res, requests } = await invoke({
+    product: 'single', colors: ['white'], quantity: 1, paper_addon: 'classic',
   });
   assert.equal(res.statusCode, 200);
   const { params } = requests[0];
   assert.equal(params.get('line_items[1][price_data][unit_amount]'), '499');
   assert.equal(params.get('line_items[1][quantity]'), '1');
-  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_addon]'), 'true');
-  assert.match(params.get('line_items[1][price_data][product_data][description]'), /\$8\.99/);
-  assert.equal(params.get('metadata[paper_addon]'), 'sweet');
-  assert.equal(params.get('metadata[paper_packs]'), '1');
+  assert.match(params.get('line_items[1][price_data][product_data][description]'), /\$6\.99/);
+});
+
+test('retired Sweet and Bright packs can no longer be bought', async () => {
+  for (const body of [
+    { paper: [{ bundle: 'sweet', quantity: 1 }] },
+    { paper: [{ bundle: 'bright', quantity: 1 }] },
+    { product: 'duo', colors: ['pink', 'white'], paper_addon: 'sweet' },
+    { product: 'duo', colors: ['pink', 'white'], paper_addon: 'bright' },
+  ]) {
+    const { res, requests } = await invoke(body);
+    assert.equal(res.statusCode, 400, JSON.stringify(body));
+    assert.equal(requests.length, 0);
+  }
+});
+
+test('printer prices switch to regular prices when the sale ends on 12/1', async () => {
+  const cases = [
+    ['2026-11-30T23:59:59-05:00', '2999', '4999'],
+    ['2026-12-01T00:00:00-05:00', '4999', '6999'],
+    ['2027-01-15T12:00:00-05:00', '4999', '6999'],
+  ];
+  try {
+    for (const [when, single, duo] of cases) {
+      mock.timers.setTime(new Date(when).getTime());
+      const one = await invoke({ product: 'single', colors: ['pink'], quantity: 1 });
+      assert.equal(one.requests[0].params.get('line_items[0][price_data][unit_amount]'), single, when);
+      assert.equal(one.requests[0].params.get('metadata[unit_price_cents]'), single, when);
+      const two = await invoke({ product: 'duo', colors: ['pink', 'white'], quantity: 2 });
+      assert.equal(two.requests[0].params.get('line_items[0][price_data][unit_amount]'), duo, when);
+      assert.equal(two.requests[0].params.get('line_items[0][quantity]'), '2', when);
+      assert.equal(two.requests[0].params.get('allow_promotion_codes'), 'true');
+    }
+  } finally {
+    mock.timers.setTime(DURING_SALE);
+  }
 });
 
 test('the add-on price needs a printer and a real bundle', async () => {
@@ -171,7 +223,7 @@ test('the add-on price needs a printer and a real bundle', async () => {
     { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'gold', quantity: 1 }] },
     { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'classic', quantity: 11 }] },
     { product: 'duo', colors: ['pink', 'white'], paper: [{ bundle: 'classic', quantity: 0 }] },
-    { paper_addon: 'sweet' },
+    { paper_addon: 'dreamy' },
   ]) {
     const { res, requests } = await invoke(body);
     assert.equal(res.statusCode, 400, JSON.stringify(body));
@@ -235,41 +287,38 @@ test('several paper bundles become one Stripe line item each, with their own qua
   const { res, requests } = await invoke({
     paper: [
       { bundle: 'classic', quantity: 2 },
-      { bundle: 'sweet', quantity: 1 },
-      { bundle: 'bright', quantity: 1 },
+      { bundle: 'dreamy', quantity: 2 },
     ],
   });
   assert.equal(res.statusCode, 200);
   const { params } = requests[0];
-  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '799');
+  assert.equal(params.get('line_items[0][price_data][unit_amount]'), '699');
   assert.equal(params.get('line_items[0][quantity]'), '2');
-  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '899');
-  assert.equal(params.get('line_items[1][quantity]'), '1');
-  assert.equal(params.get('line_items[2][price_data][unit_amount]'), '899');
-  assert.equal(params.get('line_items[2][quantity]'), '1');
-  assert.equal(params.has('line_items[3][quantity]'), false);
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '999');
+  assert.equal(params.get('line_items[1][quantity]'), '2');
+  assert.equal(params.has('line_items[2][quantity]'), false);
   assert.equal(params.get('line_items[0][price_data][product_data][metadata][paper_bundle]'), 'classic');
-  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_bundle]'), 'sweet');
-  assert.equal(params.get('line_items[2][price_data][product_data][metadata][paper_bundle]'), 'bright');
-  assert.deepEqual(JSON.parse(params.get('metadata[paper_bundles]')), { classic: 2, sweet: 1, bright: 1 });
+  assert.equal(params.get('line_items[1][price_data][product_data][metadata][paper_bundle]'), 'dreamy');
+  assert.deepEqual(JSON.parse(params.get('metadata[paper_bundles]')), { classic: 2, dreamy: 2 });
   assert.equal(params.get('metadata[paper_packs]'), '4');
   assert.equal(params.get('metadata[quantity]'), '4');
-  // $15.98 + $8.99 + $8.99 = $33.96, so shipping is free.
+  assert.equal(params.get('metadata[paper_summary]'), '2 × Classic (3 rolls), 2 × Dreamy (5 rolls)');
+  // $13.98 + $19.98 = $33.96, so shipping is free.
   assert.equal(params.get('shipping_options[0][shipping_rate_data][fixed_amount][amount]'), '0');
 });
 
-test('mixed paper with a printer and the $4.99 add-on keeps every line separate', async () => {
+test('mixed paper with a printer and the add-on keeps every line separate', async () => {
   const { res, requests } = await invoke({
     product: 'duo', colors: ['pink', 'white'], quantity: 1,
-    paper: [{ bundle: 'classic', quantity: 3 }, { bundle: 'bright', quantity: 2 }],
-    paper_addon: 'sweet',
+    paper: [{ bundle: 'classic', quantity: 3 }, { bundle: 'dreamy', quantity: 2 }],
+    paper_addon: 'classic',
   });
   assert.equal(res.statusCode, 200);
   const { params } = requests[0];
   assert.equal(params.get('line_items[0][price_data][unit_amount]'), '4999');
-  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '799');
+  assert.equal(params.get('line_items[1][price_data][unit_amount]'), '699');
   assert.equal(params.get('line_items[1][quantity]'), '3');
-  assert.equal(params.get('line_items[2][price_data][unit_amount]'), '899');
+  assert.equal(params.get('line_items[2][price_data][unit_amount]'), '999');
   assert.equal(params.get('line_items[2][quantity]'), '2');
   assert.equal(params.get('line_items[3][price_data][unit_amount]'), '499');
   assert.equal(params.get('line_items[3][quantity]'), '1');
@@ -281,7 +330,7 @@ test('a bundle can appear only up to the per-bundle limit and duplicates merge',
   assert.equal(merged.res.statusCode, 200);
   assert.equal(merged.requests[0].params.get('line_items[0][quantity]'), '3');
   assert.equal(merged.requests[0].params.has('line_items[1][quantity]'), false);
-  const tooMany = await invoke({ paper: [{ bundle: 'sweet', quantity: 6 }, { bundle: 'sweet', quantity: 5 }] });
+  const tooMany = await invoke({ paper: [{ bundle: 'dreamy', quantity: 6 }, { bundle: 'dreamy', quantity: 5 }] });
   assert.equal(tooMany.res.statusCode, 400);
   assert.equal(tooMany.requests.length, 0);
 });

@@ -11,6 +11,14 @@ test('bundles expand into individual rolls per color', () => {
   });
 });
 
+test('a Dreamy pack is one roll each of white, lavender, yellow, pink and blue', () => {
+  assert.deepEqual(rollCountsFor({ dreamy: 2, classic: 1 }), {
+    white: 5, lavender: 2, yellow: 2, pink: 2, blue: 2,
+  });
+  const parsed = parsePaperMetadata({ paper_bundles: JSON.stringify({ dreamy: 1 }), paper_addon: 'classic' });
+  assert.equal(describePaper(parsed), '1 × Dreamy (5 rolls), 1 × Classic (3 rolls, add-on price)');
+});
+
 test('starting stock supports 13 Classic packs and 12 each of Sweet and Bright', () => {
   // 39 white rolls, 12 of each other color (see migration_005).
   assert.equal(Math.floor(39 / rollCountsFor({ classic: 1 }).white), 13);
@@ -18,6 +26,7 @@ test('starting stock supports 13 Classic packs and 12 each of Sweet and Bright',
   assert.equal(Math.floor(12 / rollCountsFor({ bright: 1 }).mint), 12);
 });
 
+// Sweet and Bright are retired, but checkouts started before then must still record.
 test('paper metadata round-trips, including the add-on pack', () => {
   const parsed = parsePaperMetadata({ paper_bundles: JSON.stringify({ classic: 1 }), paper_addon: 'sweet' });
   assert.deepEqual(parsed.bundles, { classic: 1, sweet: 1 });

@@ -1,6 +1,6 @@
 /**
  * Sentimo Order Checkout Logic
- * Handles: quantity selection, color selection, optional thermal paper, the $4.99 paper add-on pop-up, shipping destination note, Stripe Checkout redirect, analytics events
+ * Handles: quantity selection, color selection, sale pricing (ends 12/1), optional thermal paper, the discounted paper add-on pop-up, shipping destination note, Stripe Checkout redirect, analytics events
  */
 (function () {
   'use strict';
@@ -38,34 +38,37 @@
   const addonAppliedText = document.getElementById('paper-addon-applied-text');
   const addonRemove = document.getElementById('paper-addon-remove');
   const orderShippingNote = document.getElementById('order-shipping-note');
+  const saleBadge = document.getElementById('sale-badge');
 
   let quantity = 1;
   let selectedProduct = 'duo';
   let selectedColors = [null, null];
-  const paperQtys = { classic: 0, sweet: 0, bright: 0 };
+  const paperQtys = { classic: 0, dreamy: 0 };
   let addonChoice = null;
   const MAX_QTY = 10;
   const MIN_QTY = 1;
   const MAX_PAPER_QTY = 10;
-  const ADDON_PRICE = 499;
   // Display only. The server sets the real prices.
   const PAPER_BUNDLES = {
-    classic: { label: 'Classic', price: 799 },
-    sweet: { label: 'Sweet', price: 899 },
-    bright: { label: 'Bright', price: 899 },
+    classic: { label: 'Classic', price: 699, addonPrice: 499, rolls: 3 },
+    dreamy: { label: 'Dreamy', price: 999, addonPrice: 699, rolls: 5 },
   };
+  // The sale ends at midnight US Eastern on Dec 1 (keep in sync with api/_config.js).
+  // After that the page shows regular prices, matching what checkout charges.
+  const SALE_ENDS_AT = new Date('2026-12-01T00:00:00-05:00');
+  const saleActive = Date.now() < SALE_ENDS_AT.getTime();
   const PRODUCTS = {
     single: {
-      currentPrice: '$29.99',
-      originalPrice: '$49.99',
+      currentPrice: saleActive ? '$29.99' : '$49.99',
+      originalPrice: saleActive ? '$49.99' : '',
       subtitle: 'for 1 printer',
       quantityHelp: 'Each single-printer option includes 1 printer and starter materials',
       buttonLabel: 'Order Single Printer',
       printerCount: 1,
     },
     duo: {
-      currentPrice: '$49.99',
-      originalPrice: '$69.99',
+      currentPrice: saleActive ? '$49.99' : '$69.99',
+      originalPrice: saleActive ? '$69.99' : '',
       subtitle: 'for 2 printers',
       quantityHelp: 'Each 2-pack includes 2 printers (choose a color for each; the colors can match)',
       buttonLabel: 'Order 2-Pack',
@@ -78,6 +81,15 @@
     white: 'White',
     black: 'Black',
   };
+
+  // Static markup shows sale prices; switch it to regular prices once the sale ends.
+  if (!saleActive) {
+    saleBadge?.classList.add('hidden');
+    document.querySelectorAll('[data-sale-original]').forEach((el) => el.classList.add('hidden'));
+    document.querySelectorAll('[data-regular-text]').forEach((el) => {
+      el.textContent = el.dataset.regularText;
+    });
+  }
 
   // ===================== ANALYTICS HELPERS =====================
   function trackEvent(eventName, data) {
@@ -322,7 +334,7 @@
   window.SentimoShipping?.onChange(updateShippingNote);
   updateShippingNote();
 
-  // The $4.99 add-on stays visible in the form once the shopper accepts it.
+  // The discounted add-on stays visible in the form once the shopper accepts it.
   function renderAddonApplied() {
     if (!addonApplied) return;
     addonApplied.classList.toggle('hidden', !addonChoice);
@@ -331,7 +343,7 @@
     const bundle = PAPER_BUNDLES[addonChoice];
     if (addonAppliedImg) addonAppliedImg.src = `/assets/cutouts/paper-${addonChoice}.webp`;
     if (addonAppliedText) {
-      addonAppliedText.textContent = `1 × ${bundle.label} pack (3 rolls) for ${formatCents(ADDON_PRICE)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Order'} to continue.`;
+      addonAppliedText.textContent = `1 × ${bundle.label} pack (${bundle.rolls} rolls) for ${formatCents(bundle.addonPrice)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Order'} to continue.`;
     }
   }
 
@@ -341,7 +353,7 @@
     trackEvent('paper_addon_removed', {});
   });
 
-  // ===================== PAPER ADD-ON POP-UP ($4.99, 1 per order) =====================
+  // ===================== PAPER ADD-ON POP-UP (discounted, 1 per order) =====================
   function addonFocusable() {
     return Array.from(addonModal.querySelectorAll('button')).filter((el) => !el.disabled);
   }
@@ -352,7 +364,7 @@
     addonModal.classList.add('flex');
     document.body.classList.add('overflow-hidden');
     trackEvent('paper_addon_offer_shown', { product: selectedProduct });
-    addonModal.querySelector('[data-addon-choice="sweet"]')?.focus();
+    addonModal.querySelector('[data-addon-choice="dreamy"]')?.focus();
   }
 
   function closeAddonModal() {
@@ -412,7 +424,7 @@
       return;
     }
 
-    // Anyone buying a printer without paper gets the $4.99 add-on offer first.
+    // Anyone buying a printer without paper gets the discounted add-on offer first.
     if (paperPacks() === 0 && !addonChoice && addonModal) {
       openAddonModal();
       return;

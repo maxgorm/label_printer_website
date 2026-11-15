@@ -3,6 +3,16 @@ import PREORDER_CONFIG from './_config.js';
 
 const BUNDLES = PREORDER_CONFIG.paper_bundles;
 
+/** A pack the site still sells (retired packs only appear in older checkout sessions). */
+function isOnSale(bundle) {
+  return Object.hasOwn(BUNDLES, bundle) && !BUNDLES[bundle].retired;
+}
+
+/** Number of rolls in one pack of a bundle. */
+export function rollsPerPack(bundle) {
+  return Object.values(BUNDLES[bundle].rolls).reduce((sum, count) => sum + count, 0);
+}
+
 /**
  * Validate the paper selections sent by the browser. Only bundle keys and
  * quantities are accepted; prices always come from the server config.
@@ -16,7 +26,7 @@ export function normalizePaperItems(input) {
   for (const entry of input) {
     const bundle = entry?.bundle;
     const quantity = Number(entry?.quantity);
-    if (!Object.hasOwn(BUNDLES, bundle) || !Number.isInteger(quantity) || quantity < 1) {
+    if (!isOnSale(bundle) || !Number.isInteger(quantity) || quantity < 1) {
       return { error: 'Invalid thermal paper selection' };
     }
     items[bundle] = (items[bundle] || 0) + quantity;
@@ -29,7 +39,7 @@ export function normalizePaperItems(input) {
 
 export function normalizePaperAddon(input) {
   if (input === undefined || input === null || input === '') return { addon: null };
-  if (typeof input !== 'string' || !Object.hasOwn(BUNDLES, input)) {
+  if (typeof input !== 'string' || !isOnSale(input)) {
     return { error: 'Invalid thermal paper add-on' };
   }
   return { addon: input };
@@ -93,8 +103,8 @@ export function parsePaperMetadata(metadata = {}) {
 }
 
 export function describePaper({ listed, addon }) {
-  const parts = Object.entries(listed).map(([bundle, packs]) => `${packs} × ${BUNDLES[bundle].label} (3 rolls)`);
-  if (addon) parts.push(`1 × ${BUNDLES[addon].label} (3 rolls, add-on price)`);
+  const parts = Object.entries(listed).map(([bundle, packs]) => `${packs} × ${BUNDLES[bundle].label} (${rollsPerPack(bundle)} rolls)`);
+  if (addon) parts.push(`1 × ${BUNDLES[addon].label} (${rollsPerPack(addon)} rolls, add-on price)`);
   return parts.join(', ');
 }
 
