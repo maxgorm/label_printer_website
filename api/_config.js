@@ -150,6 +150,15 @@ const PREORDER_CONFIG = {
   // Stripe allows promo codes
   allow_promotion_codes: true,
 
+  // Thank-you code shown on /reviews only after a review is submitted. It is a Stripe
+  // promotion code on the "Review Discount" coupon (15% off, once). It lives server-side
+  // so it is not in the page source. Keep the expiry label in sync with Stripe.
+  review_promo: {
+    code: 'SPREADLOVE15',
+    percent_off: 15,
+    expires_label: 'February 1, 2027',
+  },
+
   // Collect shipping address in Stripe Checkout
   collect_shipping: true,
 
