@@ -17,7 +17,7 @@ const TYPES = {
   '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.woff2': 'font/woff2',
 };
 // Same page rewrites as vercel.json.
-const REWRITES = { '/support': '/support.html', '/download': '/download.html', '/auth/action': '/auth-action.html' };
+const REWRITES = { '/support': '/support.html', '/download': '/download.html', '/auth/action': '/auth-action.html', '/reviews': '/reviews.html' };
 
 if (process.env.STRIPE_SECRET_KEY?.startsWith('sk_live')) {
   console.error('Refusing to start: .env.local has a LIVE Stripe key. Use a test key (sk_test_...) locally.');

@@ -8,6 +8,7 @@
     { "source": "/support", "destination": "/support.html" },
     { "source": "/download", "destination": "/download.html" },
     { "source": "/auth/action", "destination": "/auth-action.html" },
+    { "source": "/reviews", "destination": "/reviews.html" },
     { "source": "/gifts/long-distance-relationship-gifts", "destination": "/gifts/long-distance-relationship-gifts.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
@@ -21,6 +22,12 @@
         { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://www.googletagmanager.com https://js.stripe.com https://www.gstatic.com https://apis.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://www.facebook.com https://lh3.googleusercontent.com https://*.google-analytics.com https://*.googletagmanager.com https://*.stripe.com; media-src 'self'; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.stripe.com https://*.stripe.com https://*.stripe.network https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://cloudflareinsights.com; frame-src https://js.stripe.com https://*.stripe.com https://*.stripe.network https://*.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), browsing-topics=()" }
+      ]
+    },
+    {
+      "source": "/reviews(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     },
     {

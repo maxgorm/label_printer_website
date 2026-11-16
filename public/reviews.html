@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XF7KSGXZVW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-XF7KSGXZVW');
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leave a Review | Sentimo</title>
+    <meta name="description" content="Tell us how Sentimo is going and get 15% off your next order." />
+    <!-- Unlisted page: only reachable from review-request emails. -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261102-icons" />
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261115-reviews" />
+    <style>
+        .star-btn svg { transition: transform .15s ease, color .15s ease; }
+        .star-btn:hover svg, .star-btn:focus-visible svg { transform: scale(1.12); }
+        .star-btn:focus-visible { outline: 2px solid #F53F7B; outline-offset: 2px; border-radius: .5rem; }
+        .dropzone.is-dragging { border-color: #F53F7B; background: #FFE8F0; }
+        #review-thanks-view:focus { outline: none; }
+        .shake { animation: shake .35s ease; }
+        @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+        @media (prefers-reduced-motion: reduce) { .star-btn svg, .shake { transition: none; animation: none; } }
+    </style>
+</head>
+<body class="bg-background-light text-text-main-light font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- ===================== NAVIGATION ===================== -->
+    <nav class="fixed w-full z-50 bg-background-light/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="/" class="flex items-center">
+                <img src="/assets/opt/sizes/sentimo-logo-364x84.webp" alt="Sentimo Logo" width="364" height="84" class="h-8 md:h-10 w-auto" />
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-28 md:pt-32 pb-24 px-4 sm:px-6">
+        <div class="max-w-2xl mx-auto">
+
+            <!-- ===================== REVIEW FORM ===================== -->
+            <section id="review-form-view">
+                <header class="text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-3">How's your Sentimo?</h1>
+                    <p class="text-lg text-text-muted-light">
+                        Share your experience and we'll thank you with
+                        <strong class="text-primary">15% off your next order</strong>.
+                    </p>
+                </header>
+
+                <form id="review-form" novalidate class="bg-surface-light rounded-xl shadow-soft border border-gray-100 p-6 sm:p-8 space-y-8">
+
+                    <!-- Rating -->
+                    <fieldset>
+                        <legend class="block font-bold text-lg mb-1">Your rating <span class="text-primary">*</span></legend>
+                        <p class="text-sm text-text-muted-light mb-3">Tap a star to rate your overall experience.</p>
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                            <div id="stars" role="radiogroup" aria-label="Rating out of 5 stars" class="flex items-center gap-1">
+                                <!-- Buttons are built by reviews.js -->
+                            </div>
+                            <span id="rating-label" class="text-sm font-medium text-text-muted-light" aria-live="polite"></span>
+                        </div>
+                    </fieldset>
+
+                    <!-- Title -->
+                    <div>
+                        <div class="flex items-baseline justify-between mb-2">
+                            <label for="review-title" class="font-bold text-lg">Review title <span class="text-primary">*</span></label>
+                            <span id="title-count" class="text-xs text-text-muted-light tabular-nums">0 / 80</span>
+                        </div>
+                        <input id="review-title" name="title" type="text" maxlength="80" autocomplete="off" required
+                            placeholder="Sum it up in a few words"
+                            class="w-full rounded-lg border-gray-200 bg-background-light px-4 py-3 focus:border-primary focus:ring-primary" />
+                    </div>
+
+                    <!-- Body -->
+                    <div>
+                        <div class="flex items-baseline justify-between mb-2">
+                            <label for="review-body" class="font-bold text-lg">Your review <span class="text-primary">*</span></label>
+                            <span id="body-count" class="text-xs text-text-muted-light tabular-nums">0 / 3000</span>
+                        </div>
+                        <textarea id="review-body" name="body" rows="7" maxlength="3000" required
+                            placeholder="Who did you send notes to? What did you print? How did it feel to get one? Anything that surprised you?"
+                            class="w-full rounded-lg border-gray-200 bg-background-light px-4 py-3 leading-relaxed focus:border-primary focus:ring-primary"></textarea>
+                    </div>
+
+                    <!-- Photos -->
+                    <div id="photo-section" class="rounded-xl bg-accent-pink/40 border border-primary/15 p-5 sm:p-6">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                            </div>
+                            <div>
+                                <h2 class="font-bold text-lg leading-snug">Add photos <span class="font-normal text-sm text-text-muted-light">(up to 5)</span></h2>
+                                <p class="text-sm text-text-muted-light">
+                                    Show us your favorite notes, your printer's spot on the desk, or the fridge covered in stickers.
+                                    Reviews with photos help other couples the most.
+                                </p>
+                            </div>
+                        </div>
+
+                        <label id="dropzone" for="photo-input"
+                            class="dropzone flex flex-col items-center justify-center text-center cursor-pointer rounded-lg border-2 border-dashed border-primary/30 bg-surface-light px-4 py-8 hover:border-primary transition-colors">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F53F7B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+                            <span class="mt-2 font-semibold text-primary">Tap to add photos</span>
+                            <span class="text-xs text-text-muted-light mt-1">or drag them here</span>
+                        </label>
+                        <input id="photo-input" type="file" accept="image/*" multiple class="sr-only" />
+
+                        <p id="photo-error" class="hidden text-sm text-red-600 mt-3" role="alert"></p>
+                        <ul id="photo-list" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4 empty:hidden" aria-label="Selected photos"></ul>
+                    </div>
+
+                    <!-- About you -->
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div>
+                            <label for="review-name" class="block font-bold mb-2">Name to show <span class="text-primary">*</span></label>
+                            <input id="review-name" name="name" type="text" maxlength="60" autocomplete="given-name" required
+                                placeholder="e.g. Sarah M."
+                                class="w-full rounded-lg border-gray-200 bg-background-light px-4 py-3 focus:border-primary focus:ring-primary" />
+                        </div>
+                        <div>
+                            <label for="review-email" class="block font-bold mb-2">Email <span class="text-primary">*</span></label>
+                            <input id="review-email" name="email" type="email" maxlength="254" autocomplete="email" required
+                                placeholder="The one you ordered with"
+                                class="w-full rounded-lg border-gray-200 bg-background-light px-4 py-3 focus:border-primary focus:ring-primary" />
+                            <p class="text-xs text-text-muted-light mt-1">Never shown publicly.</p>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="review-order" class="block font-bold mb-2">Order number <span class="font-normal text-sm text-text-muted-light">(optional)</span></label>
+                            <input id="review-order" name="order_number" type="text" maxlength="40" autocomplete="off"
+                                placeholder="From your confirmation email"
+                                class="w-full rounded-lg border-gray-200 bg-background-light px-4 py-3 focus:border-primary focus:ring-primary" />
+                        </div>
+                    </div>
+
+                    <!-- Honeypot: hidden from people, filled by bots -->
+                    <div class="hidden" aria-hidden="true">
+                        <label for="review-website">Website</label>
+                        <input id="review-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                    </div>
+
+                    <!-- Photo nudge, shown once if they submit without photos -->
+                    <div id="photo-nudge" class="hidden rounded-xl border border-primary/20 bg-accent-pink/40 p-5" role="alert">
+                        <p class="font-bold mb-1">Want to add a photo first?</p>
+                        <p class="text-sm text-text-muted-light mb-4">Even one quick snap of a note you printed makes your review so much more helpful.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <button type="button" id="nudge-add" class="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-full font-medium text-sm transition-colors">Add a photo</button>
+                            <button type="button" id="nudge-skip" class="px-5 py-2.5 rounded-full font-medium text-sm text-text-muted-light hover:text-primary transition-colors">Submit without photos</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p id="form-error" class="hidden text-sm text-red-600 mb-4" role="alert"></p>
+                        <button id="submit-btn" type="submit"
+                            class="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover disabled:opacity-60 disabled:cursor-wait text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50">
+                            Submit review
+                        </button>
+                        <p class="text-xs text-text-muted-light text-center mt-4 leading-relaxed">
+                            By submitting, you agree that Sentimo may share your review, name and photos on our website and social media.
+                            You'll get your 15% thank-you code whether your review is glowing or not. Honest feedback helps us most.
+                        </p>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ===================== THANK YOU ===================== -->
+            <section id="review-thanks-view" class="hidden text-center" tabindex="-1">
+                <div class="w-20 h-20 bg-accent-pink rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#F53F7B" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold mb-3">Thank you!</h1>
+                <p class="text-lg text-text-muted-light mb-8">
+                    Your review means a lot to our small team. Here's your thank-you gift.
+                </p>
+
+                <div class="bg-surface-light rounded-xl shadow-soft border border-gray-100 p-6 sm:p-8 mb-8">
+                    <p class="text-sm font-semibold uppercase tracking-wider text-primary mb-2"><span id="promo-percent">15</span>% off your next order</p>
+                    <div class="flex flex-col sm:flex-row items-stretch justify-center gap-3 my-4">
+                        <code id="promo-code" class="block rounded-lg border-2 border-dashed border-primary/40 bg-accent-pink/40 px-6 py-4 text-2xl sm:text-3xl font-bold tracking-widest text-text-main-light select-all"></code>
+                        <button type="button" id="copy-code" class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary-hover text-white px-6 py-3 font-semibold transition-colors">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            <span id="copy-label">Copy code</span>
+                        </button>
+                    </div>
+                    <p class="text-sm text-text-muted-light">
+                        Enter it at checkout. Valid until <span id="promo-expiry">February 1, 2027</span>.
+                    </p>
+                </div>
+
+                <a href="/#reserve" class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-medium transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50">
+                    Shop Sentimo
+                </a>
+                <p class="text-sm text-text-muted-light mt-6">
+                    Questions? Contact us at <a href="mailto:support@sentimonotes.com" class="text-primary hover:underline">support@sentimonotes.com</a>
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-surface-light border-t border-gray-200 py-6">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-text-muted-light mb-4 md:mb-0">
+                    Sentimo&trade; is a trademark of Sentimo L.L.C.
+                </p>
+                <div class="flex items-center space-x-6 text-sm">
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/terms.html">Terms</a>
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/order-policy.html">Order Policy</a>
+                    <a class="text-gray-400 hover:text-primary transition-colors" href="/privacy.html">Privacy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/assets/js/reviews.js?v=20261115"></script>
+</body>
+</html>
