@@ -26,7 +26,7 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="/assets/css/styles.css?v=20261102-icons" />
     <!-- Tailwind (built by npm run build:css) -->
-    <link rel="stylesheet" href="/assets/css/tailwind-alt.css?v=20261102" />
+    <link rel="stylesheet" href="/assets/css/tailwind-alt.css?v=20261115-404" />
     <script defer src="/assets/js/tracking.js?v=20261108-meta2"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans antialiased flex min-h-screen flex-col">
@@ -44,44 +44,49 @@
     </nav>
 
     <!-- ===================== 404 CONTENT ===================== -->
-    <main class="flex-grow pt-32 pb-20">
-        <section class="relative overflow-hidden">
-            <div class="absolute left-1/2 top-16 h-72 w-72 -translate-x-1/2 rounded-full bg-accent-pink blur-3xl opacity-70 dark:bg-primary/10"></div>
+    <main class="relative isolate flex flex-grow items-center overflow-hidden pt-20">
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+            <div class="absolute -left-24 top-1/4 h-80 w-80 rounded-full bg-accent-pink blur-3xl opacity-80 dark:bg-primary/10"></div>
+            <div class="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-accent-pink blur-3xl opacity-60 dark:bg-primary/10"></div>
+        </div>
 
-            <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-[1fr_0.85fr]">
-                <div class="fade-in-up text-center lg:text-left">
-                    <p class="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-primary">404</p>
-                    <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-                        This note
-                        <span class="handwritten block pt-2 text-primary font-normal">got lost.</span>
-                    </h1>
-                    <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-text-muted-light dark:text-text-muted-dark lg:mx-0">
-                        The page you are looking for does not exist, may have moved, or may have been typed incorrectly.
-                    </p>
+        <section class="mx-auto grid w-full max-w-6xl items-center gap-12 px-6 py-16 lg:grid-cols-2 lg:gap-16 lg:py-20">
+            <div class="fade-in-up text-center lg:text-left">
+                <p class="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-primary">Error 404</p>
+                <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+                    This note
+                    <span class="handwritten block pt-1 text-primary font-normal">got lost.</span>
+                </h1>
+                <p class="mx-auto mt-6 max-w-md text-lg leading-relaxed text-text-muted-light dark:text-text-muted-dark lg:mx-0">
+                    The page you are looking for does not exist, may have moved, or may have been typed incorrectly.
+                </p>
 
-                    <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-                        <a href="/" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-medium text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary-hover hover:shadow-primary/50">
-                            Go back home
-                            <span class="material-icons-round text-xl">home</span>
-                        </a>
-                        <a href="/download" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 px-8 py-4 text-lg font-medium text-text-main-light transition-all hover:border-primary dark:border-gray-700 dark:text-text-main-dark">
-                            Download app
-                            <span class="material-icons-round text-xl">download</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="fade-in-up relative mx-auto w-full max-w-md" style="animation-delay: 0.15s;">
-                    <div class="rounded-[2rem] border border-primary/10 bg-surface-light p-2.5 shadow-2xl dark:border-gray-800 dark:bg-surface-dark">
-                        <img src="/assets/opt/printer-notes.webp" alt="Sentimo printer with printed notes" width="1600" height="1067" class="h-auto w-full rounded-[1.5rem] object-cover" />
-                    </div>
-                    <div class="absolute -bottom-6 left-1/2 w-[88%] -translate-x-1/2 rounded-2xl border border-primary/15 bg-accent-pink px-6 py-4 text-center shadow-soft dark:bg-primary/10">
-                        <p class="text-sm font-medium text-text-main-light dark:text-text-main-dark">
-                            Sentimo helps little messages find the right place.
-                        </p>
-                    </div>
+                <div class="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
+                    <a href="/" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-medium text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary-hover hover:shadow-primary/50">
+                        Go back home
+                        <span class="material-icons-round text-xl">home</span>
+                    </a>
+                    <a href="/download" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-surface-light/60 px-8 py-4 text-lg font-medium text-text-main-light transition-all hover:border-primary dark:border-gray-700 dark:bg-transparent dark:text-text-main-dark">
+                        Download app
+                        <span class="material-icons-round text-xl">download</span>
+                    </a>
                 </div>
             </div>
+
+            <figure class="fade-in-up mx-auto w-full max-w-xl lg:max-w-none" style="animation-delay: 0.15s;">
+                <div class="overflow-hidden rounded-[2rem] border border-primary/10 bg-surface-light p-2.5 shadow-soft dark:border-gray-800 dark:bg-surface-dark">
+                    <img
+                        src="/assets/opt/sizes/printer-moment-1200.webp"
+                        srcset="/assets/opt/sizes/printer-moment-800.webp 800w, /assets/opt/sizes/printer-moment-1200.webp 1200w, /assets/opt/printer-moment.webp 1920w"
+                        sizes="(min-width: 1024px) 560px, 100vw"
+                        alt="Someone smiling as they read a note printed by the Sentimo printer"
+                        width="1200" height="675"
+                        class="aspect-video h-auto w-full rounded-[1.5rem] object-cover" />
+                    <figcaption class="px-4 pb-2 pt-4 text-center text-sm font-medium text-text-muted-light dark:text-text-muted-dark">
+                        Sentimo helps little messages find the right place.
+                    </figcaption>
+                </div>
+            </figure>
         </section>
     </main>
 
