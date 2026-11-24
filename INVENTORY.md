@@ -25,6 +25,10 @@ Paper is tracked per roll color in `paper_movements`, with the `paper_stock` vie
 
 From 2026-11 the Sweet and Bright packs are retired and the new supplier's **Dreamy** pack (1 roll each of white, lavender, yellow, pink and blue) replaces them. `supabase/migration_007_dreamy_paper.sql` adds the `lavender` roll color. Record the new supplier's rolls in `paper_movements` (template at the end of that migration) before selling Dreamy, since checkout blocks a pack when any of its colors is out of stock.
 
+## Cart orders
+
+From 2026-11 the website uses a cart, so one order can hold several printer lines (for example a pink and white 2-Pack plus a black single printer) and paper packs. Stock still comes from `color_counts`, `paper_bundles` and `roll_counts`, which add up every line. `supabase/migration_009_cart_items.sql` adds `cart_items`, a per-line list for packing: printers with their product, colors and quantity, and paper packs with `addon: true` on the discounted pack. When a cart mixes single printers and 2-Packs, `product_slug` is `sentimo-mixed`, `quantity` counts printer packages, and `unit_price` is empty. The webhook saves orders without `cart_items` until the migration is applied.
+
 ## Shipping and tracking
 
 Set `tracking_number` (and optionally `tracking_carrier`) and `fulfillment_status = 'shipped'` on an order. A Supabase Database Webhook calls `/api/shipment-notify`, which emails the customer once and sets `shipping_email_sent_at`. See `SETUP.md`.

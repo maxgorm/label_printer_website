@@ -1,6 +1,8 @@
 /**
- * Sentimo Order Checkout Logic
- * Handles: quantity selection, color selection, sale pricing (ends 12/1), optional thermal paper, the discounted paper add-on pop-up, shipping destination note, Stripe Checkout redirect, analytics events
+ * Sentimo Order Form
+ * Handles: product, color, and quantity selection, sale pricing (ends 12/1), the shipping
+ * destination note, and adding the configured printer to the cart (cart.js handles checkout,
+ * the paper add-on offer, and Stripe).
  */
 (function () {
   'use strict';
@@ -9,9 +11,6 @@
   const qtyPlus = document.getElementById('qty-plus');
   const qtyDisplay = document.getElementById('quantity-display');
   const preorderBtn = document.getElementById('preorder-btn');
-  const preorderBtnText = document.getElementById('preorder-btn-text');
-  const preorderBtnSpinner = document.getElementById('preorder-btn-spinner');
-  const preorderError = document.getElementById('preorder-error');
   const productOptions = document.querySelectorAll('[data-product-option]');
   const productRadios = document.querySelectorAll('input[name="product"]');
   const priceOriginal = document.getElementById('price-original');
@@ -27,51 +26,33 @@
   const colorPickers = document.querySelectorAll('.color-picker');
   const colorOptions = document.querySelectorAll('[data-color-option]');
   const colorRadios = document.querySelectorAll('.color-radio');
-  const paperCards = document.querySelectorAll('[data-paper-card]');
-  const paperHelp = document.getElementById('paper-selection-help');
-  const addonModal = document.getElementById('paper-addon-modal');
-  const addonBackdrop = document.getElementById('paper-addon-backdrop');
-  const addonClose = document.getElementById('paper-addon-close');
-  const addonSkip = document.getElementById('paper-addon-skip');
-  const addonApplied = document.getElementById('paper-addon-applied');
-  const addonAppliedImg = document.getElementById('paper-addon-applied-img');
-  const addonAppliedText = document.getElementById('paper-addon-applied-text');
-  const addonRemove = document.getElementById('paper-addon-remove');
   const orderShippingNote = document.getElementById('order-shipping-note');
   const saleBadge = document.getElementById('sale-badge');
 
   let quantity = 1;
   let selectedProduct = 'duo';
   let selectedColors = [null, null];
-  const paperQtys = { classic: 0, dreamy: 0 };
-  let addonChoice = null;
   const MAX_QTY = 10;
   const MIN_QTY = 1;
-  const MAX_PAPER_QTY = 10;
-  // Display only. The server sets the real prices.
-  const PAPER_BUNDLES = {
-    classic: { label: 'Classic', price: 699, addonPrice: 499, rolls: 3, image: '/assets/cutouts/paper-classic.webp' },
-    dreamy: { label: 'Dreamy', price: 999, addonPrice: 699, rolls: 5, image: '/assets/cutouts/paper-dreamy-row.webp' },
-  };
-  // The sale ends at midnight US Eastern on Dec 1 (keep in sync with api/_config.js).
-  // After that the page shows regular prices, matching what checkout charges.
-  const SALE_ENDS_AT = new Date('2026-12-01T00:00:00-05:00');
-  const saleActive = Date.now() < SALE_ENDS_AT.getTime();
+  // Display prices come from the cart catalog (cart.js), which also handles the 12/1 sale end.
+  const CATALOG = window.SentimoCart.catalog;
+  const saleActive = CATALOG.saleActive;
+  const fmt = window.SentimoCart.formatCents;
   const PRODUCTS = {
     single: {
-      currentPrice: saleActive ? '$29.99' : '$49.99',
-      originalPrice: saleActive ? '$49.99' : '',
+      currentPrice: fmt(CATALOG.products.single.priceCents),
+      originalPrice: CATALOG.products.single.originalCents ? fmt(CATALOG.products.single.originalCents) : '',
       subtitle: 'for 1 printer',
       quantityHelp: 'Each single-printer option includes 1 printer and starter materials',
-      buttonLabel: 'Order Single Printer',
+      buttonLabel: 'Add Single Printer to Cart',
       printerCount: 1,
     },
     duo: {
-      currentPrice: saleActive ? '$49.99' : '$69.99',
-      originalPrice: saleActive ? '$69.99' : '',
+      currentPrice: fmt(CATALOG.products.duo.priceCents),
+      originalPrice: CATALOG.products.duo.originalCents ? fmt(CATALOG.products.duo.originalCents) : '',
       subtitle: 'for 2 printers',
       quantityHelp: 'Each 2-pack includes 2 printers (choose a color for each; the colors can match)',
-      buttonLabel: 'Order 2-Pack',
+      buttonLabel: 'Add 2-Pack to Cart',
       printerCount: 2,
     },
   };
@@ -148,7 +129,6 @@
     });
 
     updateColorSelection();
-    renderAddonApplied();
   }
 
   function requiredColorCount() {
@@ -284,235 +264,37 @@
     }
   });
 
-  // ===================== OPTIONAL THERMAL PAPER (FULL PRICE) =====================
-  function formatCents(cents) {
-    return '$' + (cents / 100).toFixed(2);
-  }
-
-  function paperPacks() {
-    return Object.values(paperQtys).reduce((sum, count) => sum + count, 0);
-  }
-
-  function updatePaperSelection() {
-    paperCards.forEach((card) => {
-      const key = card.dataset.paperCard;
-      const count = paperQtys[key];
-      card.classList.toggle('border-primary', count > 0);
-      card.classList.toggle('bg-primary/5', count > 0);
-      card.classList.toggle('border-gray-200', count === 0);
-      card.classList.toggle('dark:border-gray-700', count === 0);
-      const add = card.querySelector('[data-paper-add]');
-      const stepper = card.querySelector('[data-paper-stepper]');
-      add.classList.toggle('hidden', count > 0);
-      stepper.classList.toggle('hidden', count === 0);
-      stepper.classList.toggle('flex', count > 0);
-      card.querySelector('[data-paper-qty]').textContent = count;
-      card.querySelector('[data-paper-plus]').disabled = count >= MAX_PAPER_QTY;
-    });
-
-    if (paperHelp) {
-      const lines = Object.entries(paperQtys).filter(([, count]) => count > 0);
-      if (lines.length) {
-        const total = lines.reduce((sum, [key, count]) => sum + PAPER_BUNDLES[key].price * count, 0);
-        const summary = lines.map(([key, count]) => `${count} × ${PAPER_BUNDLES[key].label}`).join(', ');
-        paperHelp.textContent = `Added: ${summary} (${paperPacks()} ${paperPacks() === 1 ? 'pack' : 'packs'}) for ${formatCents(total)}.`;
-      } else {
-        paperHelp.textContent = 'Add as many packs of each as you like.';
-      }
-    }
-  }
-
-  function changePaper(key, delta) {
-    paperQtys[key] = Math.max(0, Math.min(MAX_PAPER_QTY, paperQtys[key] + delta));
-    updatePaperSelection();
-  }
-
-  paperCards.forEach((card) => {
-    const key = card.dataset.paperCard;
-    card.querySelector('[data-paper-add]').addEventListener('click', () => changePaper(key, 1));
-    card.querySelector('[data-paper-plus]').addEventListener('click', () => changePaper(key, 1));
-    card.querySelector('[data-paper-minus]').addEventListener('click', () => changePaper(key, -1));
-  });
-
-  updatePaperSelection();
-
   // ===================== SHIPPING DESTINATION =====================
   // Printer orders always clear the US free-shipping threshold.
   function updateShippingNote() {
     const ship = window.SentimoShipping;
     if (!orderShippingNote || !ship) return;
     orderShippingNote.textContent = ship.isInternational()
-      ? `Shipping to ${ship.countryName()} is ${formatCents(ship.quote({ subtotalCents: 0 }).cents)} per order. Delivery takes 5-14 days. Duties and taxes are the buyer’s responsibility.`
+      ? `Shipping to ${ship.countryName()} is ${fmt(ship.quote({ subtotalCents: 0 }).cents)} per order. Delivery takes 5-14 days. Duties and taxes are the buyer’s responsibility.`
       : 'Free shipping anywhere in the US. Delivery takes 2-5 days.';
   }
 
   window.SentimoShipping?.onChange(updateShippingNote);
   updateShippingNote();
 
-  // The discounted add-on stays visible in the form once the shopper accepts it.
-  function renderAddonApplied() {
-    if (!addonApplied) return;
-    addonApplied.classList.toggle('hidden', !addonChoice);
-    addonApplied.classList.toggle('flex', Boolean(addonChoice));
-    if (!addonChoice) return;
-    const bundle = PAPER_BUNDLES[addonChoice];
-    if (addonAppliedImg) addonAppliedImg.src = bundle.image;
-    if (addonAppliedText) {
-      addonAppliedText.textContent = `1 × ${bundle.label} pack (${bundle.rolls} rolls) for ${formatCents(bundle.addonPrice)} (regularly ${formatCents(bundle.price)}). Click ${PRODUCTS[selectedProduct]?.buttonLabel || 'Order'} to continue.`;
-    }
-  }
-
-  addonRemove?.addEventListener('click', () => {
-    addonChoice = null;
-    renderAddonApplied();
-    trackEvent('paper_addon_removed', {});
-  });
-
-  // ===================== PAPER ADD-ON POP-UP (discounted, 1 per order) =====================
-  function addonFocusable() {
-    return Array.from(addonModal.querySelectorAll('button')).filter((el) => !el.disabled);
-  }
-
-  function openAddonModal() {
-    if (!addonModal) return;
-    addonModal.classList.remove('hidden');
-    addonModal.classList.add('flex');
-    document.body.classList.add('overflow-hidden');
-    trackEvent('paper_addon_offer_shown', { product: selectedProduct });
-    addonModal.querySelector('[data-addon-choice="dreamy"]')?.focus();
-  }
-
-  function closeAddonModal() {
-    if (!addonModal) return;
-    addonModal.classList.add('hidden');
-    addonModal.classList.remove('flex');
-    document.body.classList.remove('overflow-hidden');
-    preorderBtn?.focus();
-  }
-
-  function isAddonModalOpen() {
-    return Boolean(addonModal) && !addonModal.classList.contains('hidden');
-  }
-
-  addonModal?.querySelectorAll('[data-addon-choice]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const bundle = button.dataset.addonChoice;
-      trackEvent('paper_addon_accepted', { bundle });
-      addonChoice = bundle;
-      closeAddonModal();
-      renderAddonApplied();
-      addonApplied?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    });
-  });
-
-  addonSkip?.addEventListener('click', () => {
-    trackEvent('paper_addon_declined', {});
-    closeAddonModal();
-    startCheckout();
-  });
-
-  addonClose?.addEventListener('click', closeAddonModal);
-  addonBackdrop?.addEventListener('click', closeAddonModal);
-
-  document.addEventListener('keydown', (event) => {
-    if (!isAddonModalOpen()) return;
-    if (event.key === 'Escape') {
-      closeAddonModal();
-    } else if (event.key === 'Tab') {
-      const items = addonFocusable();
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-  });
-
-  // ===================== PRE-ORDER BUTTON =====================
+  // ===================== ADD TO CART =====================
   preorderBtn?.addEventListener('click', () => {
     if (!hasCompleteColorSelection()) {
       updateColorSelection();
       return;
     }
-
-    // Anyone buying a printer without paper gets the discounted add-on offer first.
-    if (paperPacks() === 0 && !addonChoice && addonModal) {
-      openAddonModal();
-      return;
+    const added = window.SentimoCart.add({
+      type: 'printer',
+      product: selectedProduct,
+      colors: selectedColors.slice(0, requiredColorCount()),
+      quantity,
+    });
+    if (added) {
+      // Ready for another configuration; the cart drawer now shows the checkout prompt.
+      quantity = 1;
+      updateQtyDisplay();
     }
-
-    startCheckout();
   });
-
-  async function startCheckout() {
-    const colors = selectedColors.slice(0, requiredColorCount());
-    const country = window.SentimoShipping?.country() || 'US';
-    const payload = { quantity, product: selectedProduct, colors, country };
-    const paper = Object.entries(paperQtys)
-      .filter(([, count]) => count > 0)
-      .map(([bundle, count]) => ({ bundle, quantity: count }));
-    if (paper.length) payload.paper = paper;
-    if (addonChoice) payload.paper_addon = addonChoice;
-    if (window.SentimoTrack) payload.attribution = window.SentimoTrack.attribution();
-
-    // Track CTA click
-    trackEvent('checkout_started', { quantity, product: selectedProduct, colors, country, paper: paper.length ? paper : null, paper_addon: addonChoice });
-
-    // Set loading state
-    preorderBtn.disabled = true;
-    if (preorderBtnText) preorderBtnText.textContent = 'Processing...';
-    if (preorderBtnSpinner) preorderBtnSpinner.classList.remove('hidden');
-    if (preorderError) preorderError.classList.add('hidden');
-
-    try {
-      const response = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server error. Please ensure the Vercel dev server is running (not a static file server).');
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
-
-      if (data.url) {
-        if (window.SentimoTrack) {
-          // Checkout session exists: now it is a real InitiateCheckout.
-          const t = data.tracking;
-          if (t) {
-            const { event_id: eventId, ...custom } = t;
-            window.SentimoTrack.track('InitiateCheckout', custom, eventId);
-          }
-          window.SentimoTrack.navigate(data.url);
-        } else {
-          window.location.href = data.url;
-        }
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-    } catch (err) {
-      if (preorderError) {
-        preorderError.textContent = err.message || 'Unable to start checkout. Please try again.';
-        preorderError.classList.remove('hidden');
-      }
-
-      // Reset button
-      preorderBtn.disabled = !hasCompleteColorSelection();
-      if (preorderBtnText) preorderBtnText.textContent = PRODUCTS[selectedProduct]?.buttonLabel || 'Order Now';
-      if (preorderBtnSpinner) preorderBtnSpinner.classList.add('hidden');
-    }
-  }
 
   // ===================== CTA TRACKING =====================
   // data-track names the event; data-track-location (optional) says which button sent it.

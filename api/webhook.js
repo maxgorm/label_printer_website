@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import PREORDER_CONFIG from './_config.js';
 import { describePaper, parsePaperMetadata } from './_paper.js';
+import { colorCountsForPrinters, describePrinterLine, parsePrinterItems } from './_cart.js';
 import { buildPurchaseEvent, metaConfigured, reportingAttribution, sendCapiEvents } from './_meta.js';
 
 // Disable body parsing so we can read the raw body for signature verification
@@ -105,13 +106,30 @@ async function handleCheckoutCompleted(stripe, session) {
     (international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label);
   const quantity = parseInt(metadata.quantity, 10) || 1;
   const paperOnly = metadata.product_key === 'paper';
-  const product = paperOnly ? null : (PREORDER_CONFIG.products[metadata.product_key] ||
+  // Cart checkouts list every printer line in `printer_items`; older sessions have one
+  // product with its colors in printer_color_1/2.
+  const printerLines = paperOnly ? [] : parsePrinterItems(metadata);
+  const mixed = metadata.product_key === 'mixed';
+  const product = paperOnly || mixed ? null : (PREORDER_CONFIG.products[metadata.product_key] ||
     Object.values(PREORDER_CONFIG.products).find(({ slug }) => slug === metadata.product_slug) ||
     PREORDER_CONFIG.products[PREORDER_CONFIG.default_product]);
-  const productName = paperOnly ? 'Sentimo Thermal Paper' : (metadata.product_name || product.name);
-  const unitPrice = paperOnly ? null : (parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents);
-  const printerColors = paperOnly ? '' : formatPrinterColors(metadata.printer_colors);
-  const colorCounts = paperOnly ? {} : parseColorCounts(metadata, product.printer_count, quantity);
+  if (mixed && !printerLines.length) throw new Error('Mixed printer order is missing printer lines');
+  const productName = paperOnly ? 'Sentimo Thermal Paper' : (metadata.product_name || (product ? product.name : 'Sentimo Printers'));
+  // Per-package price; null when a cart mixes single printers and 2-Packs.
+  const unitPrice = paperOnly || mixed ? null : (parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents);
+  const printerColors = paperOnly ? '' : (printerLines.length > 1
+    ? printerLines.map(describePrinterLine).join('; ')
+    : formatPrinterColors(metadata.printer_colors));
+  const colorCounts = paperOnly ? {} : (printerLines.length
+    ? colorCountsForPrinters(printerLines)
+    : parseColorCounts(metadata, product.printer_count, quantity));
+  const cartItems = [
+    ...printerLines.map(({ product: key, colors, quantity: count }) => ({
+      type: 'printer', product: key, slug: PREORDER_CONFIG.products[key].slug, colors, quantity: count,
+    })),
+    ...Object.entries(parsePaperMetadata(metadata).listed).map(([bundle, packs]) => ({ type: 'paper', bundle, quantity: packs })),
+    ...(metadata.paper_addon ? [{ type: 'paper', bundle: metadata.paper_addon, quantity: 1, addon: true }] : []),
+  ];
   const paper = parsePaperMetadata(metadata);
   if (paperOnly && !Object.keys(paper.bundles).length) {
     throw new Error('Paper order is missing thermal paper bundles');
@@ -128,13 +146,13 @@ async function handleCheckoutCompleted(stripe, session) {
   if (priorError) throw priorError;
 
   if (!priorOrder) {
-    const { error: dbError } = await supabase.from('preorders').insert({
+    const orderRow = {
       stripe_checkout_session_id: fullSession.id,
       stripe_payment_intent_id: fullSession.payment_intent,
       stripe_customer_id: fullSession.customer || null,
       email: customerEmail,
       full_name: customerName,
-      product_slug: paperOnly ? 'sentimo-paper' : (metadata.product_slug || product.slug),
+      product_slug: paperOnly ? 'sentimo-paper' : (metadata.product_slug || (product ? product.slug : 'sentimo-mixed')),
       channel: 'web',
       color_counts: colorCounts,
       paper_bundles: paper.bundles,
@@ -163,7 +181,15 @@ async function handleCheckoutCompleted(stripe, session) {
         paperSummary ? `Thermal paper: ${paperSummary}` : '',
         customerPhone ? `Phone: ${customerPhone}` : '',
       ].filter(Boolean).join(' | ') || null,
-    });
+    };
+
+    let { error: dbError } = await supabase.from('preorders').insert({ ...orderRow, cart_items: cartItems });
+    // Until migration_009 adds the cart_items column, save the order without it. Colors,
+    // paper, and the notes line still hold everything needed to fulfill the order.
+    if (dbError && isMissingColumn(dbError, 'cart_items')) {
+      console.error('preorders.cart_items is missing; apply supabase/migration_009_cart_items.sql');
+      ({ error: dbError } = await supabase.from('preorders').insert(orderRow));
+    }
 
     // A concurrent delivery can still race the read; the unique session ID is authoritative.
     if (dbError && dbError.code !== '23505') throw dbError;
@@ -289,6 +315,11 @@ async function handleRefund(charge) {
       .eq('id', order.id);
     if (updateError) throw updateError;
   }
+}
+
+/** True when PostgREST/Postgres rejected an insert because `column` does not exist yet. */
+function isMissingColumn(error, column) {
+  return (error.code === 'PGRST204' || error.code === '42703') && String(error.message || '').includes(column);
 }
 
 export function parseColorCounts(metadata, printerCount, packageQuantity) {

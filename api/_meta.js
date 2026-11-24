@@ -13,6 +13,7 @@
  */
 import { createHash } from 'node:crypto';
 import PREORDER_CONFIG from './_config.js';
+import { parsePrinterItems } from './_cart.js';
 import { parsePaperMetadata } from './_paper.js';
 
 const DEFAULT_API_VERSION = 'v23.0';
@@ -117,7 +118,16 @@ export function purchaseValueCents(session) {
 /** Stable product IDs (the product/paper slugs) with quantities, from session metadata. */
 export function contentsFromMetadata(metadata = {}) {
   const contents = [];
-  if (metadata.product_key && metadata.product_key !== 'paper') {
+  const printers = parsePrinterItems(metadata);
+  if (printers.length) {
+    // Cart orders: one content entry per product, summed across color lines.
+    const bySlug = new Map();
+    for (const line of printers) {
+      const slug = PREORDER_CONFIG.products[line.product].slug;
+      bySlug.set(slug, (bySlug.get(slug) || 0) + line.quantity);
+    }
+    for (const [id, quantity] of bySlug) contents.push({ id, quantity });
+  } else if (metadata.product_key && metadata.product_key !== 'paper') {
     contents.push({ id: metadata.product_slug, quantity: parseInt(metadata.quantity, 10) || 1 });
   }
   const paper = parsePaperMetadata(metadata);

@@ -138,7 +138,8 @@ const PREORDER_CONFIG = {
 
   // URLs
   success_url: '/order-confirmed.html?session_id={CHECKOUT_SESSION_ID}',
-  cancel_url: '/#reserve',
+  // The cart reopens when a shopper backs out of Stripe Checkout.
+  cancel_url: '/#cart',
 
   // Support
   support_email: 'support@sentimonotes.com',

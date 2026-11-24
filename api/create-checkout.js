@@ -1,12 +1,11 @@
 import Stripe from 'stripe';
 import PREORDER_CONFIG, { printerPriceCents } from './_config.js';
+import { describePrinterLine, normalizeCart, printerItemsMetadata } from './_cart.js';
 import { attributionMetadata, checkoutEventId, commerceData, contentsFromMetadata } from './_meta.js';
 import {
   describePaper,
   findPaperStockShortage,
   mergeBundles,
-  normalizePaperAddon,
-  normalizePaperItems,
   normalizeShippingCountry,
   rollCountsFor,
   shippingCentsFor,
@@ -21,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Stripe secret key is not configured' });
   }
 
-  const { quantity, product: productKey, colors, paper, paper_addon: paperAddon, country: countryInput } = req.body || {};
+  const { country: countryInput } = req.body || {};
 
   // Older cached pages send no country; those orders stay US-only.
   const country = normalizeShippingCountry(countryInput);
@@ -29,43 +28,30 @@ export default async function handler(req, res) {
   const international = country !== 'US';
   const shipLabel = international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label;
 
-  const paperResult = normalizePaperItems(paper);
-  if (paperResult.error) return res.status(400).json({ error: paperResult.error });
-  const addonResult = normalizePaperAddon(paperAddon);
-  if (addonResult.error) return res.status(400).json({ error: addonResult.error });
-  const listedPaper = paperResult.items;
-  const addon = addonResult.addon;
+  // The cart: printer lines, full-price paper packs, and the optional discounted add-on pack.
+  const cart = normalizeCart(req.body || {});
+  if (cart.error) return res.status(400).json({ error: cart.error });
+  const { printers, paper: listedPaper, addon } = cart;
+  const paperOnly = printers.length === 0;
 
-  // Paper-only orders name no printer. Anything else is a printer order.
-  const paperOnly = productKey === undefined && colors === undefined && Object.keys(listedPaper).length > 0;
-  if (paperOnly && addon) {
-    return res.status(400).json({ error: 'The paper add-on price requires a printer in your order' });
-  }
+  const printerProductKeys = [...new Set(printers.map((line) => line.product))];
+  // One product type keeps the classic metadata shape; a mix of single printers and 2-Packs is "mixed".
+  const metaProductKey = paperOnly ? 'paper' : (printerProductKeys.length === 1 ? printerProductKeys[0] : 'mixed');
+  const metaProduct = PREORDER_CONFIG.products[metaProductKey] || null;
+  const printerPackages = printers.reduce((sum, line) => sum + line.quantity, 0);
+  const printerUnits = printers.reduce((sum, line) => sum + line.quantity * PREORDER_CONFIG.products[line.product].printer_count, 0);
 
-  const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
-  const selectedProductKey = productKey || PREORDER_CONFIG.default_product;
-  const selectedProduct = paperOnly ? null : PREORDER_CONFIG.products[selectedProductKey];
-
-  if (!paperOnly && !selectedProduct) {
-    return res.status(400).json({ error: 'Invalid product selection' });
-  }
-
-  let colorSummary = '';
+  const colorLabels = (colors) => colors.map((color) => PREORDER_CONFIG.color_labels[color]).join(', ');
   let colorMetadata = {};
-  if (!paperOnly) {
-    const requiredColorCount = selectedProduct.printer_count;
-    if (!Array.isArray(colors) || colors.length !== requiredColorCount || colors.some((color) => !PREORDER_CONFIG.available_colors.includes(color))) {
-      return res.status(400).json({
-        error: `Please select ${requiredColorCount} valid printer color${requiredColorCount === 1 ? '' : 's'}`,
-      });
-    }
-
-    colorSummary = colors.map((color) => PREORDER_CONFIG.color_labels[color]).join(', ');
+  if (printers.length === 1) {
+    const [{ colors }] = printers;
     colorMetadata = {
-      printer_colors: colorSummary,
+      printer_colors: colorLabels(colors),
       printer_color_1: PREORDER_CONFIG.color_labels[colors[0]],
       ...(colors[1] ? { printer_color_2: PREORDER_CONFIG.color_labels[colors[1]] } : {}),
     };
+  } else if (printers.length > 1) {
+    colorMetadata = { printer_colors: printers.map(describePrinterLine).join('; ').slice(0, 500) };
   }
 
   const bundles = PREORDER_CONFIG.paper_bundles;
@@ -77,13 +63,14 @@ export default async function handler(req, res) {
   if (stockError) return res.status(409).json({ error: stockError });
 
   const paperTotalPacks = Object.values(paperAll).reduce((sum, packs) => sum + packs, 0);
-  // Sale price until the sale ends, then the regular price.
-  const unitPriceCents = paperOnly ? 0 : printerPriceCents(selectedProduct);
   const lineItems = [];
   let subtotalCents = 0;
 
-  if (!paperOnly) {
-    subtotalCents += unitPriceCents * qty;
+  // One Stripe line per printer cart line. Sale price until the sale ends, then the regular price.
+  for (const line of printers) {
+    const product = PREORDER_CONFIG.products[line.product];
+    const unitPriceCents = printerPriceCents(product);
+    subtotalCents += unitPriceCents * line.quantity;
     lineItems.push({
       price_data: {
         currency: PREORDER_CONFIG.currency,
@@ -91,12 +78,12 @@ export default async function handler(req, res) {
         tax_behavior: 'exclusive',
         product_data: {
           tax_code: PREORDER_CONFIG.product_tax_code,
-          name: selectedProduct.name,
-          description: `${selectedProduct.description} Colors: ${colorSummary}.`,
+          name: product.name,
+          description: `${product.description} Colors: ${colorLabels(line.colors)}.`,
         },
         unit_amount: unitPriceCents,
       },
-      quantity: qty,
+      quantity: line.quantity,
     });
   }
 
@@ -128,7 +115,7 @@ export default async function handler(req, res) {
         tax_behavior: 'exclusive',
         product_data: {
           tax_code: PREORDER_CONFIG.paper_tax_code,
-          name: `${bundle.name} (printer add-on price)`,
+          name: `${bundle.name} (bundle deal with your printer)`,
           description: `${bundle.description} Add-on price with your printer; regular price ${formatDollars(bundle.price_cents)}.`,
           metadata: { paper_bundle: addon, paper_addon: 'true' },
         },
@@ -172,14 +159,17 @@ export default async function handler(req, res) {
         ] },
       }],
       metadata: {
-        product_key: paperOnly ? 'paper' : selectedProductKey,
-        product_slug: paperOnly ? 'sentimo-paper' : selectedProduct.slug,
-        product_name: paperOnly ? 'Sentimo Thermal Paper' : selectedProduct.name,
-        unit_price_cents: String(unitPriceCents),
-        printer_count: paperOnly ? '0' : String(selectedProduct.printer_count),
+        product_key: metaProductKey,
+        product_slug: paperOnly ? 'sentimo-paper' : (metaProduct ? metaProduct.slug : 'sentimo-mixed'),
+        product_name: paperOnly ? 'Sentimo Thermal Paper' : (metaProduct ? metaProduct.name : 'Sentimo Printers'),
+        // Per-package price when every printer line is the same product; empty for a mix.
+        unit_price_cents: paperOnly ? '0' : (metaProduct ? String(printerPriceCents(metaProduct)) : ''),
+        // Printers in one package for a single product type; total printers for a mix.
+        printer_count: paperOnly ? '0' : String(metaProduct ? metaProduct.printer_count : printerUnits),
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: shipLabel,
-        quantity: String(paperOnly ? paperTotalPacks : qty),
+        quantity: String(paperOnly ? paperTotalPacks : printerPackages),
+        ...(paperOnly ? {} : { printer_items: printerItemsMetadata(printers) }),
         shipping_cents: String(shippingCents),
         shipping_country: country,
         ...colorMetadata,

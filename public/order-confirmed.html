@@ -114,6 +114,8 @@
         (function () {
             var sessionId = new URLSearchParams(window.location.search).get('session_id');
             if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) return;
+            // The order is placed, so empty the website cart (cart.js).
+            try { localStorage.removeItem('sentimo_cart_v1'); } catch (e) { /* ignore */ }
             var flagKey = 'sentimo_purchase_' + sessionId;
             var gaFlagKey = 'sentimo_ga_purchase_' + sessionId;
             fetch('/api/order-purchase?session_id=' + encodeURIComponent(sessionId), { cache: 'no-store' })

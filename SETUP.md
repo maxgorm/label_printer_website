@@ -38,6 +38,7 @@ Copy `.env.example` and fill in real values. Set these as Vercel Environment Var
 3. Run the migration in `supabase/migration_001_preorders.sql`
 4. Run `supabase/migration_002_orders_inventory.sql` for color counts and inventory
 4a. Run `migration_003`, then `migration_004` (order numbers), then `migration_005_paper_and_tracking.sql` (thermal paper stock, shipping charge, tracking columns)
+4b. Run `migration_006` through `migration_008`, then `migration_009_cart_items.sql` (per-line cart contents on each order)
 5. Copy your project URL and service role key into env vars
 
 ---
