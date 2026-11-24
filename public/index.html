@@ -52,9 +52,9 @@
 
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css?v=20261124-paper" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261124-shop2" />
     <!-- Tailwind (built by npm run build:css) -->
-    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261124-paper" />
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261124-shop" />
     <link rel="canonical" href="https://www.sentimonotes.com/" />
     <script type="application/ld+json">
 {
@@ -313,42 +313,42 @@
     </section>
 
     <!-- ===================== ORDER BLOCK ===================== -->
-    <section id="reserve" class="py-14 lg:py-10 scroll-reveal">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid min-w-0 lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-8 lg:gap-10 items-start">
+    <section id="reserve" class="pt-5 pb-10 lg:py-12 scroll-reveal">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="grid min-w-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-5 lg:gap-12 items-start">
                 <!-- Image Carousel (Left) -->
-                <div class="relative w-full min-w-0 lg:col-start-1 lg:row-start-1 lg:max-w-[32rem] lg:justify-self-center">
+                <div class="relative w-full min-w-0 lg:sticky lg:top-24">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
-                        <div id="carousel-stage" class="aspect-square relative overflow-hidden">
+                        <div id="carousel-stage" class="gallery-stage relative overflow-hidden bg-surface-light">
                             <!-- Product video (last gallery item). The <video> is created on first selection so it costs nothing on page load. -->
                             <div id="carousel-video-wrap" class="absolute inset-0 hidden items-center justify-center bg-black" data-video-src="/assets/opt/SentimoProductVid-720p.mp4" data-video-poster="/assets/opt/printer-notes.webp"></div>
-                            <img id="carousel-img" src="/assets/opt/Hero.webp" srcset="/assets/opt/sizes/Hero-400.webp 400w, /assets/opt/sizes/Hero-800.webp 800w, /assets/opt/Hero.webp 1254w" sizes="(min-width: 1024px) 510px, 94vw" width="1254" height="1254" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover transition-opacity duration-300" />
+                            <img id="carousel-img" src="/assets/opt/Hero.webp" srcset="/assets/opt/sizes/Hero-400.webp 400w, /assets/opt/sizes/Hero-800.webp 800w, /assets/opt/Hero.webp 1254w" sizes="(min-width: 1152px) 580px, (min-width: 1024px) 50vw, 94vw" width="1254" height="1254" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover transition-opacity duration-300" />
                         </div>
                     </div>
                     <!-- Thumbnails -->
-                    <div class="flex gap-2 sm:gap-3 mt-3 overflow-x-auto pb-2">
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="0">
+                    <div class="flex gap-2 sm:gap-3 mt-2.5 lg:mt-3 overflow-x-auto pb-1">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-primary w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="0">
                             <img src="/assets/opt/sizes/Hero-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printers with love notes" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="1">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="1">
                             <img src="/assets/opt/sizes/3-w-printer-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printer with a handwritten note" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="2">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="2">
                             <img src="/assets/opt/sizes/4-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printing a handwritten note" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="3">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="3">
                             <img src="/assets/opt/sizes/5-no-logo-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printer being used at a table" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="4">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="4">
                             <img src="/assets/opt/sizes/6-160.webp" width="160" height="160" loading="lazy" alt="Pink and white Sentimo printers" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="5">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="5">
                             <img src="/assets/opt/sizes/7-160.webp" width="160" height="160" loading="lazy" alt="Sentimo printers and included accessories" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="6">
+                        <button class="carousel-thumb rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="6">
                             <img src="/assets/opt/sizes/8-160.webp" width="160" height="160" loading="lazy" alt="Pink, white, and black Sentimo printers" class="w-full h-full object-cover" />
                         </button>
-                        <button class="carousel-thumb relative rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 transition-colors" data-index="7" aria-label="Play the Sentimo product video">
+                        <button class="carousel-thumb relative rounded-xl overflow-hidden border-2 border-transparent hover:border-primary/50 w-12 h-12 sm:w-16 sm:h-16 lg:w-[4.5rem] lg:h-[4.5rem] flex-shrink-0 transition-colors" data-index="7" aria-label="Play the Sentimo product video">
                             <img src="/assets/opt/sizes/printer-notes-160.webp" width="160" height="160" loading="lazy" alt="" class="w-full h-full object-cover" />
                             <span class="absolute inset-0 flex items-center justify-center bg-black/30" aria-hidden="true">
                                 <svg class="w-6 h-6 sm:w-7 sm:h-7 drop-shadow" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff" fill-opacity=".92"/><path d="M10 8.2v7.6l6-3.8z" fill="#F53F7B"/></svg>
@@ -365,167 +365,131 @@
                 </div>
 
                 <!-- Order Form (Right) -->
-                <div class="w-full min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-[8.25rem] lg:max-w-[29rem] lg:justify-self-end text-center lg:text-left">
-                    <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Order Sentimo</h2>
+                <div id="order-panel" class="w-full min-w-0 lg:max-w-[30rem]">
+                    <h2 id="order-title" class="text-[1.75rem] sm:text-4xl lg:text-[2.125rem] xl:text-[2.5rem] font-extrabold leading-[1.1] tracking-tight">The Sentimo Duo Pack</h2>
+                    <p id="order-subtitle" class="mt-1 text-[0.9375rem] lg:text-lg text-text-muted-light dark:text-text-muted-dark">One for you. One for someone you love.</p>
 
-                    <div id="price-original-wrap" class="mb-1.5">
-                        <span id="price-original" class="text-lg text-text-muted-light dark:text-text-muted-dark line-through">$69.99</span>
-                    </div>
-                    <div class="mb-5 flex flex-wrap items-baseline justify-center lg:justify-start gap-2">
-                        <span id="price-current" class="text-4xl md:text-[3rem] font-bold text-primary">$49.99</span>
-                        <span id="price-subtitle" class="text-base md:text-lg text-text-muted-light dark:text-text-muted-dark">for 2 printers</span>
-                        <span id="sale-badge" class="inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">SALE ENDS 12/1</span>
+                    <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                        <span id="price-current" class="text-[2rem] lg:text-[2.75rem] font-extrabold leading-none tracking-tight text-primary">$49.99</span>
+                        <span id="price-original" class="text-base sm:text-lg lg:text-xl font-medium text-text-muted-light line-through dark:text-text-muted-dark">$69.99</span>
+                        <span id="sale-badge" class="whitespace-nowrap rounded-full bg-primary/10 px-2.5 py-1 text-xs sm:px-3 sm:text-sm font-bold text-primary"><span id="price-save">Save $20</span> &middot; ends 12/1</span>
                     </div>
 
-                    <p class="text-sm sm:text-base text-text-muted-light dark:text-text-muted-dark mb-6">
-                        Now shipping to the US and 17 other countries. Choose where it&rsquo;s going below.
+                    <p class="mt-3 flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+                        <svg class="h-5 w-5 flex-none text-text-main-light dark:text-text-main-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3v3h-7"/><circle cx="6.5" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/></svg>
+                        <span id="order-shipping-note" aria-live="polite">Free U.S. shipping &middot; Delivered in 2-5 days</span>
                     </p>
 
-                    <!-- Product Selection -->
-                    <fieldset class="mb-5 text-left">
-                        <legend class="font-medium text-sm mb-2">Choose your setup:</legend>
-                        <div class="grid sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Choose your Sentimo setup">
-                            <div class="relative">
-                                <input id="product-single" type="radio" name="product" value="single" class="sr-only" />
-                                <label for="product-single" data-product-option="single" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 pr-12 transition-colors hover:border-primary/50">
-                                    <span class="flex items-start justify-between gap-2">
-                                        <span class="font-bold">Single Printer</span>
-                                        <span data-sale-original class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark line-through">$49.99</span>
-                                    </span>
-                                    <span data-regular-text="1 printer for $49.99" class="text-sm text-text-muted-light dark:text-text-muted-dark">1 printer for $29.99</span>
-                                    <span class="text-xs font-medium text-primary">Great for a shared family printer</span>
-                                </label>
-                                <button id="single-info-button" type="button" class="group absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-primary/50 text-sm font-bold leading-none text-primary transition-colors hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/40" aria-label="Why order one?" aria-expanded="false" aria-controls="single-info-popover" title="Why order one?">
-                                    i
-                                    <span role="tooltip" class="pointer-events-none invisible absolute right-0 top-full z-30 mt-2 w-max rounded-md bg-gray-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:visible group-hover:opacity-100">Why order one?</span>
-                                </button>
-                                <div id="single-info-popover" class="absolute right-0 top-full z-20 mt-2 hidden w-[min(20rem,calc(100vw-3rem))] rounded-xl border border-primary/20 bg-surface-light p-4 text-left shadow-xl dark:bg-surface-dark" role="dialog" aria-labelledby="single-info-title" aria-describedby="single-info-description">
-                                    <div class="flex items-start justify-between gap-3">
-                                        <p id="single-info-title" class="font-bold text-text-main-light dark:text-text-main-dark">Why order one?</p>
-                                        <button id="single-info-close" type="button" class="text-xl leading-none text-text-muted-light hover:text-primary dark:text-text-muted-dark" aria-label="Close why order one message">&times;</button>
-                                    </div>
-                                    <p id="single-info-description" class="mt-2 text-sm leading-relaxed text-text-muted-light dark:text-text-muted-dark">One Sentimo printer can receive notes from many people. Send one to Grandma, and all the grandkids can send notes through the app, even if they don&rsquo;t have Sentimo printers themselves.</p>
-                                </div>
-                            </div>
-                            <label data-product-option="duo" class="product-option relative flex cursor-pointer flex-col gap-2 rounded-xl border-2 border-primary bg-primary/5 p-4 transition-colors">
-                                <input type="radio" name="product" value="duo" class="sr-only" checked />
-                                <span class="flex items-start justify-between gap-2">
-                                    <span class="font-bold">2-Pack</span>
-                                    <span class="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">Best value</span>
+                    <!-- Set -->
+                    <fieldset class="mt-5 lg:mt-6">
+                        <legend class="mb-2 text-[0.9375rem] font-bold">Choose your set</legend>
+                        <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+                            <label data-product-option="single" class="product-option">
+                                <input type="radio" name="product" value="single" class="sr-only" />
+                                <span class="radio-dot" aria-hidden="true"></span>
+                                <span class="min-w-0">
+                                    <span class="block font-bold leading-tight">Single</span>
+                                    <span data-option-price="single" class="block text-sm text-text-muted-light dark:text-text-muted-dark">$29.99</span>
                                 </span>
-                                <span data-regular-text="2 printers for $69.99" class="text-sm text-text-muted-light dark:text-text-muted-dark">2 printers for $49.99</span>
-                                <span class="text-xs font-medium text-primary">One for you, one for them</span>
+                            </label>
+                            <label data-product-option="duo" class="product-option is-selected">
+                                <input type="radio" name="product" value="duo" class="sr-only" checked />
+                                <span class="radio-dot" aria-hidden="true"></span>
+                                <span class="min-w-0">
+                                    <span class="block font-bold leading-tight">Duo-Pack</span>
+                                    <span data-option-price="duo" class="block text-sm text-text-muted-light dark:text-text-muted-dark">$49.99</span>
+                                </span>
+                                <span class="absolute -top-2.5 right-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">Best value</span>
                             </label>
                         </div>
                     </fieldset>
 
-                    <!-- Printer Color Selection -->
-                    <fieldset id="color-selection" class="mb-5 text-left" aria-describedby="color-selection-help">
-                        <legend class="font-medium text-sm mb-2">Choose your printer color(s):</legend>
-                        <p id="color-selection-help" class="text-xs text-text-muted-light dark:text-text-muted-dark mb-3" aria-live="polite">Choose two colors for your 2-pack. You can choose the same color twice.</p>
-                        <div id="color-pickers" class="space-y-4">
-                            <div class="color-picker" data-printer-index="0">
-                                <p class="text-sm font-medium mb-2">Printer 1</p>
-                                <div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Printer 1 color">
-                                    <label data-color-option="pink" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
-                                        <input class="sr-only color-radio" type="radio" name="printer-color-0" value="pink" data-printer-index="0" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-pink.webp" alt="Pink Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">Pink</span>
+                    <!-- Colors -->
+                    <fieldset id="color-selection" class="mt-5">
+                        <legend class="sr-only">Choose printer colors</legend>
+                        <div id="color-pickers" class="grid grid-cols-2 gap-3 sm:gap-6">
+                            <div class="color-picker min-w-0" data-printer-index="0">
+                                <p class="mb-2 text-[0.9375rem] font-bold">Your Sentimo <span data-color-name="0" class="font-medium text-text-muted-light dark:text-text-muted-dark">&middot; Pink</span></p>
+                                <div class="grid grid-cols-3 gap-1.5 sm:gap-2" role="radiogroup" aria-label="Your Sentimo color">
+                                    <label data-color-option="pink" data-printer-index="0" class="color-option" title="Pink">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-0" value="pink" data-printer-index="0" checked />
+                                        <img src="/assets/cutouts/printer-pink.webp" alt="Pink" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
-                                    <label data-color-option="white" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="white" data-printer-index="0" class="color-option" title="White">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-0" value="white" data-printer-index="0" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-white.webp" alt="White Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">White</span>
+                                        <img src="/assets/cutouts/printer-white.webp" alt="White" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
-                                    <label data-color-option="black" data-printer-index="0" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="black" data-printer-index="0" class="color-option" title="Black">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-0" value="black" data-printer-index="0" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-black.webp" alt="Black Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">Black</span>
+                                        <img src="/assets/cutouts/printer-black.webp" alt="Black" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
                                 </div>
                             </div>
-                            <div class="color-picker" data-printer-index="1">
-                                <p class="text-sm font-medium mb-2">Printer 2</p>
-                                <div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Printer 2 color">
-                                    <label data-color-option="pink" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                            <div class="color-picker min-w-0" data-printer-index="1">
+                                <p class="mb-2 text-[0.9375rem] font-bold">Their Sentimo <span data-color-name="1" class="font-medium text-text-muted-light dark:text-text-muted-dark">&middot; White</span></p>
+                                <div class="grid grid-cols-3 gap-1.5 sm:gap-2" role="radiogroup" aria-label="Their Sentimo color">
+                                    <label data-color-option="pink" data-printer-index="1" class="color-option" title="Pink">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-1" value="pink" data-printer-index="1" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-pink.webp" alt="Pink Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">Pink</span>
+                                        <img src="/assets/cutouts/printer-pink.webp" alt="Pink" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
-                                    <label data-color-option="white" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
-                                        <input class="sr-only color-radio" type="radio" name="printer-color-1" value="white" data-printer-index="1" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-white.webp" alt="White Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">White</span>
+                                    <label data-color-option="white" data-printer-index="1" class="color-option" title="White">
+                                        <input class="sr-only color-radio" type="radio" name="printer-color-1" value="white" data-printer-index="1" checked />
+                                        <img src="/assets/cutouts/printer-white.webp" alt="White" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
-                                    <label data-color-option="black" data-printer-index="1" class="color-option w-24 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors hover:border-primary/50">
+                                    <label data-color-option="black" data-printer-index="1" class="color-option" title="Black">
                                         <input class="sr-only color-radio" type="radio" name="printer-color-1" value="black" data-printer-index="1" />
-                                        <span class="mx-auto block h-16 w-16"><img src="/assets/cutouts/printer-black.webp" alt="Black Sentimo printer" loading="lazy" class="h-full w-full object-contain" /></span>
-                                        <span class="mt-1 block text-xs font-medium">Black</span>
+                                        <img src="/assets/cutouts/printer-black.webp" alt="Black" loading="lazy" class="h-full w-full object-contain" />
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </fieldset>
 
-                    <!-- Quantity Selector -->
-                    <div class="flex flex-col items-center lg:items-start gap-2 mb-5">
-                        <div class="flex items-center gap-3">
-                            <label for="quantity-display" class="font-medium text-sm">Printer quantity:</label>
-                            <div class="flex items-center border border-gray-200 dark:border-gray-700 rounded-full overflow-hidden bg-surface-light dark:bg-surface-dark">
-                                <button id="qty-minus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
-                                <span id="quantity-display" class="px-4 py-1.5 text-lg font-bold min-w-[3rem] text-center">1</span>
-                                <button id="qty-plus" class="px-4 py-1.5 text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
-                            </div>
+                    <!-- Quantity -->
+                    <div class="mt-5 flex items-center justify-between gap-3">
+                        <span id="quantity-label" class="text-[0.9375rem] font-bold">Quantity of sets</span>
+                        <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-labelledby="quantity-label">
+                            <button id="qty-minus" type="button" class="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Decrease quantity">&minus;</button>
+                            <span id="quantity-display" class="w-7 text-center font-bold" aria-live="polite">1</span>
+                            <button id="qty-plus" type="button" class="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Increase quantity">&plus;</button>
                         </div>
-                        <p id="quantity-help" class="text-xs text-text-muted-light dark:text-text-muted-dark">Each 2-pack includes 2 printers (one for you, one for them)</p>
                     </div>
 
-                    <!-- Shipping Destination -->
-                    <div class="mb-5 text-left">
-                        <label for="order-ship-country" class="block font-medium text-sm mb-2">Ship to:</label>
-                        <select id="order-ship-country" data-ship-country class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-3 py-2 text-sm focus:border-primary focus:ring-primary" aria-describedby="order-shipping-note"></select>
-                        <p id="order-shipping-note" class="mt-2 text-xs text-text-muted-light dark:text-text-muted-dark" aria-live="polite">Free shipping anywhere in the US. Delivery takes 2-5 days.</p>
+                    <!-- Ship to -->
+                    <div class="ship-to mt-4 flex items-center justify-between gap-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark pl-4 focus-within:border-primary">
+                        <label for="order-ship-country" class="flex-none text-[0.9375rem] font-bold">Ship to</label>
+                        <select id="order-ship-country" data-ship-country class="min-w-0 flex-1 border-0 bg-transparent py-2.5 pr-9 text-right text-sm font-medium focus:ring-0" aria-describedby="order-shipping-note"></select>
                     </div>
+                    <p id="order-duties-note" class="mt-1.5 hidden text-xs text-text-muted-light dark:text-text-muted-dark">Duties and taxes for international orders are paid on delivery.</p>
+
+                    <!-- Optional paper refills: collapsible on mobile, always open on desktop -->
+                    <details id="paper" class="paper-refills mt-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 lg:rounded-none lg:border-0">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 lg:cursor-default lg:px-0 lg:pt-1 lg:pb-2">
+                            <span class="text-[0.9375rem] font-bold">Optional paper refills <span id="refills-count" class="hidden font-medium text-primary"></span></span>
+                            <svg class="refills-chevron h-5 w-5 flex-none transition-transform lg:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"/></svg>
+                        </summary>
+                        <div class="space-y-2 px-3 pb-3 lg:px-0 lg:pb-0">
+                            <label data-refill="classic" class="refill-option">
+                                <input type="checkbox" value="classic" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-classic.webp" alt="" loading="lazy" class="h-10 w-10 object-contain" /></span>
+                                <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Classic</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 3 white rolls</span></span>
+                                <span data-refill-price="classic" class="flex-none text-right text-sm leading-tight"><span data-refill-regular class="block text-xs text-text-muted-light line-through dark:text-text-muted-dark">$6.99</span><strong data-refill-now class="font-bold">$4.99</strong></span>
+                            </label>
+                            <label data-refill="dreamy" class="refill-option">
+                                <input type="checkbox" value="dreamy" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="" loading="lazy" class="h-8 w-16 object-contain" /></span>
+                                <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Dreamy</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 5 assorted rolls</span></span>
+                                <span data-refill-price="dreamy" class="flex-none text-right text-sm leading-tight"><span data-refill-regular class="block text-xs text-text-muted-light line-through dark:text-text-muted-dark">$9.99</span><strong data-refill-now class="font-bold">$6.99</strong></span>
+                            </label>
+                            <p id="refills-note" class="px-1 text-xs text-text-muted-light dark:text-text-muted-dark">One pack is bundle priced with a printer. Sticker paper; each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
+                            <button id="paper-only-btn" type="button" class="hidden px-1 text-left text-sm font-medium text-primary underline underline-offset-2 hover:text-primary-hover" data-track="click_paper_only" data-track-location="order_form">Only need paper? Add it without a printer</button>
+                        </div>
+                    </details>
 
                     <!-- Add to cart (cart.js opens the cart with a checkout prompt) -->
-                    <button id="preorder-btn" disabled class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-lg w-full" data-track="click_add_to_cart" data-track-location="order_form">
-                        <span id="preorder-btn-text">Add 2-Pack to Cart</span>
+                    <button id="preorder-btn" type="button" class="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 text-lg font-bold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary-hover hover:shadow-primary/50 disabled:cursor-not-allowed disabled:opacity-50" data-track="click_add_to_cart" data-track-location="order_form">
+                        <span id="preorder-btn-text" data-cta-label>Add Duo-Pack to Cart &middot; $49.99</span>
                     </button>
-                    <p class="text-xs text-text-muted-light dark:text-text-muted-dark mt-3">
-                        Paper refills can be added in your cart, including one pack at a discounted price with a printer.
-                    </p>
-                </div>
-
-                <!-- Thermal paper: after the order form on mobile, under the gallery on desktop -->
-                <div id="paper" class="w-full min-w-0 lg:col-start-1 lg:row-start-2 lg:max-w-[32rem] lg:justify-self-center">
-                    <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-surface-light dark:bg-surface-dark p-5 sm:p-6 shadow-card">
-                        <div class="text-center mb-5">
-                            <h2 class="text-2xl font-bold">Thermal paper rolls</h2>
-                            <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Sticker thermal paper. Classic is 3 white rolls; Dreamy is 5 rolls in white, lavender, yellow, pink, and blue. Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes. Add as many packs as you like to your cart. With a printer in your cart, one pack is discounted.</p>
-                        </div>
-                        <div class="flex flex-wrap justify-center gap-2 sm:gap-3" role="group" aria-label="Thermal paper packs">
-                            <div data-standalone-card="classic" class="paper-card flex w-[calc((100%-1rem)/3)] sm:w-36 flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
-                                <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
-                                <span class="mt-1 block text-xs font-medium">Classic</span>
-                                <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
-                                <span class="block text-xs font-bold text-primary">$6.99</span>
-                                <div class="mt-auto pt-1.5">
-                                    <button type="button" data-standalone-add="classic" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Classic pack to cart">Add to cart</button>
-                                    <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
-                                </div>
-                            </div>
-                            <div data-standalone-card="dreamy" class="paper-card flex w-[calc((100%-0.5rem)/2)] sm:w-[10.5rem] flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
-                                <span class="mx-auto block h-20 w-full"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="Five rolls of thermal paper in white, lavender, yellow, pink, and blue" loading="lazy" class="h-full w-full object-contain" /></span>
-                                <span class="mt-1 block text-xs font-medium">Dreamy</span>
-                                <span class="block px-1 text-[11px] text-text-muted-light dark:text-text-muted-dark">5 rolls: white, lavender, yellow, pink, blue</span>
-                                <span class="block text-xs font-bold text-primary">$9.99</span>
-                                <div class="mt-auto pt-1.5">
-                                    <button type="button" data-standalone-add="dreamy" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Dreamy pack to cart">Add to cart</button>
-                                    <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -871,9 +835,12 @@
     <!-- Phones/tablets only. main.js shows it once the hero button has scrolled away and hides it
          while the order form, paper section, or footer is on screen. -->
     <div id="sticky-cta" class="sticky-cta lg:hidden" aria-hidden="true" inert>
-        <a href="#reserve" data-select-product="duo" data-track="click_preorder_cta" data-track-location="sticky_bar" class="flex w-full items-center justify-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-6 py-3.5 rounded-full font-bold text-[1.1875rem] leading-tight shadow-lg shadow-primary/30 transition-colors">
+        <a href="#reserve" data-sticky-mode="browse" data-select-product="duo" data-track="click_preorder_cta" data-track-location="sticky_bar" class="flex w-full items-center justify-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-6 py-3.5 rounded-full font-bold text-[1.1875rem] leading-tight shadow-lg shadow-primary/30 transition-colors">
             Get the 2-Pack for <span data-duo-price>$49.99</span>
         </a>
+        <button type="button" data-sticky-mode="buy" data-track="click_add_to_cart" data-track-location="sticky_bar" class="hidden w-full items-center justify-center bg-primary hover:bg-primary-hover text-white px-6 py-3.5 rounded-full font-bold text-[1.1875rem] leading-tight shadow-lg shadow-primary/30 transition-colors">
+            <span data-cta-label>Add Duo-Pack to Cart &middot; $49.99</span>
+        </button>
     </div>
 
     <!-- ===================== VIDEO MODAL ===================== -->
@@ -980,11 +947,10 @@
         </div>
     </div>
 
-    <script src="/assets/js/main.js?v=20261123-cart"></script>
+    <script src="/assets/js/main.js?v=20261124-shop"></script>
     <script src="/assets/js/shipping.js?v=20261022-intl2"></script>
-    <script src="/assets/js/cart.js?v=20261123-cart"></script>
-    <script src="/assets/js/preorder.js?v=20261123-cart"></script>
-    <script src="/assets/js/paper.js?v=20261123-cart"></script>
+    <script src="/assets/js/cart.js?v=20261124-shop"></script>
+    <script src="/assets/js/preorder.js?v=20261124-shop"></script>
 
     <!-- Carousel Script -->
     <script>
@@ -1033,9 +999,8 @@
             var isVideo = slides[currentIndex] === 'video';
 
             if (stage) {
-                // 16:9 stage for the video so it isn't letterboxed inside the square frame.
-                stage.classList.toggle('aspect-square', !isVideo);
-                stage.classList.toggle('aspect-video', isVideo);
+                // 16:9 stage for the video so it isn't letterboxed inside the photo frame.
+                stage.classList.toggle('is-video', isVideo);
             }
             if (videoWrap) {
                 videoWrap.classList.toggle('hidden', !isVideo);
@@ -1056,6 +1021,10 @@
                         var base = slides[currentIndex].replace('/assets/opt/', '/assets/opt/sizes/').replace(/\.webp$/, '');
                         mainImg.srcset = base + '-400.webp 400w, ' + base + '-800.webp 800w, ' + slides[currentIndex] + ' 1254w';
                         mainImg.src = slides[currentIndex];
+                        // Product graphics with text are shown whole; photos fill the frame.
+                        var graphic = /\/(6|7|8)\.webp$/.test(slides[currentIndex]);
+                        mainImg.classList.toggle('object-contain', graphic);
+                        mainImg.classList.toggle('object-cover', !graphic);
                         mainImg.style.opacity = '1';
                     }, 150);
                 }

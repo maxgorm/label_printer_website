@@ -4,7 +4,8 @@
  * drawer, and sent to /api/create-checkout as a list of items. Prices here are display
  * only; the server sets the real prices (api/_config.js).
  *
- * window.SentimoCart: add(item), open(), close(), count(), items(), onChange(fn), catalog, formatCents
+ * window.SentimoCart: add(item), addSet({ printer, paper }), paperQuote(bundles, { withPrinter }), open(), close(),
+ *   count(), items(), onChange(fn), catalog, formatCents
  */
 (function () {
   'use strict';
@@ -21,7 +22,7 @@
         priceCents: saleActive ? 2999 : 4999, originalCents: saleActive ? 4999 : null,
       },
       duo: {
-        name: '2-Pack', slug: 'sentimo-2-pack', printerCount: 2,
+        name: 'Duo-Pack', slug: 'sentimo-2-pack', printerCount: 2,
         priceCents: saleActive ? 4999 : 6999, originalCents: saleActive ? 6999 : null,
       },
     },
@@ -320,32 +321,96 @@
     commit();
   }
 
+  // Put an item in the cart without saving or opening it. Returns { added, message }.
+  function addItem(item) {
+    if (!validItem(item)) return { added: 0, message: '' };
+    const key = itemKey(item);
+    const existing = state.items.find((i) => itemKey(i) === key);
+    const max = item.type === 'printer' ? CATALOG.maxPrinterPackages - printerPackages() + (existing?.quantity || 0) : CATALOG.maxPaperPerBundle;
+    const current = existing?.quantity || 0;
+    const allowed = Math.min(item.quantity, max - current);
+    if (allowed <= 0) {
+      return {
+        added: 0,
+        message: item.type === 'printer'
+          ? `Your cart already has the maximum of ${CATALOG.maxPrinterPackages} printer packages.`
+          : `Your cart already has the maximum of ${CATALOG.maxPaperPerBundle} packs of this paper.`,
+      };
+    }
+    if (existing) existing.quantity += allowed;
+    else state.items.push({ ...item, colors: item.colors ? [...item.colors] : undefined, quantity: allowed });
+    reportAddToCart(item, allowed);
+    return { added: allowed, message: describeAdded(item, allowed) };
+  }
+
   /**
    * Add an item and open the cart with a confirmation, the way most shops prompt checkout.
    * Returns false (and shows why) when the item would break a cart limit.
    */
   function add(item, { open: shouldOpen = true } = {}) {
     if (!validItem(item)) return false;
-    const key = itemKey(item);
-    const existing = state.items.find((i) => itemKey(i) === key);
-    const max = item.type === 'printer' ? CATALOG.maxPrinterPackages - printerPackages() + (existing?.quantity || 0) : CATALOG.maxPaperPerBundle;
-    const current = existing?.quantity || 0;
-    const allowed = Math.min(item.quantity, max - current);
-    let message;
-    if (allowed <= 0) {
-      message = item.type === 'printer'
-        ? `Your cart already has the maximum of ${CATALOG.maxPrinterPackages} printer packages.`
-        : `Your cart already has the maximum of ${CATALOG.maxPaperPerBundle} packs of this paper.`;
-    } else {
-      if (existing) existing.quantity += allowed;
-      else state.items.push({ ...item, colors: item.colors ? [...item.colors] : undefined, quantity: allowed });
-      message = describeAdded(item, allowed);
-      reportAddToCart(item, allowed);
-    }
+    const { added, message } = addItem(item);
     commit();
-    if (allowed > 0) bumpBadges();
-    if (shouldOpen) open({ message });
-    return allowed > 0;
+    if (added > 0) bumpBadges();
+    if (shouldOpen) open({ message: added > 0 ? `${message} added to your cart.` : message });
+    return added > 0;
+  }
+
+  // Paper packs ordered by bundle saving, biggest first: that pack gets the bundle price.
+  function byBundleSaving(bundles) {
+    return [...new Set(bundles)].filter((b) => CATALOG.paper[b]).sort((a, b) =>
+      (CATALOG.paper[b].priceCents - CATALOG.paper[b].addonCents) - (CATALOG.paper[a].priceCents - CATALOG.paper[a].addonCents));
+  }
+
+  /**
+   * What each paper pack would cost if added now. With a printer (in the cart, or added with
+   * the paper) and no bundle-priced pack yet, the pack with the biggest saving gets the bundle price.
+   */
+  function paperQuote(bundles, { withPrinter = false } = {}) {
+    let dealOpen = (withPrinter || hasPrinter()) && !state.addon;
+    const quote = {};
+    byBundleSaving(bundles).forEach((bundle) => {
+      const entry = CATALOG.paper[bundle];
+      quote[bundle] = { cents: dealOpen ? entry.addonCents : entry.priceCents, regularCents: entry.priceCents, deal: dealOpen };
+      dealOpen = false;
+    });
+    return quote;
+  }
+
+  /**
+   * Add a printer and the paper packs chosen with it in one step, then open the cart once.
+   * Either part is optional (paper alone is a refill order). Returns true when anything was added.
+   */
+  function addSet({ printer = null, paper = [] } = {}, { open: shouldOpen = true } = {}) {
+    const names = [];
+    const problems = [];
+    if (printer) {
+      const { added, message } = addItem(printer);
+      if (added > 0) names.push(message);
+      else if (message) problems.push(message);
+    }
+    byBundleSaving(paper).forEach((bundle) => {
+      if (hasPrinter() && !state.addon) {
+        state.addon = bundle;
+        track('paper_addon_accepted', { bundle, where: 'order_form' });
+        reportAddToCart({ type: 'paper', bundle }, 1, CATALOG.paper[bundle].addonCents);
+        names.push(`${CATALOG.paper[bundle].name} (bundle deal)`);
+        return;
+      }
+      const { added, message } = addItem({ type: 'paper', bundle, quantity: 1 });
+      if (added > 0) names.push(message);
+      else if (message) problems.push(message);
+    });
+    commit();
+    if (names.length) bumpBadges();
+    const addedText = names.length ? `${joinNames(names)} added to your cart.` : '';
+    if (shouldOpen) open({ message: [addedText, ...problems].filter(Boolean).join(' ') });
+    return names.length > 0;
+  }
+
+  function joinNames(names) {
+    if (names.length <= 1) return names.join('');
+    return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
   }
 
   function bumpBadges() {
@@ -360,15 +425,15 @@
     if (item.type === 'printer') {
       const name = CATALOG.products[item.product].name;
       const colors = item.colors.map((c) => CATALOG.colors[c]).join(' + ');
-      return `${quantity > 1 ? `${quantity} × ` : ''}${name} (${colors}) added to your cart.`;
+      return `${quantity > 1 ? `${quantity} × ` : ''}${name} (${colors})`;
     }
-    return `${quantity > 1 ? `${quantity} × ` : ''}${CATALOG.paper[item.bundle].name} added to your cart.`;
+    return `${quantity > 1 ? `${quantity} × ` : ''}${CATALOG.paper[item.bundle].name}`;
   }
 
-  function reportAddToCart(item, quantity) {
+  function reportAddToCart(item, quantity, unitCents) {
     const isPrinter = item.type === 'printer';
     const entry = isPrinter ? CATALOG.products[item.product] : CATALOG.paper[item.bundle];
-    const valueCents = entry.priceCents * quantity;
+    const valueCents = (unitCents ?? entry.priceCents) * quantity;
     track('add_to_cart', { item: isPrinter ? entry.slug : entry.slug, quantity, value: valueCents / 100 });
     // Meta AddToCart only fires with advertising consent (tracking.js decides).
     window.SentimoTrack?.track('AddToCart', {
@@ -580,6 +645,8 @@
     catalog: CATALOG,
     formatCents,
     add,
+    addSet,
+    paperQuote,
     open,
     close,
     count,
