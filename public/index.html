@@ -315,9 +315,9 @@
     <!-- ===================== ORDER BLOCK ===================== -->
     <section id="reserve" class="py-14 lg:py-10 scroll-reveal">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid min-w-0 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+            <div class="grid min-w-0 lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-8 lg:gap-10 items-start">
                 <!-- Image Carousel (Left) -->
-                <div class="relative w-full min-w-0 lg:max-w-[32rem] lg:justify-self-center">
+                <div class="relative w-full min-w-0 lg:col-start-1 lg:row-start-1 lg:max-w-[32rem] lg:justify-self-center">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div id="carousel-stage" class="aspect-square relative overflow-hidden">
                             <!-- Product video (last gallery item). The <video> is created on first selection so it costs nothing on page load. -->
@@ -365,7 +365,7 @@
                 </div>
 
                 <!-- Order Form (Right) -->
-                <div class="w-full min-w-0 lg:sticky lg:top-[8.25rem] lg:max-w-[29rem] lg:justify-self-end text-center lg:text-left">
+                <div class="w-full min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-[8.25rem] lg:max-w-[29rem] lg:justify-self-end text-center lg:text-left">
                     <h2 class="text-3xl md:text-[2.5rem] font-bold mb-3 lg:leading-tight">Order Sentimo</h2>
 
                     <div id="price-original-wrap" class="mb-1.5">
@@ -495,37 +495,35 @@
                         Paper refills can be added in your cart, including one pack at a discounted price with a printer.
                     </p>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- ===================== THERMAL PAPER ===================== -->
-    <section id="paper" class="py-10 scroll-reveal">
-        <div class="max-w-3xl mx-auto px-6">
-            <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-surface-light dark:bg-surface-dark p-5 sm:p-6 shadow-card">
-                <div class="text-center mb-5">
-                    <h2 class="text-2xl font-bold">Thermal paper rolls</h2>
-                    <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Sticker thermal paper. Classic is 3 white rolls; Dreamy is 5 rolls in white, lavender, yellow, pink, and blue. Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes. Add as many packs as you like to your cart. With a printer in your cart, one pack is discounted.</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-2 sm:gap-3" role="group" aria-label="Thermal paper packs">
-                    <div data-standalone-card="classic" class="paper-card flex w-[calc((100%-1rem)/3)] sm:w-36 flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
-                        <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
-                        <span class="mt-1 block text-xs font-medium">Classic</span>
-                        <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
-                        <span class="block text-xs font-bold text-primary">$6.99</span>
-                        <div class="mt-auto pt-1.5">
-                            <button type="button" data-standalone-add="classic" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Classic pack to cart">Add to cart</button>
-                            <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
+                <!-- Thermal paper: after the order form on mobile, under the gallery on desktop -->
+                <div id="paper" class="w-full min-w-0 lg:col-start-1 lg:row-start-2 lg:max-w-[32rem] lg:justify-self-center">
+                    <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-surface-light dark:bg-surface-dark p-5 sm:p-6 shadow-card">
+                        <div class="text-center mb-5">
+                            <h2 class="text-2xl font-bold">Thermal paper rolls</h2>
+                            <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Sticker thermal paper. Classic is 3 white rolls; Dreamy is 5 rolls in white, lavender, yellow, pink, and blue. Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes. Add as many packs as you like to your cart. With a printer in your cart, one pack is discounted.</p>
                         </div>
-                    </div>
-                    <div data-standalone-card="dreamy" class="paper-card flex w-[calc((100%-0.5rem)/2)] sm:w-[10.5rem] flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
-                        <span class="mx-auto block h-20 w-full"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="Five rolls of thermal paper in white, lavender, yellow, pink, and blue" loading="lazy" class="h-full w-full object-contain" /></span>
-                        <span class="mt-1 block text-xs font-medium">Dreamy</span>
-                        <span class="block px-1 text-[11px] text-text-muted-light dark:text-text-muted-dark">5 rolls: white, lavender, yellow, pink, blue</span>
-                        <span class="block text-xs font-bold text-primary">$9.99</span>
-                        <div class="mt-auto pt-1.5">
-                            <button type="button" data-standalone-add="dreamy" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Dreamy pack to cart">Add to cart</button>
-                            <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
+                        <div class="flex flex-wrap justify-center gap-2 sm:gap-3" role="group" aria-label="Thermal paper packs">
+                            <div data-standalone-card="classic" class="paper-card flex w-[calc((100%-1rem)/3)] sm:w-36 flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
+                                <span class="mx-auto block h-20 w-20"><img src="/assets/cutouts/paper-classic.webp" alt="Three rolls of white thermal paper" loading="lazy" class="h-full w-full object-contain" /></span>
+                                <span class="mt-1 block text-xs font-medium">Classic</span>
+                                <span class="block text-[11px] text-text-muted-light dark:text-text-muted-dark">3 white rolls</span>
+                                <span class="block text-xs font-bold text-primary">$6.99</span>
+                                <div class="mt-auto pt-1.5">
+                                    <button type="button" data-standalone-add="classic" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Classic pack to cart">Add to cart</button>
+                                    <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
+                                </div>
+                            </div>
+                            <div data-standalone-card="dreamy" class="paper-card flex w-[calc((100%-0.5rem)/2)] sm:w-[10.5rem] flex-col rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark p-1.5 text-center transition-colors">
+                                <span class="mx-auto block h-20 w-full"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="Five rolls of thermal paper in white, lavender, yellow, pink, and blue" loading="lazy" class="h-full w-full object-contain" /></span>
+                                <span class="mt-1 block text-xs font-medium">Dreamy</span>
+                                <span class="block px-1 text-[11px] text-text-muted-light dark:text-text-muted-dark">5 rolls: white, lavender, yellow, pink, blue</span>
+                                <span class="block text-xs font-bold text-primary">$9.99</span>
+                                <div class="mt-auto pt-1.5">
+                                    <button type="button" data-standalone-add="dreamy" class="w-full rounded-full bg-primary px-2 py-1.5 text-xs font-bold text-white transition-colors hover:bg-primary-hover" aria-label="Add one Dreamy pack to cart">Add to cart</button>
+                                    <span data-standalone-in-cart class="invisible mt-1 block text-[11px] font-medium text-primary" aria-live="polite">0 in cart</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
