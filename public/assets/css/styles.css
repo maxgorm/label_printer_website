@@ -141,6 +141,179 @@ body {
     }
 }
 
+/* --- Hero layout ---
+   Phones: headline, collage, then benefits + order button (the copy wrapper is display: contents
+   so its two halves sit either side of the collage). Desktop: copy left, collage right. */
+.hero-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.25rem;
+}
+.hero-copy { display: contents; }
+.hero-head { order: 1; }
+.hero-media { order: 2; }
+.hero-actions { order: 3; }
+
+@media (min-width: 640px) {
+    .hero-layout { row-gap: 2rem; }
+}
+
+@media (min-width: 1024px) {
+    .hero-layout {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        column-gap: clamp(2.5rem, 5vw, 5rem);
+        align-items: center;
+    }
+    .hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+/* Soft pink glow behind the collage */
+.hero-glow {
+    position: absolute;
+    z-index: -1;
+    width: min(46rem, 120vw);
+    aspect-ratio: 1;
+    right: -12rem;
+    top: 6rem;
+    border-radius: 9999px;
+    background: radial-gradient(closest-side, rgba(255, 232, 240, 0.95), rgba(255, 232, 240, 0));
+    pointer-events: none;
+}
+@media (max-width: 1023px) {
+    .hero-glow { right: 50%; transform: translateX(50%); top: 9rem; }
+}
+.dark .hero-glow { background: radial-gradient(closest-side, rgba(245, 63, 123, 0.12), rgba(245, 63, 123, 0)); }
+
+/* --- Hero photo collage (reusable) ---
+   Scrapbook layout: photos are placed by percentage inside a fixed-ratio box, so they can
+   overlap and the whole collage scales with the screen. Each <figure class="collage-photo"> takes:
+     data-slot="main|top|bottom"   picks default placement (below)
+     --x / --y / --w / --h         override placement (% of the collage box)
+     --z                           stacking order (higher sits on top)
+     --tilt                        rotation (keep around 1-3deg)
+     --focus                       object-position for the crop
+     --zoom / --zoom-origin        optional zoom in, and the point it zooms toward
+   Stickers (.collage-sticker) use --x / --y / --size / --tilt the same way. */
+.hero-collage {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    aspect-ratio: 8 / 7;
+    margin-inline: auto;
+}
+@media (min-width: 640px) {
+    .hero-collage { max-width: 34rem; aspect-ratio: 1 / 1; }
+}
+@media (min-width: 1024px) {
+    .hero-collage { max-width: 38rem; aspect-ratio: 20 / 21; margin-right: 0; }
+}
+
+.collage-photo {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    height: var(--h);
+    z-index: var(--z, 1);
+    margin: 0;
+    background: #fff;
+    /* White photo border as a real border, so overflow clips a zoomed photo to its inner rounded edge */
+    border: clamp(5px, 1.2vw, 10px) solid #fff;
+    border-radius: clamp(16px, 2.6vw, 24px);
+    overflow: hidden;
+    box-shadow:
+        0 1px 2px rgba(31, 41, 55, 0.08),
+        0 16px 32px -12px rgba(31, 41, 55, 0.32),
+        0 24px 48px -24px rgba(245, 63, 123, 0.25);
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.4s ease;
+}
+/* Default placement: big photo left; two smaller photos on the right that tuck over its edge
+   and over each other. */
+.collage-photo[data-slot="main"]   { --x: 1%;  --y: 5%;  --w: 59%; --h: 89%; --z: 1; }
+.collage-photo[data-slot="top"]    { --x: 56%; --y: 0%;  --w: 43%; --h: 45%; --z: 2; }
+.collage-photo[data-slot="bottom"] { --x: 54%; --y: 45%; --w: 45%; --h: 51%; --z: 3; }
+
+.collage-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus, 50% 50%);
+    /* Optional zoom: --zoom scales the photo up around --zoom-origin (e.g. to bring a printer forward) */
+    transform: scale(var(--zoom, 1));
+    transform-origin: var(--zoom-origin, 50% 50%);
+    background: #f3ece7;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .collage-photo:hover { transform: rotate(0deg) scale(1.015); }
+}
+
+/* Washi tape across the top of the main photo */
+.collage-tape {
+    position: absolute;
+    z-index: 4;
+    top: 1.5%;
+    left: 20%;
+    width: clamp(3.75rem, 14vw, 5.75rem);
+    height: clamp(1.1rem, 3.6vw, 1.5rem);
+    background: repeating-linear-gradient(-45deg, rgba(245, 63, 123, 0.28) 0 6px, rgba(245, 63, 123, 0.18) 6px 12px);
+    border-radius: 3px;
+    transform: rotate(-7deg);
+    box-shadow: 0 1px 2px rgba(31, 41, 55, 0.08);
+    pointer-events: none;
+}
+
+/* Die-cut heart stickers stuck over the photo edges, like they're holding the photos down */
+.collage-sticker {
+    position: absolute;
+    z-index: 5;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size, clamp(2.5rem, 11vw, 4rem));
+    height: auto;
+    overflow: visible;
+    transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
+    filter: drop-shadow(0 3px 4px rgba(31, 41, 55, 0.18)) drop-shadow(0 8px 14px rgba(245, 63, 123, 0.28));
+    pointer-events: none;
+}
+
+
+/* --- Sticky mobile order bar --- */
+.sticky-cta {
+    position: fixed;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.625rem max(1rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+    background: rgba(255, 249, 245, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(245, 63, 123, 0.12);
+    box-shadow: 0 -8px 24px -12px rgba(31, 41, 55, 0.18);
+    transform: translateY(110%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+}
+.sticky-cta.is-visible {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.3s ease, visibility 0s;
+}
+.dark .sticky-cta { background: rgba(24, 24, 27, 0.92); border-top-color: rgba(255, 255, 255, 0.08); }
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-up { animation: none; opacity: 1; transform: none; }
+    .scroll-reveal { transition: none; }
+    .collage-photo, .sticky-cta, .sticky-cta.is-visible { transition: none; }
+}
+
 /* --- Navbar scroll state --- */
 .nav-scrolled {
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.06);
@@ -202,6 +375,7 @@ img[src] {
 @media print {
     nav,
     #video-modal,
+    #sticky-cta,
     .floating-note {
         display: none !important;
     }

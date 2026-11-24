@@ -290,28 +290,44 @@
         });
     }
 
-    // ===================== HERO VIDEO =====================
-    function initHeroVideo() {
-        const heroVideo = document.getElementById("hero-video");
-        if (!heroVideo || !window.matchMedia) return;
+    // ===================== STICKY MOBILE ORDER BAR =====================
+    // Shows once the hero order button has scrolled up out of view, and hides again
+    // whenever the order form, paper section, or footer is on screen (or the hero button is back).
+    function initStickyCta() {
+        const bar = document.getElementById("sticky-cta");
+        const heroCta = document.getElementById("hero-cta");
+        if (!bar || !heroCta || !("IntersectionObserver" in window)) return;
 
-        const desktopQuery = window.matchMedia("(min-width: 768px)");
+        const blockers = ["reserve", "paper"].map((id) => document.getElementById(id)).filter(Boolean);
+        const footer = document.querySelector("footer");
+        if (footer) blockers.push(footer);
 
-        function syncHeroVideo() {
-            const shouldAutoplay = desktopQuery.matches;
-            heroVideo.autoplay = shouldAutoplay;
+        let heroCtaPassed = false;
+        const visibleBlockers = new Set();
 
-            if (shouldAutoplay) {
-                heroVideo.play().catch(() => {
-                    // Browser autoplay policies can still reject playback.
-                });
-            } else {
-                heroVideo.pause();
-            }
+        function sync() {
+            const show = heroCtaPassed && visibleBlockers.size === 0;
+            bar.classList.toggle("is-visible", show);
+            bar.setAttribute("aria-hidden", show ? "false" : "true");
+            bar.inert = !show;
         }
 
-        syncHeroVideo();
-        desktopQuery.addEventListener?.("change", syncHeroVideo);
+        new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                // Passed = fully out of view above the viewport (not below it).
+                heroCtaPassed = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+            });
+            sync();
+        }).observe(heroCta);
+
+        const blockerObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) visibleBlockers.add(entry.target);
+                else visibleBlockers.delete(entry.target);
+            });
+            sync();
+        });
+        blockers.forEach((el) => blockerObserver.observe(el));
     }
 
     // ===================== INIT =====================
@@ -325,7 +341,7 @@
         initSmoothScroll();
         initFaqAccordion();
         initHeroHoverSync();
-        initHeroVideo();
+        initStickyCta();
     }
 
     // Run when DOM is ready

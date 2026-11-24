@@ -213,6 +213,21 @@
 
   updateProductDisplay();
 
+  // Hero, nav, and sticky-bar buttons ("Get the 2-Pack for $49.99"): show the live 2-pack price
+  // (it changes when the sale ends) and select that option in the order form when clicked.
+  document.querySelectorAll('[data-duo-price]').forEach((el) => {
+    el.textContent = PRODUCTS.duo.currentPrice;
+  });
+  document.querySelectorAll('[data-select-product]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const radio = document.querySelector(`input[name="product"][value="${el.dataset.selectProduct}"]`);
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+
   // ===================== SINGLE-PRINTER INFO =====================
   function setSingleInfoOpen(isOpen) {
     if (!singleInfoPopover || !singleInfoButton) return;
@@ -500,9 +515,10 @@
   }
 
   // ===================== CTA TRACKING =====================
-  document.querySelectorAll('[data-track="click_preorder_cta"]').forEach((el) => {
+  // data-track names the event; data-track-location (optional) says which button sent it.
+  document.querySelectorAll('[data-track]').forEach((el) => {
     el.addEventListener('click', () => {
-      trackEvent('click_preorder_cta', {});
+      trackEvent(el.dataset.track, el.dataset.trackLocation ? { location: el.dataset.trackLocation } : {});
     });
   });
 })();
