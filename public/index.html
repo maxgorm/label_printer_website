@@ -52,9 +52,9 @@
 
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css?v=20261124-shop2" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261124-paperqty" />
     <!-- Tailwind (built by npm run build:css) -->
-    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261124-shop3" />
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261124-paperqty" />
     <link rel="canonical" href="https://www.sentimonotes.com/" />
     <script type="application/ld+json">
 {
@@ -462,26 +462,46 @@
                     </div>
                     <p id="order-duties-note" class="mt-1.5 hidden text-xs text-text-muted-light dark:text-text-muted-dark">Duties and taxes for international orders are paid on delivery.</p>
 
-                    <!-- Optional paper refills: collapsible on mobile, always open on desktop -->
-                    <details id="paper" class="paper-refills mt-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 lg:rounded-none lg:border-0">
+                    <!-- Sticker paper add-ons: open by default, collapsible on mobile, always open on desktop -->
+                    <details id="paper" open class="paper-refills mt-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 lg:rounded-none lg:border-0">
                         <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 lg:cursor-default lg:px-0 lg:pt-1 lg:pb-2">
-                            <span class="text-[0.9375rem] font-bold">Optional paper refills <span id="refills-count" class="hidden font-medium text-primary"></span></span>
+                            <span class="text-[0.9375rem] font-bold">Add sticker paper <span id="refills-count" class="hidden font-medium text-primary"></span></span>
                             <svg class="refills-chevron h-5 w-5 flex-none transition-transform lg:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"/></svg>
                         </summary>
                         <div class="space-y-2 px-3 pb-3 lg:px-0 lg:pb-0">
-                            <label data-refill="classic" class="refill-option">
-                                <input type="checkbox" value="classic" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
-                                <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-classic.webp" alt="" loading="lazy" class="h-10 w-10 object-contain" /></span>
-                                <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Classic</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 3 white rolls</span></span>
-                                <span data-refill-price="classic" class="flex-none text-right text-sm leading-tight"><span data-refill-regular class="block text-xs text-text-muted-light line-through dark:text-text-muted-dark">$6.99</span><strong data-refill-now class="font-bold">$4.99</strong></span>
-                            </label>
-                            <label data-refill="dreamy" class="refill-option">
-                                <input type="checkbox" value="dreamy" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
-                                <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="" loading="lazy" class="h-8 w-16 object-contain" /></span>
-                                <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Dreamy</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 5 assorted rolls</span></span>
-                                <span data-refill-price="dreamy" class="flex-none text-right text-sm leading-tight"><span data-refill-regular class="block text-xs text-text-muted-light line-through dark:text-text-muted-dark">$9.99</span><strong data-refill-now class="font-bold">$6.99</strong></span>
-                            </label>
-                            <p id="refills-note" class="px-1 text-xs text-text-muted-light dark:text-text-muted-dark">One pack is bundle priced with a printer. Sticker paper; each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
+                            <div data-refill="classic" class="refill-option">
+                                <label class="flex cursor-pointer items-center gap-3">
+                                    <input type="checkbox" value="classic" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                    <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-classic.webp" alt="" loading="lazy" class="h-10 w-10 object-contain" /></span>
+                                    <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Classic</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 3 white rolls</span></span>
+                                    <span data-refill-price="classic" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$6.99</strong></span>
+                                </label>
+                                <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
+                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
+                                    <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Classic packs">
+                                        <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Classic pack">&minus;</button>
+                                        <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                        <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Classic pack">&plus;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-refill="dreamy" class="refill-option">
+                                <label class="flex cursor-pointer items-center gap-3">
+                                    <input type="checkbox" value="dreamy" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                    <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="" loading="lazy" class="h-8 w-16 object-contain" /></span>
+                                    <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Dreamy</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 5 rolls: White, Lavender, Yellow, Pink, Blue</span></span>
+                                    <span data-refill-price="dreamy" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$9.99</strong></span>
+                                </label>
+                                <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
+                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
+                                    <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Dreamy packs">
+                                        <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Dreamy pack">&minus;</button>
+                                        <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                        <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Dreamy pack">&plus;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="refills-note" class="px-1 text-xs text-text-muted-light dark:text-text-muted-dark">Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
                             <button id="paper-only-btn" type="button" class="hidden px-1 text-left text-sm font-medium text-primary underline underline-offset-2 hover:text-primary-hover" data-track="click_paper_only" data-track-location="order_form">Only need paper? Add it without a printer</button>
                         </div>
                     </details>
@@ -949,8 +969,8 @@
 
     <script src="/assets/js/main.js?v=20261124-shop"></script>
     <script src="/assets/js/shipping.js?v=20261022-intl2"></script>
-    <script src="/assets/js/cart.js?v=20261124-shop"></script>
-    <script src="/assets/js/preorder.js?v=20261124-shop"></script>
+    <script src="/assets/js/cart.js?v=20261124-paperfull"></script>
+    <script src="/assets/js/preorder.js?v=20261124-paperfull"></script>
 
     <!-- Carousel Script -->
     <script>

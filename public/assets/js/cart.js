@@ -4,7 +4,7 @@
  * drawer, and sent to /api/create-checkout as a list of items. Prices here are display
  * only; the server sets the real prices (api/_config.js).
  *
- * window.SentimoCart: add(item), addSet({ printer, paper }), paperQuote(bundles, { withPrinter }), open(), close(),
+ * window.SentimoCart: add(item), addSet({ printer, paper }), open(), close(),
  *   count(), items(), onChange(fn), catalog, formatCents
  */
 (function () {
@@ -32,7 +32,7 @@
         priceCents: 699, addonCents: 499, image: '/assets/cutouts/paper-classic.webp',
       },
       dreamy: {
-        name: 'Dreamy Paper', slug: 'paper-dreamy', detail: '5 rolls: white, lavender, yellow, pink, blue', rolls: 5,
+        name: 'Dreamy Paper', slug: 'paper-dreamy', detail: '5 rolls: White, Lavender, Yellow, Pink, Blue', rolls: 5,
         priceCents: 999, addonCents: 699, image: '/assets/cutouts/paper-dreamy-row.webp',
       },
     },
@@ -356,48 +356,31 @@
     return added > 0;
   }
 
-  // Paper packs ordered by bundle saving, biggest first: that pack gets the bundle price.
-  function byBundleSaving(bundles) {
-    return [...new Set(bundles)].filter((b) => CATALOG.paper[b]).sort((a, b) =>
-      (CATALOG.paper[b].priceCents - CATALOG.paper[b].addonCents) - (CATALOG.paper[a].priceCents - CATALOG.paper[a].addonCents));
-  }
-
-  /**
-   * What each paper pack would cost if added now. With a printer (in the cart, or added with
-   * the paper) and no bundle-priced pack yet, the pack with the biggest saving gets the bundle price.
-   */
-  function paperQuote(bundles, { withPrinter = false } = {}) {
-    let dealOpen = (withPrinter || hasPrinter()) && !state.addon;
-    const quote = {};
-    byBundleSaving(bundles).forEach((bundle) => {
-      const entry = CATALOG.paper[bundle];
-      quote[bundle] = { cents: dealOpen ? entry.addonCents : entry.priceCents, regularCents: entry.priceCents, deal: dealOpen };
-      dealOpen = false;
+  // Paper lines as [{ bundle, quantity }], merged per bundle. Plain bundle names count as 1 pack.
+  function paperLines(paper) {
+    const totals = new Map();
+    (paper || []).forEach((line) => {
+      const bundle = typeof line === 'string' ? line : line?.bundle;
+      const quantity = typeof line === 'string' ? 1 : Math.floor(Number(line?.quantity) || 0);
+      if (!CATALOG.paper[bundle] || quantity <= 0) return;
+      totals.set(bundle, Math.min(CATALOG.maxPaperPerBundle, (totals.get(bundle) || 0) + quantity));
     });
-    return quote;
+    return [...totals].map(([bundle, quantity]) => ({ bundle, quantity }));
   }
 
   /**
-   * Add a printer and the paper packs chosen with it in one step, then open the cart once.
-   * Either part is optional (paper alone is a refill order). Returns true when anything was added.
+   * Add a printer and the paper chosen with it in one step, then open the cart once. Paper here is
+   * full price; the discounted pack is only offered by the pop-up at checkout. Either part is
+   * optional (paper alone is a paper-only order). Returns true when anything was added.
    */
   function addSet({ printer = null, paper = [] } = {}, { open: shouldOpen = true } = {}) {
     const names = [];
     const problems = [];
-    if (printer) {
-      const { added, message } = addItem(printer);
-      if (added > 0) names.push(message);
-      else if (message) problems.push(message);
-    }
-    byBundleSaving(paper).forEach((bundle) => {
-      if (hasPrinter() && !state.addon) {
-        state.addon = bundle;
-        track('paper_addon_accepted', { bundle, where: 'order_form' });
-        reportAddToCart({ type: 'paper', bundle }, 1, CATALOG.paper[bundle].addonCents);
-        names.push(`${CATALOG.paper[bundle].name} (bundle deal)`);
-        return;
-      }
-      const { added, message } = addItem({ type: 'paper', bundle, quantity: 1 });
+    [
+      ...(printer ? [printer] : []),
+      ...paperLines(paper).map(({ bundle, quantity }) => ({ type: 'paper', bundle, quantity })),
+    ].forEach((item) => {
+      const { added, message } = addItem(item);
       if (added > 0) names.push(message);
       else if (message) problems.push(message);
     });
@@ -646,7 +629,6 @@
     formatCents,
     add,
     addSet,
-    paperQuote,
     open,
     close,
     count,

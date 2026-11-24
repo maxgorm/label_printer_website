@@ -1,7 +1,7 @@
 /**
  * Sentimo Order Form
  * Handles: set (Single or Duo-Pack), colors, quantity, sale pricing (ends 12/1), the shipping
- * line for the chosen country, optional paper refills, and the add-to-cart button with the
+ * line for the chosen country, sticker paper add-ons, and the add-to-cart button with the
  * live total. cart.js handles the cart, checkout, the paper add-on offer, and Stripe.
  */
 (function () {
@@ -198,40 +198,61 @@
   window.SentimoShipping?.onChange(renderShipping);
   renderShipping();
 
-  // ===================== PAPER REFILLS =====================
+  // ===================== STICKER PAPER =====================
+  const refillQty = {};
+  refillOptions.forEach((option) => { refillQty[option.dataset.refill] = 1; });
+
+  // Checked packs as [{ bundle, quantity }].
   function checkedRefills() {
-    return Array.from(refillBoxes).filter((box) => box.checked).map((box) => box.value);
+    return Array.from(refillBoxes).filter((box) => box.checked).map((box) => ({ bundle: box.value, quantity: refillQty[box.value] }));
   }
 
-  // Each row shows what that pack costs with this printer: one pack gets the bundle price.
+  function paperCents(lines) {
+    return lines.reduce((sum, line) => sum + CATALOG.paper[line.bundle].priceCents * line.quantity, 0);
+  }
+
+  // Each row shows the full price of its packs (the discounted pack is only offered at checkout).
   function renderRefills() {
     const checked = checkedRefills();
-    const quote = cart.paperQuote(checked, { withPrinter: true });
     refillOptions.forEach((option) => {
       const bundle = option.dataset.refill;
-      const isChecked = checked.includes(bundle);
-      const price = isChecked ? quote[bundle] : cart.paperQuote([...checked, bundle], { withPrinter: true })[bundle];
+      const isChecked = checked.some((line) => line.bundle === bundle);
       option.classList.toggle('is-selected', isChecked);
-      const regular = option.querySelector('[data-refill-regular]');
       const now = option.querySelector('[data-refill-now]');
-      if (now) now.textContent = fmt(price.cents);
-      if (regular) {
-        regular.textContent = fmt(price.regularCents);
-        regular.classList.toggle('hidden', !price.deal);
-      }
+      if (now) now.textContent = fmt(paperCents([{ bundle, quantity: isChecked ? refillQty[bundle] : 1 }]));
+      const stepper = option.querySelector('[data-refill-stepper]');
+      stepper?.classList.toggle('hidden', !isChecked);
+      stepper?.classList.toggle('flex', isChecked);
+      const qty = option.querySelector('[data-refill-qty]');
+      if (qty) qty.textContent = String(refillQty[bundle]);
+      const minus = option.querySelector('[data-refill-minus]');
+      const plus = option.querySelector('[data-refill-plus]');
+      if (minus) minus.disabled = refillQty[bundle] <= 1;
+      if (plus) plus.disabled = refillQty[bundle] >= CATALOG.maxPaperPerBundle;
     });
+    const packs = checked.reduce((sum, line) => sum + line.quantity, 0);
     if (refillsCount) {
-      refillsCount.textContent = checked.length ? `· ${checked.length} added` : '';
-      refillsCount.classList.toggle('hidden', !checked.length);
+      refillsCount.textContent = packs ? `· ${packs} added` : '';
+      refillsCount.classList.toggle('hidden', !packs);
     }
-    paperOnlyBtn?.classList.toggle('hidden', !checked.length);
+    paperOnlyBtn?.classList.toggle('hidden', !packs);
     renderCta();
   }
+
+  refillOptions.forEach((option) => {
+    const bundle = option.dataset.refill;
+    const step = (delta) => {
+      refillQty[bundle] = Math.max(1, Math.min(CATALOG.maxPaperPerBundle, refillQty[bundle] + delta));
+      renderRefills();
+    };
+    option.querySelector('[data-refill-minus]')?.addEventListener('click', () => step(-1));
+    option.querySelector('[data-refill-plus]')?.addEventListener('click', () => step(1));
+  });
 
   refillBoxes.forEach((box) => box.addEventListener('change', renderRefills));
   cart.onChange(renderRefills);
 
-  // Desktop shows the refills open; phones get a collapsible panel that starts closed.
+  // The paper panel starts open. Desktop keeps it open; phones can collapse it.
   const desktop = window.matchMedia('(min-width: 1024px)');
   function syncRefillsPanel() {
     if (refillsPanel && desktop.matches) refillsPanel.open = true;
@@ -242,7 +263,7 @@
     if (desktop.matches) event.preventDefault();
   });
 
-  // "Paper Refills" links (nav, cart) open the panel on phones.
+  // "Paper Refills" links (nav, cart) open the paper panel on phones.
   function openRefillsFromHash() {
     if (refillsPanel && window.location.hash === '#paper') refillsPanel.open = true;
   }
@@ -254,9 +275,7 @@
 
   // ===================== ADD TO CART =====================
   function orderTotalCents() {
-    const printerCents = CATALOG.products[selectedProduct].priceCents * quantity;
-    const quote = cart.paperQuote(checkedRefills(), { withPrinter: true });
-    return printerCents + Object.values(quote).reduce((sum, line) => sum + line.cents, 0);
+    return CATALOG.products[selectedProduct].priceCents * quantity + paperCents(checkedRefills());
   }
 
   function renderCta() {
@@ -268,6 +287,7 @@
   function resetAfterAdd() {
     setQuantity(1);
     refillBoxes.forEach((box) => { box.checked = false; });
+    Object.keys(refillQty).forEach((bundle) => { refillQty[bundle] = 1; });
     renderRefills();
   }
 
