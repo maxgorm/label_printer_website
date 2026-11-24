@@ -291,35 +291,19 @@
     }
 
     // ===================== STICKY MOBILE ORDER BAR =====================
-    // Before the order section it links there ("Get the 2-Pack"). Inside the order section it is
-    // the add-to-cart button whenever the form's own button is off screen. Hidden near the hero
-    // button, the form's button, and the footer.
+    // "Get the 2-Pack" bar that links to the order section. Shows once the hero order button has
+    // scrolled up out of view, and hides while the order section or the footer is on screen.
     function initStickyCta() {
         const bar = document.getElementById("sticky-cta");
         const heroCta = document.getElementById("hero-cta");
-        const orderSection = document.getElementById("reserve");
-        const orderButton = document.getElementById("preorder-btn");
         if (!bar || !heroCta || !("IntersectionObserver" in window)) return;
 
-        const browse = bar.querySelector('[data-sticky-mode="browse"]');
-        const buy = bar.querySelector('[data-sticky-mode="buy"]');
-        const footer = document.querySelector("footer");
-        const seen = { order: false, button: false, footer: false };
+        const blockers = [document.getElementById("reserve"), document.querySelector("footer")].filter(Boolean);
+        const visibleBlockers = new Set();
         let heroCtaPassed = false;
 
         function sync() {
-            let mode = null;
-            if (seen.button || seen.footer) mode = null;
-            else if (seen.order && buy && orderButton) mode = "buy";
-            else if (heroCtaPassed) mode = "browse";
-
-            browse?.classList.toggle("hidden", mode !== "browse");
-            browse?.classList.toggle("flex", mode === "browse");
-            buy?.classList.toggle("hidden", mode !== "buy");
-            buy?.classList.toggle("flex", mode === "buy");
-            if (buy && orderButton) buy.disabled = orderButton.disabled;
-
-            const show = mode !== null;
+            const show = heroCtaPassed && visibleBlockers.size === 0;
             bar.classList.toggle("is-visible", show);
             bar.setAttribute("aria-hidden", show ? "false" : "true");
             bar.inert = !show;
@@ -333,15 +317,14 @@
             sync();
         }).observe(heroCta);
 
-        const watched = new Map([[orderSection, "order"], [orderButton, "button"], [footer, "footer"]]);
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => { seen[watched.get(entry.target)] = entry.isIntersecting; });
+        const blockerObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) visibleBlockers.add(entry.target);
+                else visibleBlockers.delete(entry.target);
+            });
             sync();
         });
-        watched.forEach((_, el) => { if (el) observer.observe(el); });
-
-        // The sticky buy button adds exactly what the form shows.
-        buy?.addEventListener("click", () => orderButton?.click());
+        blockers.forEach((el) => blockerObserver.observe(el));
     }
 
     // ===================== INIT =====================
