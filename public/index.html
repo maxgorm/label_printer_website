@@ -52,9 +52,9 @@
 
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css?v=20261124-paperqty" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=20261125-books" />
     <!-- Tailwind (built by npm run build:css) -->
-    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261124-popup" />
+    <link rel="stylesheet" href="/assets/css/tailwind-main.css?v=20261125-books" />
     <link rel="canonical" href="https://www.sentimonotes.com/" />
     <script type="application/ld+json">
 {
@@ -173,6 +173,7 @@
                 <a class="nav-link hover:text-primary transition-colors" href="#whats-included">What's Included</a>
                 <a class="nav-link hover:text-primary transition-colors" href="#faq">FAQ</a>
                 <a class="nav-link hidden lg:inline hover:text-primary transition-colors" href="#paper">Paper Refills</a>
+                <a class="nav-link hidden lg:inline hover:text-primary transition-colors" href="/memory-book">Memory Books</a>
             </div>
 
             <!-- Actions -->
@@ -203,6 +204,7 @@
             <div class="border-t border-gray-100 dark:border-gray-800 pt-3 space-y-1">
                 <p class="text-[11px] font-bold uppercase tracking-wider text-text-muted-light dark:text-text-muted-dark">Already have Sentimo?</p>
                 <a class="flex items-center gap-2 text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="#paper"><span class="material-icons-round text-primary !text-[20px]" aria-hidden="true">receipt_long</span>Paper Refills</a>
+                <a class="flex items-center gap-2 text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="/memory-book"><span class="material-icons-round text-primary !text-[20px]" aria-hidden="true">menu_book</span>Memory Books</a>
                 <a class="flex items-center gap-2 text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors py-2" href="/download" data-track="click_download_cta" data-track-location="mobile_menu"><span class="material-icons-round text-primary !text-[20px]" aria-hidden="true">download</span>Download the App</a>
             </div>
             <a class="block sm:hidden bg-primary hover:bg-primary-hover text-white px-6 py-3.5 rounded-full font-bold text-center" href="#reserve" data-select-product="duo" data-track="click_preorder_cta" data-track-location="mobile_menu">Get the 2-Pack for <span data-duo-price>$49.99</span></a>
@@ -315,9 +317,10 @@
     <!-- ===================== ORDER BLOCK ===================== -->
     <section id="reserve" class="pt-5 pb-10 lg:py-12 scroll-reveal">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
-            <div class="grid min-w-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-5 lg:gap-12 items-start">
+            <!-- Desktop: gallery and the Memory Book story stack on the left, the order form spans both rows on the right. -->
+            <div class="grid min-w-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] gap-5 lg:gap-x-12 lg:gap-y-8 items-start">
                 <!-- Image Carousel (Left) -->
-                <div class="relative w-full min-w-0 lg:sticky lg:top-24">
+                <div class="relative w-full min-w-0 lg:col-start-1 lg:row-start-1">
                     <div class="bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-card">
                         <div id="carousel-stage" class="gallery-stage relative overflow-hidden bg-surface-light">
                             <!-- Product video (last gallery item). The <video> is created on first selection so it costs nothing on page load. -->
@@ -365,7 +368,7 @@
                 </div>
 
                 <!-- Order Form (Right) -->
-                <div id="order-panel" class="w-full min-w-0 lg:max-w-[30rem]">
+                <div id="order-panel" class="w-full min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:max-w-[30rem]">
                     <h2 id="order-title" class="text-[1.75rem] sm:text-4xl lg:text-[2.125rem] xl:text-[2.5rem] font-extrabold leading-[1.1] tracking-tight">The Sentimo Duo Pack</h2>
                     <p id="order-subtitle" class="mt-1 text-[0.9375rem] lg:text-lg text-text-muted-light dark:text-text-muted-dark">One for you. One for someone you love.</p>
 
@@ -462,55 +465,150 @@
                     </div>
                     <p id="order-duties-note" class="mt-1.5 hidden text-xs text-text-muted-light dark:text-text-muted-dark">Duties and taxes for international orders are paid on delivery.</p>
 
-                    <!-- Sticker paper add-ons: open by default, collapsible on mobile, always open on desktop -->
-                    <details id="paper" open class="paper-refills mt-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 lg:rounded-none lg:border-0">
-                        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 lg:cursor-default lg:px-0 lg:pt-1 lg:pb-2">
-                            <span class="text-[0.9375rem] font-bold">Add sticker paper <span id="refills-count" class="hidden font-medium text-primary"></span></span>
-                            <svg class="refills-chevron h-5 w-5 flex-none transition-transform lg:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"/></svg>
-                        </summary>
-                        <div class="space-y-2 px-3 pb-3 lg:px-0 lg:pb-0">
-                            <div data-refill="classic" class="refill-option">
-                                <label class="flex cursor-pointer items-center gap-3">
-                                    <input type="checkbox" value="classic" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
-                                    <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-classic.webp" alt="" loading="lazy" class="h-10 w-10 object-contain" /></span>
-                                    <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Classic</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 3 white rolls</span></span>
-                                    <span data-refill-price="classic" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$6.99</strong></span>
-                                </label>
-                                <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
-                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
-                                    <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Classic packs">
-                                        <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Classic pack">&minus;</button>
-                                        <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
-                                        <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Classic pack">&plus;</button>
+                    <!-- Make it yours: optional accessories. Nothing is preselected; paper and Memory Books are
+                         chosen independently and are added once per order (not multiplied by the set quantity). -->
+                    <div id="accessories" class="mt-6 border-t border-gray-200 pt-5 dark:border-gray-700">
+                        <h3 class="flex items-center gap-1.5 text-[1.375rem] sm:text-2xl font-extrabold leading-tight tracking-tight">
+                            Make it yours
+                            <svg class="ml-1 h-7 w-9 flex-none text-primary" viewBox="0 0 36 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 24s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 13c0 6-8 11-8 11z"/><path d="M25 7l3-3M27 13h4M25 19l3 2.5"/></svg>
+                        </h3>
+                        <p class="mt-0.5 text-sm text-text-muted-light dark:text-text-muted-dark">A little extra to make every note more special.</p>
+
+                        <!-- Extra sticker paper: open by default, collapsible on mobile, always open on desktop -->
+                        <details id="paper" open class="paper-refills accessory-group mt-3">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 lg:cursor-default lg:pb-2">
+                                <span class="text-[0.9375rem] font-bold">Extra sticker paper <span id="refills-count" class="hidden font-medium text-primary"></span></span>
+                                <svg class="refills-chevron h-5 w-5 flex-none transition-transform lg:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clip-rule="evenodd"/></svg>
+                            </summary>
+                            <div class="space-y-2 px-3 pb-3">
+                                <div data-refill="classic" class="refill-option">
+                                    <label class="flex cursor-pointer items-center gap-3">
+                                        <input type="checkbox" value="classic" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                        <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-classic.webp" alt="" loading="lazy" class="h-10 w-10 object-contain" /></span>
+                                        <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Classic</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 3 white rolls</span></span>
+                                        <span data-refill-price="classic" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$6.99</strong></span>
+                                    </label>
+                                    <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
+                                        <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Classic packs">
+                                            <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Classic pack">&minus;</button>
+                                            <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                            <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Classic pack">&plus;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-refill="dreamy" class="refill-option">
+                                    <label class="flex cursor-pointer items-center gap-3">
+                                        <input type="checkbox" value="dreamy" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
+                                        <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="" loading="lazy" class="h-8 w-16 object-contain" /></span>
+                                        <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Dreamy</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 5 rolls: White, Lavender, Yellow, Pink, Blue</span></span>
+                                        <span data-refill-price="dreamy" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$9.99</strong></span>
+                                    </label>
+                                    <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
+                                        <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Dreamy packs">
+                                            <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Dreamy pack">&minus;</button>
+                                            <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                            <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Dreamy pack">&plus;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p id="refills-note" class="px-1 text-xs text-text-muted-light dark:text-text-muted-dark">Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
+                            </div>
+                        </details>
+
+                        <!-- Memory Books: at most one option; pressing the selected option again clears it. -->
+                        <div id="memory-books" class="accessory-group accessory-group--books mt-3 px-3 pb-3 pt-3">
+                            <div class="flex items-start gap-3 px-1">
+                                <svg class="mt-0.5 h-7 w-7 flex-none text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 3v18"/><path d="M13.5 13.6c-1.6-1.2-2.6-2-2.6-3.1 0-.8.6-1.4 1.4-1.4.5 0 .9.2 1.2.6.3-.4.7-.6 1.2-.6.8 0 1.4.6 1.4 1.4 0 1.1-1 1.9-2.6 3.1z" fill="currentColor" stroke="none"/></svg>
+                                <div class="min-w-0">
+                                    <p class="flex flex-wrap items-center gap-2">
+                                        <span id="memory-books-title" class="text-[0.9375rem] font-bold">Memory Books</span>
+                                        <!-- Launch label: remove after the launch period. -->
+                                        <span class="rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold leading-4 text-white">New!</span>
+                                        <span id="books-count" class="hidden text-[0.9375rem] font-medium text-primary"></span>
+                                    </p>
+                                    <p id="memory-books-desc" class="text-xs text-text-muted-light dark:text-text-muted-dark">Give your favorite notes a place to live. Pocket-sized, A6 kraft notebooks. No extra shipping cost.</p>
+                                </div>
+                            </div>
+                            <div class="mt-2.5 space-y-2" role="group" aria-labelledby="memory-books-title" aria-describedby="memory-books-desc">
+                                <div data-book="single" class="refill-option book-option">
+                                    <button type="button" data-book-toggle aria-pressed="false" class="book-toggle flex w-full items-center gap-3 text-left">
+                                        <span class="radio-dot" aria-hidden="true"></span>
+                                        <img src="/assets/opt/books/memory-book-single-160.webp" width="160" height="160" alt="" loading="lazy" class="h-11 w-11 flex-none rounded-lg object-cover" />
+                                        <span class="min-w-0 flex-1 text-sm leading-snug">
+                                            <strong class="block font-bold">Memory Book</strong>
+                                            <span class="block text-xs text-text-muted-light dark:text-text-muted-dark">1 book &middot; 48 pages</span>
+                                        </span>
+                                        <strong data-book-now class="flex-none text-sm font-bold">$4.99</strong>
+                                    </button>
+                                    <div data-book-stepper class="mt-2 hidden items-center gap-3 pl-[6.25rem]">
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Qty</span>
+                                        <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Memory Book quantity">
+                                            <button type="button" data-book-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Memory Book">&minus;</button>
+                                            <span data-book-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                            <button type="button" data-book-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Memory Book">&plus;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-book="duo" class="refill-option book-option">
+                                    <button type="button" data-book-toggle aria-pressed="false" class="book-toggle flex w-full items-center gap-3 text-left">
+                                        <span class="radio-dot" aria-hidden="true"></span>
+                                        <img src="/assets/opt/books/memory-book-duo-160.webp" width="160" height="160" alt="" loading="lazy" class="h-11 w-11 flex-none rounded-lg object-cover" />
+                                        <span class="min-w-0 flex-1 text-sm leading-snug">
+                                            <strong class="block font-bold">Memory Book Duo</strong>
+                                            <span class="block text-xs text-text-muted-light dark:text-text-muted-dark">2 books &middot; One for each of you</span>
+                                        </span>
+                                        <strong data-book-now class="flex-none text-sm font-bold">$7.99</strong>
+                                    </button>
+                                    <div data-book-stepper class="mt-2 hidden items-center gap-3 pl-[6.25rem]">
+                                        <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Qty</span>
+                                        <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Memory Book Duo quantity">
+                                            <button type="button" data-book-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Memory Book Duo">&minus;</button>
+                                            <span data-book-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
+                                            <button type="button" data-book-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Memory Book Duo">&plus;</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div data-refill="dreamy" class="refill-option">
-                                <label class="flex cursor-pointer items-center gap-3">
-                                    <input type="checkbox" value="dreamy" class="refill-checkbox h-5 w-5 flex-none rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-surface-dark" />
-                                    <span class="flex h-10 w-16 flex-none items-center justify-center"><img src="/assets/cutouts/paper-dreamy-row.webp" alt="" loading="lazy" class="h-8 w-16 object-contain" /></span>
-                                    <span class="min-w-0 flex-1 text-sm leading-snug"><strong class="font-bold">Dreamy</strong> <span class="text-text-muted-light dark:text-text-muted-dark">&middot; 5 rolls: White, Lavender, Yellow, Pink, Blue</span></span>
-                                    <span data-refill-price="dreamy" class="flex-none text-right text-sm leading-tight"><strong data-refill-now class="font-bold">$9.99</strong></span>
-                                </label>
-                                <div data-refill-stepper class="mt-2 hidden items-center gap-3 pl-[6.75rem]">
-                                    <span class="text-xs font-medium text-text-muted-light dark:text-text-muted-dark">Packs</span>
-                                    <div class="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark" role="group" aria-label="Dreamy packs">
-                                        <button type="button" data-refill-minus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One less Dreamy pack">&minus;</button>
-                                        <span data-refill-qty class="w-6 text-center text-sm font-bold" aria-live="polite">1</span>
-                                        <button type="button" data-refill-plus class="flex h-7 w-7 items-center justify-center rounded-full font-bold hover:bg-gray-100 disabled:opacity-40 dark:hover:bg-gray-800" aria-label="One more Dreamy pack">&plus;</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <p id="refills-note" class="px-1 text-xs text-text-muted-light dark:text-text-muted-dark">Each roll prints about 50&ndash;60 photos or 80&ndash;100 notes.</p>
-                            <button id="paper-only-btn" type="button" class="hidden px-1 text-left text-sm font-medium text-primary underline underline-offset-2 hover:text-primary-hover" data-track="click_paper_only" data-track-location="order_form">Only need paper? Add it without a printer</button>
                         </div>
-                    </details>
+
+                        <!-- Shown when more than one set is chosen: accessories do not multiply with sets. -->
+                        <p id="accessories-per-order" class="mt-2 hidden px-1 text-xs text-text-muted-light dark:text-text-muted-dark">Paper and Memory Books are added once per order, not per set. Use their quantity buttons to add more.</p>
+                        <button id="paper-only-btn" type="button" class="mt-2 hidden px-1 text-left text-sm font-medium text-primary underline underline-offset-2 hover:text-primary-hover" data-track="click_paper_only" data-track-location="order_form">Only need accessories? Add them without a printer</button>
+                    </div>
 
                     <!-- Add to cart (cart.js opens the cart with a checkout prompt) -->
                     <button id="preorder-btn" type="button" class="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-4 text-lg font-bold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary-hover hover:shadow-primary/50 disabled:cursor-not-allowed disabled:opacity-50" data-track="click_add_to_cart" data-track-location="order_form">
                         <span id="preorder-btn-text" data-cta-label>Add Duo-Pack to Cart &middot; $49.99</span>
                     </button>
                 </div>
+
+                <!-- Memory Book story: under the gallery on desktop, after the order form on phones -->
+                <section id="memory-book-story" class="memory-story min-w-0 lg:col-start-1 lg:row-start-2" aria-labelledby="memory-story-title">
+                    <div class="grid items-center gap-5 overflow-hidden rounded-2xl border border-gray-100 bg-surface-light p-4 shadow-card dark:border-gray-800 dark:bg-surface-dark sm:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] sm:gap-6 sm:p-5">
+                        <img src="/assets/opt/books/memory-book-open-800.webp"
+                             srcset="/assets/opt/books/memory-book-open-400.webp 400w, /assets/opt/books/memory-book-open-800.webp 800w, /assets/opt/books/memory-book-open.webp 1254w"
+                             sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 92vw"
+                             width="1254" height="1254" loading="lazy" decoding="async"
+                             alt="Open Sentimo Memory Book held in one hand, with printed sticker notes reading &ldquo;i miss you too&rdquo; and &ldquo;good morning&rdquo; stuck on the page"
+                             class="aspect-square w-full rounded-xl object-cover" />
+                        <div class="min-w-0">
+                            <p class="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">Meet the Sentimo Memory Book</p>
+                            <h2 id="memory-story-title" class="mt-2.5 text-[1.75rem] sm:text-[2rem] font-extrabold leading-[1.05] tracking-tight">Little notes.<br />Big memories.</h2>
+                            <p class="mt-2 text-[0.9375rem] leading-relaxed text-text-muted-light dark:text-text-muted-dark">From sleepy good mornings to spontaneous <em>I love yous</em>, give your favorite little moments a home.</p>
+                            <ul class="mt-3 space-y-1.5 text-sm">
+                                <li class="flex items-center gap-2"><span class="material-icons-round text-primary !text-[18px]" aria-hidden="true">menu_book</span>Collect your printed notes</li>
+                                <li class="flex items-center gap-2"><svg class="h-[18px] w-[18px] flex-none text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M4 12h16"/></svg>Pocket-sized (A6) and travel-friendly</li>
+                                <li class="flex items-center gap-2"><svg class="h-[18px] w-[18px] flex-none text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg>A simple way to keep what matters</li>
+                            </ul>
+                            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <p class="text-[0.9375rem] font-bold text-primary">Starting at <span data-book-from>$4.99</span></p>
+                                <a href="/memory-book" class="text-sm font-bold text-text-main-light underline underline-offset-4 hover:text-primary dark:text-text-main-dark" data-track="click_explore_memory_books" data-track-location="order_story">Explore Memory Books</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </section>
@@ -824,6 +922,7 @@
                         <li><a class="hover:text-primary transition-colors" href="#whats-included">What's Included</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#reserve">Order</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#paper">Paper Refills</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="/memory-book">Memory Books</a></li>
                         <li><a class="hover:text-primary transition-colors" href="/download" data-track="click_download_cta" data-track-location="footer">Download the App</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#faq">FAQ</a></li>
                         <li><a class="hover:text-primary transition-colors" href="/gifts/long-distance-relationship-gifts">Long-Distance Gift Ideas</a></li>
@@ -897,10 +996,11 @@
 
                 <div id="cart-empty" class="hidden py-14 text-center">
                     <p class="font-bold">Your cart is empty</p>
-                    <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Pick your printers or paper to get started.</p>
+                    <p class="mt-1 text-sm text-text-muted-light dark:text-text-muted-dark">Pick your printers, paper, or Memory Books to get started.</p>
                     <div class="mt-5 flex flex-col items-center gap-2">
                         <a href="#reserve" data-cart-close data-select-product="duo" class="inline-flex items-center justify-center bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-bold text-sm">Shop the 2-Pack</a>
                         <a href="#paper" data-cart-close class="text-sm font-medium text-primary underline underline-offset-2">Shop paper refills</a>
+                        <a href="/memory-book" class="text-sm font-medium text-primary underline underline-offset-2">Shop Memory Books</a>
                     </div>
                 </div>
 
@@ -970,8 +1070,8 @@
 
     <script src="/assets/js/main.js?v=20261124-sticky"></script>
     <script src="/assets/js/shipping.js?v=20261022-intl2"></script>
-    <script src="/assets/js/cart.js?v=20261124-paperfull"></script>
-    <script src="/assets/js/preorder.js?v=20261124-paperfull"></script>
+    <script src="/assets/js/cart.js?v=20261125-books"></script>
+    <script src="/assets/js/preorder.js?v=20261125-books"></script>
 
     <!-- Carousel Script -->
     <script>

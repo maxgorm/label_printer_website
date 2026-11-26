@@ -1,5 +1,6 @@
 import PREORDER_CONFIG from './_config.js';
 import { normalizePaperAddon, normalizePaperItems } from './_paper.js';
+import { normalizeBookItems } from './_books.js';
 
 const PRODUCTS = PREORDER_CONFIG.products;
 const COLORS = PREORDER_CONFIG.available_colors;
@@ -15,11 +16,13 @@ export const MAX_PRINTER_PACKAGES = 10;
  *
  * New carts send `items`:
  *   [{ type: 'printer', product: 'duo', colors: ['pink', 'white'], quantity: 1 },
- *    { type: 'paper', bundle: 'classic', quantity: 2 }]
+ *    { type: 'paper', bundle: 'classic', quantity: 2 },
+ *    { type: 'book', variant: 'duo', quantity: 1 }]
  * Older cached pages send `product`, `colors`, `quantity`, and `paper`; those are
  * mapped to the same shape so they keep working.
  *
- * Returns { printers: [{ product, colors, quantity }], paper: { bundle: packs }, addon } or { error }.
+ * Returns { printers: [{ product, colors, quantity }], paper: { bundle: packs }, books: { variant: units }, addon }
+ * or { error }.
  */
 export function normalizeCart(body = {}) {
   const addonResult = normalizePaperAddon(body.paper_addon);
@@ -27,12 +30,15 @@ export function normalizeCart(body = {}) {
 
   let printerInput;
   let paperInput;
+  let bookInput;
   if (Array.isArray(body.items)) {
     printerInput = [];
     paperInput = [];
+    bookInput = [];
     for (const item of body.items) {
       if (item?.type === 'printer') printerInput.push(item);
       else if (item?.type === 'paper') paperInput.push({ bundle: item.bundle, quantity: item.quantity });
+      else if (item?.type === 'book') bookInput.push({ variant: item.variant, quantity: item.quantity });
       else return { error: 'Invalid cart item' };
     }
   } else if (body.items !== undefined) {
@@ -52,6 +58,8 @@ export function normalizeCart(body = {}) {
 
   const paperResult = normalizePaperItems(paperInput);
   if (paperResult.error) return { error: paperResult.error };
+  const bookResult = normalizeBookItems(bookInput);
+  if (bookResult.error) return { error: bookResult.error };
 
   if (printerInput.length > MAX_PRINTER_LINES) return { error: 'Too many printers in your cart' };
   const merged = new Map();
@@ -77,12 +85,14 @@ export function normalizeCart(body = {}) {
     return { error: `You can order up to ${MAX_PRINTER_PACKAGES} printer packages at a time` };
   }
 
-  if (!printers.length && !Object.keys(paperResult.items).length) return { error: 'Your cart is empty' };
+  if (!printers.length && !Object.keys(paperResult.items).length && !Object.keys(bookResult.items).length) {
+    return { error: 'Your cart is empty' };
+  }
   if (addonResult.addon && !printers.length) {
     return { error: 'The paper add-on price requires a printer in your order' };
   }
 
-  return { printers, paper: paperResult.items, addon: addonResult.addon };
+  return { printers, paper: paperResult.items, books: bookResult.items, addon: addonResult.addon };
 }
 
 /** Readable printer line, e.g. "2-Pack × 1 (Pink, White)". */

@@ -15,6 +15,7 @@ import { createHash } from 'node:crypto';
 import PREORDER_CONFIG from './_config.js';
 import { parsePrinterItems } from './_cart.js';
 import { parsePaperMetadata } from './_paper.js';
+import { parseBookMetadata } from './_books.js';
 
 const DEFAULT_API_VERSION = 'v23.0';
 
@@ -115,7 +116,7 @@ export function purchaseValueCents(session) {
   return Math.max(0, (session.amount_subtotal ?? 0) - (session.total_details?.amount_discount ?? 0));
 }
 
-/** Stable product IDs (the product/paper slugs) with quantities, from session metadata. */
+/** Stable product IDs (the product/paper/Memory Book slugs) with quantities, from session metadata. */
 export function contentsFromMetadata(metadata = {}) {
   const contents = [];
   const printers = parsePrinterItems(metadata);
@@ -127,12 +128,15 @@ export function contentsFromMetadata(metadata = {}) {
       bySlug.set(slug, (bySlug.get(slug) || 0) + line.quantity);
     }
     for (const [id, quantity] of bySlug) contents.push({ id, quantity });
-  } else if (metadata.product_key && metadata.product_key !== 'paper') {
+  } else if (metadata.product_key && !['paper', 'accessories'].includes(metadata.product_key)) {
     contents.push({ id: metadata.product_slug, quantity: parseInt(metadata.quantity, 10) || 1 });
   }
   const paper = parsePaperMetadata(metadata);
   for (const [bundle, packs] of Object.entries(paper.bundles)) {
     contents.push({ id: PREORDER_CONFIG.paper_bundles[bundle].slug, quantity: packs });
+  }
+  for (const [variant, units] of Object.entries(parseBookMetadata(metadata).items)) {
+    contents.push({ id: PREORDER_CONFIG.memory_books[variant].slug, quantity: units });
   }
   return contents;
 }

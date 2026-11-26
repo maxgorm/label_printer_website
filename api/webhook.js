@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import PREORDER_CONFIG from './_config.js';
 import { describePaper, parsePaperMetadata } from './_paper.js';
+import { describeBooks, parseBookMetadata } from './_books.js';
 import { colorCountsForPrinters, describePrinterLine, parsePrinterItems } from './_cart.js';
 import { buildPurchaseEvent, metaConfigured, reportingAttribution, sendCapiEvents } from './_meta.js';
 
@@ -105,7 +106,8 @@ async function handleCheckoutCompleted(stripe, session) {
   const shipLabel = metadata.expected_ship ||
     (international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label);
   const quantity = parseInt(metadata.quantity, 10) || 1;
-  const paperOnly = metadata.product_key === 'paper';
+  // No printer in the order: paper only ("paper") or accessories including Memory Books ("accessories").
+  const paperOnly = metadata.product_key === 'paper' || metadata.product_key === 'accessories';
   // Cart checkouts list every printer line in `printer_items`; older sessions have one
   // product with its colors in printer_color_1/2.
   const printerLines = paperOnly ? [] : parsePrinterItems(metadata);
@@ -114,7 +116,9 @@ async function handleCheckoutCompleted(stripe, session) {
     Object.values(PREORDER_CONFIG.products).find(({ slug }) => slug === metadata.product_slug) ||
     PREORDER_CONFIG.products[PREORDER_CONFIG.default_product]);
   if (mixed && !printerLines.length) throw new Error('Mixed printer order is missing printer lines');
-  const productName = paperOnly ? 'Sentimo Thermal Paper' : (metadata.product_name || (product ? product.name : 'Sentimo Printers'));
+  const productName = paperOnly
+    ? (metadata.product_name || 'Sentimo Thermal Paper')
+    : (metadata.product_name || (product ? product.name : 'Sentimo Printers'));
   // Per-package price; null when a cart mixes single printers and 2-Packs.
   const unitPrice = paperOnly || mixed ? null : (parseInt(metadata.unit_price_cents, 10) || product.unit_price_cents);
   const printerColors = paperOnly ? '' : (printerLines.length > 1
@@ -131,10 +135,19 @@ async function handleCheckoutCompleted(stripe, session) {
     ...(metadata.paper_addon ? [{ type: 'paper', bundle: metadata.paper_addon, quantity: 1, addon: true }] : []),
   ];
   const paper = parsePaperMetadata(metadata);
-  if (paperOnly && !Object.keys(paper.bundles).length) {
-    throw new Error('Paper order is missing thermal paper bundles');
+  const memoryBooks = parseBookMetadata(metadata);
+  // A Memory Book Duo is two physical books; `books` makes that explicit on packing lists.
+  for (const [variant, units] of Object.entries(memoryBooks.items)) {
+    cartItems.push({
+      type: 'book', variant, sku: PREORDER_CONFIG.memory_books[variant].sku, quantity: units,
+      books: PREORDER_CONFIG.memory_books[variant].books * units,
+    });
+  }
+  if (paperOnly && !Object.keys(paper.bundles).length && !memoryBooks.books) {
+    throw new Error('Accessory order is missing thermal paper bundles and Memory Books');
   }
   const paperSummary = describePaper(paper);
+  const bookSummary = describeBooks(memoryBooks.items);
   const shippingAmount = fullSession.total_details?.amount_shipping ?? null;
   const totalAmount = fullSession.amount_total;
 
@@ -152,11 +165,13 @@ async function handleCheckoutCompleted(stripe, session) {
       stripe_customer_id: fullSession.customer || null,
       email: customerEmail,
       full_name: customerName,
-      product_slug: paperOnly ? 'sentimo-paper' : (metadata.product_slug || (product ? product.slug : 'sentimo-mixed')),
+      product_slug: paperOnly ? (metadata.product_slug || 'sentimo-paper') : (metadata.product_slug || (product ? product.slug : 'sentimo-mixed')),
       channel: 'web',
       color_counts: colorCounts,
       paper_bundles: paper.bundles,
       roll_counts: paper.rolls,
+      memory_books: memoryBooks.items,
+      memory_book_count: memoryBooks.books,
       shipping_amount: shippingAmount,
       source_created_at: new Date(fullSession.created * 1000).toISOString(),
       quantity: quantity,
@@ -179,16 +194,21 @@ async function handleCheckoutCompleted(stripe, session) {
       notes: [
         printerColors ? `Printer colors: ${printerColors}` : '',
         paperSummary ? `Thermal paper: ${paperSummary}` : '',
+        bookSummary ? `Memory Books: ${bookSummary}` : '',
         customerPhone ? `Phone: ${customerPhone}` : '',
       ].filter(Boolean).join(' | ') || null,
     };
 
-    let { error: dbError } = await supabase.from('preorders').insert({ ...orderRow, cart_items: cartItems });
-    // Until migration_009 adds the cart_items column, save the order without it. Colors,
-    // paper, and the notes line still hold everything needed to fulfill the order.
-    if (dbError && isMissingColumn(dbError, 'cart_items')) {
-      console.error('preorders.cart_items is missing; apply supabase/migration_009_cart_items.sql');
-      ({ error: dbError } = await supabase.from('preorders').insert(orderRow));
+    // Until a migration adds an optional column, save the order without it. Colors, paper,
+    // and the notes line (which lists Memory Books) still hold what is needed to fulfill it.
+    const row = { ...orderRow, cart_items: cartItems };
+    let { error: dbError } = await supabase.from('preorders').insert(row);
+    for (let attempt = 0; dbError && attempt < OPTIONAL_ORDER_COLUMNS.length; attempt += 1) {
+      const missing = OPTIONAL_ORDER_COLUMNS.find(({ column }) => column in row && isMissingColumn(dbError, column));
+      if (!missing) break;
+      console.error(`preorders.${missing.column} is missing; apply supabase/${missing.migration}`);
+      delete row[missing.column];
+      ({ error: dbError } = await supabase.from('preorders').insert(row));
     }
 
     // A concurrent delivery can still race the read; the unique session ID is authoritative.
@@ -215,6 +235,7 @@ async function handleCheckoutCompleted(stripe, session) {
           productName,
           printerColors,
           paperSummary,
+          bookSummary,
           shippingAmount: shippingAmount === null ? '' : (shippingAmount === 0 ? 'Free' : formatCurrency(shippingAmount, fullSession.currency)),
           quantity,
           amount: formatCurrency(totalAmount, fullSession.currency),
@@ -317,6 +338,13 @@ async function handleRefund(charge) {
   }
 }
 
+// Columns the webhook can leave out while their migration has not been applied yet.
+const OPTIONAL_ORDER_COLUMNS = [
+  { column: 'cart_items', migration: 'migration_009_cart_items.sql' },
+  { column: 'memory_books', migration: 'migration_010_memory_books.sql' },
+  { column: 'memory_book_count', migration: 'migration_010_memory_books.sql' },
+];
+
 /** True when PostgREST/Postgres rejected an insert because `column` does not exist yet. */
 function isMissingColumn(error, column) {
   return (error.code === 'PGRST204' || error.code === '42703') && String(error.message || '').includes(column);
@@ -352,7 +380,7 @@ function formatPrinterColors(value) {
     .join(', ');
 }
 
-function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, shippingAmount, quantity, amount, international, shipLabel }) {
+function buildConfirmationEmail({ name, orderNumber, productName, printerColors, paperSummary, bookSummary, shippingAmount, quantity, amount, international, shipLabel }) {
   const shippingLine = international
     ? `Your order has been received and confirmed. International orders typically arrive in ${escapeHtml(shipLabel)}. ${PREORDER_CONFIG.duties_message}`
     : `Your order has been received and confirmed. Orders ship anywhere in the US and typically arrive in ${escapeHtml(shipLabel)}.`;
@@ -372,6 +400,7 @@ function buildConfirmationEmail({ name, orderNumber, productName, printerColors,
         <p style="margin: 4px 0;"><strong>Product:</strong> ${escapeHtml(productName)}</p>
         ${printerColors ? `<p style="margin: 4px 0;"><strong>Printer color(s):</strong> ${escapeHtml(printerColors)}</p>` : ''}
         ${paperSummary ? `<p style="margin: 4px 0;"><strong>Thermal paper:</strong> ${escapeHtml(paperSummary)}</p>` : ''}
+        ${bookSummary ? `<p style="margin: 4px 0;"><strong>Memory Books:</strong> ${escapeHtml(bookSummary)}</p>` : ''}
         <p style="margin: 4px 0;"><strong>Quantity:</strong> ${quantity}</p>
         ${shippingAmount ? `<p style="margin: 4px 0;"><strong>Shipping:</strong> ${escapeHtml(shippingAmount)}</p>` : ''}
         <p style="margin: 4px 0;"><strong>Amount paid:</strong> ${escapeHtml(amount)}</p>

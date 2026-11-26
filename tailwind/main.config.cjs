@@ -4,7 +4,7 @@ const theme = require('./theme.cjs');
 module.exports = {
   darkMode: 'class',
   content: [
-    './public/{index,order-confirmed,order-policy,privacy,terms,reviews}.html',
+    './public/{index,memory-book,order-confirmed,order-policy,privacy,terms,reviews}.html',
     './public/gifts/*.html',
     './public/assets/js/**/*.js',
   ],

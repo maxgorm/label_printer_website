@@ -1,8 +1,8 @@
 /**
  * Sentimo Order Form
  * Handles: set (Single or Duo-Pack), colors, quantity, sale pricing (ends 12/1), the shipping
- * line for the chosen country, sticker paper add-ons, and the add-to-cart button with the
- * live total. cart.js handles the cart, checkout, the paper add-on offer, and Stripe.
+ * line for the chosen country, the "Make it yours" accessories (sticker paper and Memory Books),
+ * and the add-to-cart button with the live total. cart.js handles the cart, checkout, the paper add-on offer, and Stripe.
  */
 (function () {
   'use strict';
@@ -35,6 +35,9 @@
   const refillOptions = document.querySelectorAll('[data-refill]');
   const refillBoxes = document.querySelectorAll('.refill-checkbox');
   const ctaLabels = document.querySelectorAll('[data-cta-label]');
+  const bookOptions = document.querySelectorAll('[data-book]');
+  const booksCount = $('books-count');
+  const perOrderNote = $('accessories-per-order');
 
   const MIN_QTY = 1;
   const MAX_QTY = CATALOG.maxPrinterPackages;
@@ -235,7 +238,6 @@
       refillsCount.textContent = packs ? `· ${packs} added` : '';
       refillsCount.classList.toggle('hidden', !packs);
     }
-    paperOnlyBtn?.classList.toggle('hidden', !packs);
     renderCta();
   }
 
@@ -273,27 +275,111 @@
   window.addEventListener('hashchange', openRefillsFromHash);
   openRefillsFromHash();
 
+  // ===================== MEMORY BOOKS =====================
+  // At most one option (Memory Book or Memory Book Duo), unselected by default. Pressing the
+  // selected option again clears it. Like paper, the quantity is per order: it is not multiplied
+  // by the number of printer sets. The choice stays when the set, colors, or quantity change.
+  let selectedBook = null;
+  const bookQty = {};
+  bookOptions.forEach((option) => { bookQty[option.dataset.book] = 1; });
+
+  // Chosen books as [{ variant, quantity }].
+  function checkedBooks() {
+    return selectedBook ? [{ variant: selectedBook, quantity: bookQty[selectedBook] }] : [];
+  }
+
+  function bookCents(lines) {
+    return lines.reduce((sum, line) => sum + CATALOG.books[line.variant].priceCents * line.quantity, 0);
+  }
+
+  function renderBooks() {
+    bookOptions.forEach((option) => {
+      const variant = option.dataset.book;
+      const isSelected = variant === selectedBook;
+      option.classList.toggle('is-selected', isSelected);
+      option.querySelector('[data-book-toggle]')?.setAttribute('aria-pressed', String(isSelected));
+      const now = option.querySelector('[data-book-now]');
+      if (now) now.textContent = fmt(bookCents([{ variant, quantity: isSelected ? bookQty[variant] : 1 }]));
+      const stepper = option.querySelector('[data-book-stepper]');
+      stepper?.classList.toggle('hidden', !isSelected);
+      stepper?.classList.toggle('flex', isSelected);
+      const qty = option.querySelector('[data-book-qty]');
+      if (qty) qty.textContent = String(bookQty[variant]);
+      const minus = option.querySelector('[data-book-minus]');
+      const plus = option.querySelector('[data-book-plus]');
+      if (minus) minus.disabled = bookQty[variant] <= 1;
+      if (plus) plus.disabled = bookQty[variant] >= CATALOG.maxBooksPerVariant;
+    });
+    // Physical notebooks: a Memory Book Duo is two books.
+    const books = checkedBooks().reduce((sum, line) => sum + CATALOG.books[line.variant].books * line.quantity, 0);
+    if (booksCount) {
+      booksCount.textContent = books ? `· ${books} ${books === 1 ? 'book' : 'books'} added` : '';
+      booksCount.classList.toggle('hidden', !books);
+    }
+    renderCta();
+  }
+
+  bookOptions.forEach((option) => {
+    const variant = option.dataset.book;
+    option.querySelector('[data-book-toggle]')?.addEventListener('click', () => {
+      const clearing = selectedBook === variant;
+      selectedBook = clearing ? null : variant;
+      bookQty[variant] = 1;
+      trackEvent(clearing ? 'memory_book_cleared' : 'memory_book_selected', { variant, location: 'order_form' });
+      renderBooks();
+    });
+    const step = (delta) => {
+      bookQty[variant] = Math.max(1, Math.min(CATALOG.maxBooksPerVariant, bookQty[variant] + delta));
+      renderBooks();
+    };
+    option.querySelector('[data-book-minus]')?.addEventListener('click', () => step(-1));
+    option.querySelector('[data-book-plus]')?.addEventListener('click', () => step(1));
+  });
+
+  // "Starting at $4.99" in the Memory Book story.
+  const lowestBookCents = Math.min(...Object.values(CATALOG.books).map((book) => book.priceCents));
+  document.querySelectorAll('[data-book-from]').forEach((el) => { el.textContent = fmt(lowestBookCents); });
+
   // ===================== ADD TO CART =====================
+  // Printer sets × quantity, plus the per-order paper packs and Memory Books.
   function orderTotalCents() {
-    return CATALOG.products[selectedProduct].priceCents * quantity + paperCents(checkedRefills());
+    return CATALOG.products[selectedProduct].priceCents * quantity + paperCents(checkedRefills()) + bookCents(checkedBooks());
   }
 
   function renderCta() {
     const label = `${COPY[selectedProduct].cta} · ${fmt(orderTotalCents())}`;
     ctaLabels.forEach((el) => { el.textContent = label; });
     if (preorderBtn) preorderBtn.disabled = !hasCompleteColorSelection();
+    const hasAccessories = checkedRefills().length > 0 || checkedBooks().length > 0;
+    paperOnlyBtn?.classList.toggle('hidden', !hasAccessories);
+    perOrderNote?.classList.toggle('hidden', !(hasAccessories && quantity > 1));
   }
 
   function resetAfterAdd() {
     setQuantity(1);
     refillBoxes.forEach((box) => { box.checked = false; });
     Object.keys(refillQty).forEach((bundle) => { refillQty[bundle] = 1; });
+    selectedBook = null;
+    Object.keys(bookQty).forEach((variant) => { bookQty[variant] = 1; });
     renderRefills();
+    renderBooks();
+  }
+
+  // Repeated clicks while the cart opens add nothing twice.
+  let adding = false;
+  function addOnce(fn) {
+    if (adding) return;
+    adding = true;
+    try {
+      if (fn()) resetAfterAdd();
+    } finally {
+      setTimeout(() => { adding = false; }, 400);
+    }
   }
 
   preorderBtn?.addEventListener('click', () => {
     if (!hasCompleteColorSelection()) return;
-    const added = cart.addSet({
+    addOnce(() => cart.addSet({
       printer: {
         type: 'printer',
         product: selectedProduct,
@@ -301,13 +387,15 @@
         quantity,
       },
       paper: checkedRefills(),
-    });
-    if (added) resetAfterAdd();
+      books: checkedBooks(),
+    }));
   });
 
   paperOnlyBtn?.addEventListener('click', () => {
     const paper = checkedRefills();
-    if (paper.length && cart.addSet({ paper })) resetAfterAdd();
+    const books = checkedBooks();
+    if (!paper.length && !books.length) return;
+    addOnce(() => cart.addSet({ paper, books }));
   });
 
   // ===================== CTA TRACKING =====================
@@ -320,4 +408,5 @@
 
   renderProduct();
   renderRefills();
+  renderBooks();
 })();

@@ -29,6 +29,16 @@ From 2026-11 the Sweet and Bright packs are retired and the new supplier's **Dre
 
 From 2026-11 the website uses a cart, so one order can hold several printer lines (for example a pink and white 2-Pack plus a black single printer) and paper packs. Stock still comes from `color_counts`, `paper_bundles` and `roll_counts`, which add up every line. `supabase/migration_009_cart_items.sql` adds `cart_items`, a per-line list for packing: printers with their product, colors and quantity, and paper packs with `addon: true` on the discounted pack. When a cart mixes single printers and 2-Packs, `product_slug` is `sentimo-mixed`, `quantity` counts printer packages, and `unit_price` is empty. The webhook saves orders without `cart_items` until the migration is applied.
 
+## Memory Books
+
+From 2026-11 the site sells Memory Books (A6 kraft notebooks): **Memory Book** (`MEMORY-BOOK-1`, one notebook, $4.99) and **Memory Book Duo** (`MEMORY-BOOK-2`, two notebooks, $7.99). Both draw from one notebook stock, counted in physical books, in `book_movements` with the one-row `book_stock` view (`physical_on_hand`, `sold_unshipped`, `available_to_sell`). Orders store `memory_books` (units per variant, e.g. `{"duo":1}`) and `memory_book_count` (physical books, e.g. `2`); a database check keeps the two consistent. `cart_items` lists each book line with its SKU and `books` count for packing. Marking an order shipped deducts its notebooks once, in the same trigger as printers and paper.
+
+Apply `supabase/migration_010_memory_books.sql` after migration 009 and before deploying the Memory Book code, then record the notebooks on hand (template at the end of the migration). Checkout blocks Memory Books when `available_to_sell` is too low, so they cannot sell until that opening stock is recorded. Memory Book quantities are per order, like paper packs: choosing two printer sets does not double the books.
+
+```sql
+SELECT * FROM public.book_stock;
+```
+
 ## Shipping and tracking
 
 Set `tracking_number` (and optionally `tracking_carrier`) and `fulfillment_status = 'shipped'` on an order. A Supabase Database Webhook calls `/api/shipment-notify`, which emails the customer once and sets `shipping_email_sent_at`. See `SETUP.md`.

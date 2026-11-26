@@ -96,6 +96,37 @@ const PREORDER_CONFIG = {
   // Tax category for paper packs (general tangible goods).
   paper_tax_code: 'txcd_99999999',
 
+  // Memory Books: A6 kraft notebooks, sold one at a time or as a matching pair.
+  // `books` is how many physical notebooks one unit contains; both variants draw from
+  // the same notebook stock in Supabase (book_movements / book_stock). Quantities are
+  // per order, like paper packs (not multiplied by the number of printer sets).
+  // Each notebook weighs about 34 g, well inside a printer parcel, so books never add a
+  // shipping charge: shipping stays the existing flat/free rate for the order.
+  // Keep prices in sync with public/assets/js/cart.js.
+  memory_books: {
+    single: {
+      name: 'Sentimo Memory Book',
+      label: 'Memory Book',
+      sku: 'MEMORY-BOOK-1',
+      slug: 'memory-book-single',
+      description: 'One A6 kraft notebook, 48 blank pages.',
+      price_cents: 499,
+      books: 1,
+    },
+    duo: {
+      name: 'Sentimo Memory Book Duo',
+      label: 'Memory Book Duo',
+      sku: 'MEMORY-BOOK-2',
+      slug: 'memory-book-duo',
+      description: 'Two matching A6 kraft notebooks, 48 blank pages each.',
+      price_cents: 799,
+      books: 2,
+    },
+  },
+  memory_book_max_per_variant: 10,
+  // Notebooks are general tangible goods for Stripe Tax.
+  memory_book_tax_code: 'txcd_99999999',
+
   // US shipping: flat fee below the threshold (pre-tax subtotal), free at or above it.
   shipping_flat_cents: 499,
   free_shipping_threshold_cents: 2500,

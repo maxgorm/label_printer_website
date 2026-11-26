@@ -478,6 +478,44 @@ img[src] {
     transform: rotate(180deg);
 }
 
+/* "Make it yours" accessory groups: sticker paper in a white card, Memory Books in a pale pink one. */
+.accessory-group {
+    border: 2px solid #E5E7EB;
+    border-radius: 1rem;
+    background: #FFFFFF;
+}
+
+.accessory-group--books {
+    border-color: #FAD0DE;
+    background: #FFF7FA;
+}
+
+.dark .accessory-group {
+    border-color: #3F3F46;
+    background: #1F1F23;
+}
+
+.dark .accessory-group--books {
+    border-color: rgba(245, 63, 123, 0.35);
+    background: rgba(245, 63, 123, 0.06);
+}
+
+/* Memory Book options are toggle buttons (aria-pressed) that look like the set cards' radios. */
+.book-option.is-selected .radio-dot {
+    border-color: #F53F7B;
+    box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 10px #F53F7B;
+}
+
+.book-toggle:focus {
+    outline: none;
+}
+
+.book-toggle:focus-visible {
+    outline: 2px solid #F53F7B;
+    outline-offset: 4px;
+    border-radius: 0.5rem;
+}
+
 /* The ship-to select draws its own arrow inside the bordered row. */
 .ship-to select {
     background-position: right 0.75rem center;

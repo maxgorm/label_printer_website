@@ -1,10 +1,10 @@
 /**
  * Sentimo Cart
- * One cart for printers and thermal paper: saved in localStorage, shown in a slide-out
+ * One cart for printers, thermal paper, and Memory Books: saved in localStorage, shown in a slide-out
  * drawer, and sent to /api/create-checkout as a list of items. Prices here are display
  * only; the server sets the real prices (api/_config.js).
  *
- * window.SentimoCart: add(item), addSet({ printer, paper }), open(), close(),
+ * window.SentimoCart: add(item), addSet({ printer, paper, books }), open(), close(),
  *   count(), items(), onChange(fn), catalog, formatCents
  */
 (function () {
@@ -36,9 +36,22 @@
         priceCents: 999, addonCents: 699, image: '/assets/cutouts/paper-dreamy-row.webp',
       },
     },
+    // Memory Books: both variants share one notebook stock (a Duo is two books).
+    // Keep prices in sync with api/_config.js.
+    books: {
+      single: {
+        name: 'Memory Book', slug: 'memory-book-single', detail: '1 A6 kraft notebook · 48 pages', books: 1,
+        priceCents: 499, image: '/assets/opt/books/memory-book-single-160.webp',
+      },
+      duo: {
+        name: 'Memory Book Duo', slug: 'memory-book-duo', detail: '2 A6 kraft notebooks · 48 pages each', books: 2,
+        priceCents: 799, image: '/assets/opt/books/memory-book-duo-160.webp',
+      },
+    },
     colors: { pink: 'Pink', white: 'White', black: 'Black' },
     maxPrinterPackages: 10,
     maxPaperPerBundle: 10,
+    maxBooksPerVariant: 10,
   };
 
   const STORAGE_KEY = 'sentimo_cart_v1';
@@ -48,7 +61,8 @@
   }
 
   // ===================== STATE =====================
-  // items: [{ type: 'printer', product, colors, quantity } | { type: 'paper', bundle, quantity }]
+  // items: [{ type: 'printer', product, colors, quantity } | { type: 'paper', bundle, quantity }
+  //         | { type: 'book', variant, quantity }]
   // addon: one discounted paper pack ('classic' | 'dreamy'), only with a printer in the cart.
   let state = { items: [], addon: null };
 
@@ -60,6 +74,9 @@
     }
     if (item?.type === 'paper') {
       return Boolean(CATALOG.paper[item.bundle]) && Number.isInteger(item.quantity) && item.quantity > 0;
+    }
+    if (item?.type === 'book') {
+      return Object.hasOwn(CATALOG.books, item.variant) && Number.isInteger(item.quantity) && item.quantity > 0;
     }
     return false;
   }
@@ -86,7 +103,19 @@
   }
 
   function itemKey(item) {
-    return item.type === 'printer' ? `printer:${item.product}:${item.colors.join(',')}` : `paper:${item.bundle}`;
+    if (item.type === 'printer') return `printer:${item.product}:${item.colors.join(',')}`;
+    return item.type === 'book' ? `book:${item.variant}` : `paper:${item.bundle}`;
+  }
+
+  // Catalog entry for a paper or Memory Book item.
+  function accessory(item) {
+    return item.type === 'book' ? CATALOG.books[item.variant] : CATALOG.paper[item.bundle];
+  }
+
+  // Most of an item the cart can hold; for printers, counting what is already in the cart.
+  function maxFor(item, existingQuantity = 0) {
+    if (item.type === 'printer') return CATALOG.maxPrinterPackages - printerPackages() + existingQuantity;
+    return item.type === 'book' ? CATALOG.maxBooksPerVariant : CATALOG.maxPaperPerBundle;
   }
 
   function printerPackages() {
@@ -113,7 +142,7 @@
   function lineCents(item) {
     return item.type === 'printer'
       ? CATALOG.products[item.product].priceCents * item.quantity
-      : CATALOG.paper[item.bundle].priceCents * item.quantity;
+      : accessory(item).priceCents * item.quantity;
   }
 
   function subtotalCents() {
@@ -213,14 +242,13 @@
       label = product.name;
       detail = item.colors.map((c) => CATALOG.colors[c]).join(' + ');
       images = item.colors.map((c) => `/assets/cutouts/printer-${c}.webp`);
-      max = CATALOG.maxPrinterPackages - printerPackages() + item.quantity;
     } else {
-      const bundle = CATALOG.paper[item.bundle];
-      label = bundle.name;
-      detail = bundle.detail;
-      images = [bundle.image];
-      max = CATALOG.maxPaperPerBundle;
+      const entry = accessory(item);
+      label = entry.name;
+      detail = entry.detail;
+      images = [entry.image];
     }
+    max = maxFor(item, item.quantity);
     li.appendChild(thumb(images));
     const body = el('div', 'min-w-0 flex-1');
     const top = el('div', 'flex items-start justify-between gap-2');
@@ -306,10 +334,7 @@
       state.items.splice(index, 1);
       track('remove_from_cart', { item: itemKey(item) });
     } else {
-      const max = item.type === 'printer'
-        ? CATALOG.maxPrinterPackages - printerPackages() + item.quantity
-        : CATALOG.maxPaperPerBundle;
-      item.quantity = Math.min(quantity, max);
+      item.quantity = Math.min(quantity, maxFor(item, item.quantity));
     }
     commit();
     // Keep keyboard focus inside the drawer after a line disappears.
@@ -326,16 +351,15 @@
     if (!validItem(item)) return { added: 0, message: '' };
     const key = itemKey(item);
     const existing = state.items.find((i) => itemKey(i) === key);
-    const max = item.type === 'printer' ? CATALOG.maxPrinterPackages - printerPackages() + (existing?.quantity || 0) : CATALOG.maxPaperPerBundle;
     const current = existing?.quantity || 0;
-    const allowed = Math.min(item.quantity, max - current);
+    const allowed = Math.min(item.quantity, maxFor(item, current) - current);
     if (allowed <= 0) {
-      return {
-        added: 0,
-        message: item.type === 'printer'
-          ? `Your cart already has the maximum of ${CATALOG.maxPrinterPackages} printer packages.`
-          : `Your cart already has the maximum of ${CATALOG.maxPaperPerBundle} packs of this paper.`,
+      const limits = {
+        printer: `Your cart already has the maximum of ${CATALOG.maxPrinterPackages} printer packages.`,
+        paper: `Your cart already has the maximum of ${CATALOG.maxPaperPerBundle} packs of this paper.`,
+        book: `Your cart already has the maximum of ${CATALOG.maxBooksPerVariant} of this Memory Book option.`,
       };
+      return { added: 0, message: limits[item.type] };
     }
     if (existing) existing.quantity += allowed;
     else state.items.push({ ...item, colors: item.colors ? [...item.colors] : undefined, quantity: allowed });
@@ -368,17 +392,30 @@
     return [...totals].map(([bundle, quantity]) => ({ bundle, quantity }));
   }
 
+  // Memory Book lines as [{ variant, quantity }], merged per variant.
+  function bookLines(books) {
+    const totals = new Map();
+    (books || []).forEach((line) => {
+      const quantity = Math.floor(Number(line?.quantity) || 0);
+      if (!Object.hasOwn(CATALOG.books, line?.variant) || quantity <= 0) return;
+      totals.set(line.variant, Math.min(CATALOG.maxBooksPerVariant, (totals.get(line.variant) || 0) + quantity));
+    });
+    return [...totals].map(([variant, quantity]) => ({ variant, quantity }));
+  }
+
   /**
-   * Add a printer and the paper chosen with it in one step, then open the cart once. Paper here is
-   * full price; the discounted pack is only offered by the pop-up at checkout. Either part is
-   * optional (paper alone is a paper-only order). Returns true when anything was added.
+   * Add a printer and the paper and Memory Books chosen with it in one step, then open the cart
+   * once. Paper here is full price; the discounted pack is only offered by the pop-up at checkout.
+   * Every part is optional (accessories alone make an accessories-only order). Returns true when
+   * anything was added.
    */
-  function addSet({ printer = null, paper = [] } = {}, { open: shouldOpen = true } = {}) {
+  function addSet({ printer = null, paper = [], books = [] } = {}, { open: shouldOpen = true } = {}) {
     const names = [];
     const problems = [];
     [
       ...(printer ? [printer] : []),
       ...paperLines(paper).map(({ bundle, quantity }) => ({ type: 'paper', bundle, quantity })),
+      ...bookLines(books).map(({ variant, quantity }) => ({ type: 'book', variant, quantity })),
     ].forEach((item) => {
       const { added, message } = addItem(item);
       if (added > 0) names.push(message);
@@ -410,14 +447,14 @@
       const colors = item.colors.map((c) => CATALOG.colors[c]).join(' + ');
       return `${quantity > 1 ? `${quantity} × ` : ''}${name} (${colors})`;
     }
-    return `${quantity > 1 ? `${quantity} × ` : ''}${CATALOG.paper[item.bundle].name}`;
+    return `${quantity > 1 ? `${quantity} × ` : ''}${accessory(item).name}`;
   }
 
   function reportAddToCart(item, quantity, unitCents) {
     const isPrinter = item.type === 'printer';
-    const entry = isPrinter ? CATALOG.products[item.product] : CATALOG.paper[item.bundle];
+    const entry = isPrinter ? CATALOG.products[item.product] : accessory(item);
     const valueCents = (unitCents ?? entry.priceCents) * quantity;
-    track('add_to_cart', { item: isPrinter ? entry.slug : entry.slug, quantity, value: valueCents / 100 });
+    track('add_to_cart', { item: entry.slug, item_type: item.type, quantity, value: valueCents / 100 });
     // Meta AddToCart only fires with advertising consent (tracking.js decides).
     window.SentimoTrack?.track('AddToCart', {
       content_ids: [entry.slug],
@@ -560,15 +597,20 @@
     enforceRules();
     if (!state.items.length) return;
     const payload = {
-      items: state.items.map((item) => (item.type === 'printer'
-        ? { type: 'printer', product: item.product, colors: item.colors, quantity: item.quantity }
-        : { type: 'paper', bundle: item.bundle, quantity: item.quantity })),
+      items: state.items.map((item) => {
+        if (item.type === 'printer') return { type: 'printer', product: item.product, colors: item.colors, quantity: item.quantity };
+        if (item.type === 'book') return { type: 'book', variant: item.variant, quantity: item.quantity };
+        return { type: 'paper', bundle: item.bundle, quantity: item.quantity };
+      }),
       country: window.SentimoShipping?.country() || 'US',
     };
     if (state.addon) payload.paper_addon = state.addon;
     if (window.SentimoTrack) payload.attribution = window.SentimoTrack.attribution();
 
-    track('checkout_started', { items: count(), country: payload.country, paper_addon: state.addon });
+    // Physical notebooks in the order, for the Memory Book attachment rate.
+    const memoryBooks = state.items.filter((i) => i.type === 'book')
+      .reduce((sum, i) => sum + CATALOG.books[i.variant].books * i.quantity, 0);
+    track('checkout_started', { items: count(), country: payload.country, paper_addon: state.addon, memory_books: memoryBooks });
     checkoutBtn.disabled = true;
     checkoutText.textContent = 'Processing...';
     errorEl.classList.add('hidden');

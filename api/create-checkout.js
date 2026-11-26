@@ -10,6 +10,7 @@ import {
   rollCountsFor,
   shippingCentsFor,
 } from './_paper.js';
+import { bookCountFor, describeBooks, findBookStockShortage } from './_books.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -28,15 +29,21 @@ export default async function handler(req, res) {
   const international = country !== 'US';
   const shipLabel = international ? PREORDER_CONFIG.international_ship_label : PREORDER_CONFIG.expected_ship_label;
 
-  // The cart: printer lines, full-price paper packs, and the optional discounted add-on pack.
+  // The cart: printer lines, full-price paper packs, Memory Books, and the optional discounted add-on pack.
   const cart = normalizeCart(req.body || {});
   if (cart.error) return res.status(400).json({ error: cart.error });
-  const { printers, paper: listedPaper, addon } = cart;
+  const { printers, paper: listedPaper, books, addon } = cart;
+  const hasBooks = Object.keys(books).length > 0;
+  const bookCount = bookCountFor(books);
+  const bookDescription = hasBooks ? describeBooks(books) : '';
+  // No printer in the cart: an accessories-only order. "paper" when it is only paper
+  // (the shape older sessions use), "accessories" when it includes Memory Books.
   const paperOnly = printers.length === 0;
+  const accessoryKey = hasBooks ? 'accessories' : 'paper';
 
   const printerProductKeys = [...new Set(printers.map((line) => line.product))];
   // One product type keeps the classic metadata shape; a mix of single printers and 2-Packs is "mixed".
-  const metaProductKey = paperOnly ? 'paper' : (printerProductKeys.length === 1 ? printerProductKeys[0] : 'mixed');
+  const metaProductKey = paperOnly ? accessoryKey : (printerProductKeys.length === 1 ? printerProductKeys[0] : 'mixed');
   const metaProduct = PREORDER_CONFIG.products[metaProductKey] || null;
   const printerPackages = printers.reduce((sum, line) => sum + line.quantity, 0);
   const printerUnits = printers.reduce((sum, line) => sum + line.quantity * PREORDER_CONFIG.products[line.product].printer_count, 0);
@@ -61,6 +68,8 @@ export default async function handler(req, res) {
 
   const stockError = hasPaper ? await findPaperStockShortage(rollCountsFor(paperAll)) : null;
   if (stockError) return res.status(409).json({ error: stockError });
+  const bookStockError = hasBooks ? await findBookStockShortage(bookCount) : null;
+  if (bookStockError) return res.status(409).json({ error: bookStockError });
 
   const paperTotalPacks = Object.values(paperAll).reduce((sum, packs) => sum + packs, 0);
   const lineItems = [];
@@ -125,6 +134,26 @@ export default async function handler(req, res) {
     });
   }
 
+  // Memory Books: one Stripe line per variant, at the same price with or without a printer.
+  for (const [variant, units] of Object.entries(books)) {
+    const book = PREORDER_CONFIG.memory_books[variant];
+    subtotalCents += book.price_cents * units;
+    lineItems.push({
+      price_data: {
+        currency: PREORDER_CONFIG.currency,
+        tax_behavior: 'exclusive',
+        product_data: {
+          tax_code: PREORDER_CONFIG.memory_book_tax_code,
+          name: book.name,
+          description: `${book.description} Ships with your Sentimo order.`,
+          metadata: { memory_book: variant, sku: book.sku, books_per_unit: String(book.books) },
+        },
+        unit_amount: book.price_cents,
+      },
+      quantity: units,
+    });
+  }
+
   const shippingCents = shippingCentsFor(subtotalCents, country);
   const paperMetadata = hasPaper
     ? {
@@ -134,6 +163,14 @@ export default async function handler(req, res) {
         paper_summary: paperDescription,
       }
     : {};
+  const bookMetadata = hasBooks
+    ? {
+        memory_books: JSON.stringify(books),
+        memory_book_count: String(bookCount),
+        memory_book_summary: bookDescription,
+      }
+    : {};
+  const accessoryNames = { paper: 'Sentimo Thermal Paper', accessories: 'Sentimo Accessories' };
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY.trim());
 
@@ -160,25 +197,31 @@ export default async function handler(req, res) {
       }],
       metadata: {
         product_key: metaProductKey,
-        product_slug: paperOnly ? 'sentimo-paper' : (metaProduct ? metaProduct.slug : 'sentimo-mixed'),
-        product_name: paperOnly ? 'Sentimo Thermal Paper' : (metaProduct ? metaProduct.name : 'Sentimo Printers'),
+        product_slug: paperOnly ? `sentimo-${accessoryKey}` : (metaProduct ? metaProduct.slug : 'sentimo-mixed'),
+        product_name: paperOnly ? accessoryNames[accessoryKey] : (metaProduct ? metaProduct.name : 'Sentimo Printers'),
         // Per-package price when every printer line is the same product; empty for a mix.
         unit_price_cents: paperOnly ? '0' : (metaProduct ? String(printerPriceCents(metaProduct)) : ''),
         // Printers in one package for a single product type; total printers for a mix.
         printer_count: paperOnly ? '0' : String(metaProduct ? metaProduct.printer_count : printerUnits),
         order_type: PREORDER_CONFIG.order_type,
         expected_ship: shipLabel,
-        quantity: String(paperOnly ? paperTotalPacks : printerPackages),
+        // Printer packages; for accessories-only orders, paper packs plus Memory Book units.
+        quantity: String(paperOnly ? paperTotalPacks + Object.values(books).reduce((sum, n) => sum + n, 0) : printerPackages),
         ...(paperOnly ? {} : { printer_items: printerItemsMetadata(printers) }),
         shipping_cents: String(shippingCents),
         shipping_country: country,
         ...colorMetadata,
         ...paperMetadata,
+        ...bookMetadata,
         // Meta/UTM attribution, present only when the visitor consented to advertising measurement.
         ...attributionMetadata(req.body?.attribution, req),
       },
       payment_intent_data: {
-        metadata: { ...colorMetadata, ...(hasPaper ? { paper_summary: paperDescription } : {}) },
+        metadata: {
+          ...colorMetadata,
+          ...(hasPaper ? { paper_summary: paperDescription } : {}),
+          ...(hasBooks ? { memory_book_summary: bookDescription } : {}),
+        },
       },
       success_url: `${getBaseUrl(req)}${PREORDER_CONFIG.success_url}`,
       cancel_url: `${getBaseUrl(req)}${PREORDER_CONFIG.cancel_url}`,
